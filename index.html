@@ -126,6 +126,7 @@
         { id:"sm034", name:"Asmodai",                         role:"QG", chapter:"Dark Angels" },
         { id:"sm035", name:"Belial",                          role:"QG", chapter:"Dark Angels" },
         { id:"sm036", name:"Sammael",                         role:"QG", chapter:"Dark Angels" },
+        { id:"sm160", name:"Lion El'Jonson",                  role:"QG", chapter:"Dark Angels" },
         { id:"sm037", name:"Mephiston",                       role:"QG", chapter:"Blood Angels" },
         { id:"sm038", name:"Commander Dante",                 role:"QG", chapter:"Blood Angels" },
         { id:"sm039", name:"Astorath",                        role:"QG", chapter:"Blood Angels" },
@@ -365,7 +366,7 @@
 
     const btnSm     = { background:"transparent", border:"1px solid #1c1c1c", color:"#48402e", padding:"5px 12px", cursor:"pointer", fontSize:"11px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" };
     const qtyBtn    = { background:"#030303", border:"1px solid #1c1c1c", color:"#b8922a", width:"36px", height:"36px", cursor:"pointer", fontSize:"18px", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"serif" };
-    const iconMiniBtn = { background:"none", border:"1px solid #131313", cursor:"pointer", padding:"4px", display:"flex", alignItems:"center", justifyContent:"center" };
+    const iconMiniBtn = { background:"none", border:"1px solid #1c1c1c", cursor:"pointer", padding:"8px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation", minWidth:"32px", minHeight:"32px" };
     const pageStyle = { background:"#020202", minHeight:"100%", display:"flex", flexDirection:"column", fontFamily:"'Crimson Pro',Georgia,serif" };
 
     // ══════════════════════════════════════════════════════════
@@ -461,8 +462,8 @@
                 onKeyDown={e => { if(e.key==="Enter") confirm(); if(e.key==="Escape") setEditing(false); }}
                 placeholder={pts||"pts"}
                 style={{ width:"60px", background:"#030303", border:`1px solid ${f.accent}`, color:f.accent, padding:"4px 6px", fontSize:"13px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
-              <button onClick={confirm} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"3px 7px", fontSize:"12px" }}>✓</button>
-              <button onClick={() => setEditing(false)} style={{ background:"none", border:"1px solid #131313", color:"#48402e", cursor:"pointer", padding:"3px 7px", fontSize:"12px" }}>✕</button>
+              <button onClick={confirm} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✓</button>
+              <button onClick={() => setEditing(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✕</button>
             </div>
           ) : (
             <div onClick={() => { setEditVal(pts||""); setEditing(true); }} title="Toucher pour saisir les points"
@@ -513,7 +514,7 @@
       <a href={wahapediaUrl(unitName, faction)} target="_blank" rel="noopener noreferrer"
         onClick={e => e.stopPropagation()}
         title={`Ouvrir ${unitName} sur Wahapedia`}
-        style={{ display:"flex", alignItems:"center", gap:"4px", padding:"3px 7px", background:"#0a0806", border:`1px solid ${accent}33`, color:`${accent}99`, textDecoration:"none", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", cursor:"pointer", flexShrink:0 }}>
+        style={{ display:"flex", alignItems:"center", gap:"4px", padding:"5px 10px", background:"#0f0c08", border:`1px solid ${accent}55`, color:accent, textDecoration:"none", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", cursor:"pointer", flexShrink:0, touchAction:"manipulation" }}>
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         WAHA
       </a>
@@ -907,24 +908,24 @@
       const ps = PAINT_STATUS[status]||PAINT_STATUS.unpainted;
       return (
         <button onClick={onCycle} title="Changer le statut de peinture"
-          style={{ display:"flex", alignItems:"center", gap:"5px", padding:"3px 8px",
-            background:"#080604", border:`1px solid ${ps.color}44`, cursor:"pointer",
-            transition:"all 0.15s" }}>
-          <div style={{ width:"7px", height:"7px", borderRadius:"50%", background:ps.color, flexShrink:0 }} />
-          <span style={{ fontSize:"9px", color:ps.color, fontFamily:"'Cinzel',serif", letterSpacing:"1px", whiteSpace:"nowrap" }}>{ps.label}</span>
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke={ps.color} strokeWidth="2.5" opacity="0.5"><polyline points="6 9 12 15 18 9"/></svg>
+          style={{ display:"flex", alignItems:"center", gap:"6px", padding:"6px 10px",
+            background:"#0d0b08", border:`1px solid ${ps.color}66`, cursor:"pointer",
+            transition:"all 0.15s", touchAction:"manipulation" }}>
+          <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:ps.color, flexShrink:0, boxShadow:`0 0 5px ${ps.color}88` }} />
+          <span style={{ fontSize:"10px", color:ps.color, fontFamily:"'Cinzel',serif", letterSpacing:"1px", whiteSpace:"nowrap" }}>{ps.label}</span>
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={ps.color} strokeWidth="2.5" opacity="0.7"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
       );
     }
 
     function QtyEditor({ qty, onUpdate, accent }) {
       return (
-        <div style={{ display:"flex", alignItems:"center", gap:"1px" }}>
+        <div style={{ display:"flex", alignItems:"center", gap:"2px" }}>
           <button onClick={() => qty>1 && onUpdate(qty-1)}
-            style={{ width:"20px", height:"20px", background:"#0a0806", border:`1px solid ${accent}33`, color: qty>1?accent:"#252015", cursor: qty>1?"pointer":"default", fontSize:"13px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center" }}>−</button>
-          <div style={{ minWidth:"24px", textAlign:"center", fontSize:"12px", color:accent, fontFamily:"monospace", background:"#060402", border:`1px solid ${accent}22`, padding:"1px 4px" }}>{qty}</div>
+            style={{ width:"32px", height:"32px", background:"#0f0c08", border:`1px solid ${accent}55`, color: qty>1?accent:"#2a2215", cursor: qty>1?"pointer":"default", fontSize:"18px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
+          <div style={{ minWidth:"30px", textAlign:"center", fontSize:"13px", color:accent, fontFamily:"monospace", fontWeight:"700", background:"#080604", border:`1px solid ${accent}33`, padding:"4px 6px" }}>{qty}</div>
           <button onClick={() => onUpdate(qty+1)}
-            style={{ width:"20px", height:"20px", background:"#0a0806", border:`1px solid ${accent}33`, color:accent, cursor:"pointer", fontSize:"13px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center" }}>+</button>
+            style={{ width:"32px", height:"32px", background:"#0f0c08", border:`1px solid ${accent}55`, color:accent, cursor:"pointer", fontSize:"18px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>+</button>
         </div>
       );
     }

@@ -1630,6 +1630,7 @@
     }
 
     function InventoryItem({ item, faction, ptsMap, onSetPts, onDelete, onEditPhoto, onUpdatePaint, onUpdateQty, accent, viewMode, dragHandleProps }) {
+      const f = FACTIONS[faction] || FACTIONS["SM"];
       const ps = PAINT_STATUS[item.paintStatus]||PAINT_STATUS.unpainted;
       const cycleStatus = () => {
         const idx = PAINT_KEYS.indexOf(item.paintStatus||"unpainted");

@@ -2220,30 +2220,113 @@
     };
     const WISH_STATUS_KEYS = ["wanted","ordered","received"];
 
-    function ViewWishlist({ wishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice }) {
-      const [showModal, setShowModal] = useState(false);
-      const [faction, setFaction] = useState("SM");
-      const f = FACTIONS[faction];
+    // ══════════════════════════════════════════════════════════
+    // PEINTURES CITADEL
+    // ══════════════════════════════════════════════════════════
+    const CITADEL_TYPES = {
+      "Base":     { color:"#c04040", price:5.60 },
+      "Layer":    { color:"#4080c0", price:5.60 },
+      "Shade":    { color:"#405080", price:5.60 },
+      "Dry":      { color:"#a08060", price:5.60 },
+      "Contrast": { color:"#8040a0", price:6.40 },
+      "Technical":{ color:"#408060", price:5.60 },
+      "Air":      { color:"#40a0c0", price:5.60 },
+    };
+    const CITADEL_PAINTS = [
+      // BASE
+      {name:"Abaddon Black",type:"Base"},{name:"Averland Sunset",type:"Base"},{name:"Balthasar Gold",type:"Base"},
+      {name:"Caledor Sky",type:"Base"},{name:"Castellan Green",type:"Base"},{name:"Corax White",type:"Base"},
+      {name:"Death Guard Green",type:"Base"},{name:"Deathworld Forest",type:"Base"},{name:"Dryad Bark",type:"Base"},
+      {name:"Incubi Darkness",type:"Base"},{name:"Iron Hands Steel",type:"Base"},{name:"Jokaero Orange",type:"Base"},
+      {name:"Kantor Blue",type:"Base"},{name:"Khorne Red",type:"Base"},{name:"Leadbelcher",type:"Base"},
+      {name:"Macragge Blue",type:"Base"},{name:"Mechanicus Standard Grey",type:"Base"},{name:"Mephiston Red",type:"Base"},
+      {name:"Mournfang Brown",type:"Base"},{name:"Naggaroth Night",type:"Base"},{name:"Nocturne Green",type:"Base"},
+      {name:"Rakarth Flesh",type:"Base"},{name:"Rhinox Hide",type:"Base"},{name:"Screamer Pink",type:"Base"},
+      {name:"Steel Legion Drab",type:"Base"},{name:"The Fang",type:"Base"},{name:"Thousand Sons Blue",type:"Base"},
+      {name:"Wraithbone",type:"Base"},{name:"XV-88",type:"Base"},{name:"Zandri Dust",type:"Base"},
+      {name:"Celestra Grey",type:"Base"},{name:"Corvus Black",type:"Base"},{name:"Waaagh! Flesh",type:"Base"},
+      // LAYER
+      {name:"Agrax Earthshade",type:"Shade"},{name:"Athonian Camoshade",type:"Shade"},{name:"Biel-Tan Green",type:"Shade"},
+      {name:"Carroburg Crimson",type:"Shade"},{name:"Coelia Greenshade",type:"Shade"},{name:"Drakenhof Nightshade",type:"Shade"},
+      {name:"Fuegan Orange",type:"Shade"},{name:"Nuln Oil",type:"Shade"},{name:"Reikland Fleshshade",type:"Shade"},
+      {name:"Seraphim Sepia",type:"Shade"},{name:"Druchii Violet",type:"Shade"},{name:"Targor Rageshade",type:"Shade"},
+      {name:"Ardcoat",type:"Technical"},{name:"Astrogranite",type:"Technical"},{name:"Blood for the Blood God",type:"Technical"},
+      {name:"Contrast Medium",type:"Technical"},{name:"Martian Ironearth",type:"Technical"},{name:"Mordant Earth",type:"Technical"},
+      {name:"Nihilakh Oxide",type:"Technical"},{name:"Nurgles Rot",type:"Technical"},{name:"Stormshield",type:"Technical"},
+      {name:"Typhus Corrosion",type:"Technical"},{name:"Valhallan Blizzard",type:"Technical"},
+      {name:"Administratum Grey",type:"Layer"},{name:"Auric Armour Gold",type:"Layer"},{name:"Balor Brown",type:"Layer"},
+      {name:"Baneblade Brown",type:"Layer"},{name:"Baharroth Blue",type:"Layer"},{name:"Bloodreaver Flesh",type:"Layer"},
+      {name:"Blue Horror",type:"Layer"},{name:"Brass Scorpion",type:"Layer"},{name:"Cadian Fleshtone",type:"Layer"},
+      {name:"Calgar Blue",type:"Layer"},{name:"Castellax Bronze",type:"Layer"},{name:"Ceramite White",type:"Layer"},
+      {name:"Daemonette Hide",type:"Layer"},{name:"Dawnstone",type:"Layer"},{name:"Deathclaw Brown",type:"Layer"},
+      {name:"Deepkin Flesh",type:"Layer"},{name:"Elysian Green",type:"Layer"},{name:"Eshin Grey",type:"Layer"},
+      {name:"Evil Sunz Scarlet",type:"Layer"},{name:"Fire Dragon Bright",type:"Layer"},{name:"Flash Gitz Yellow",type:"Layer"},
+      {name:"Flayed One Flesh",type:"Layer"},{name:"Fulgurite Copper",type:"Layer"},{name:"Genestealer Purple",type:"Layer"},
+      {name:"Hashut Copper",type:"Layer"},{name:"Hobgrot Hide",type:"Layer"},{name:"Ironbreaker",type:"Layer"},
+      {name:"Karak Stone",type:"Layer"},{name:"Kislev Flesh",type:"Layer"},{name:"Knight-Questor Flesh",type:"Layer"},
+      {name:"Liberator Gold",type:"Layer"},{name:"Longbeard Grey",type:"Layer"},{name:"Lugganath Orange",type:"Layer"},
+      {name:"Moot Green",type:"Layer"},{name:"Nurgling Green",type:"Layer"},{name:"Ogryn Camo",type:"Layer"},
+      {name:"Pink Horror",type:"Layer"},{name:"Russ Grey",type:"Layer"},{name:"Runefang Steel",type:"Layer"},
+      {name:"Screaming Skull",type:"Layer"},{name:"Skarsnik Green",type:"Layer"},{name:"Slaanesh Grey",type:"Layer"},
+      {name:"Squig Orange",type:"Layer"},{name:"Stormvermin Fur",type:"Layer"},{name:"Straken Green",type:"Layer"},
+      {name:"Sybarite Green",type:"Layer"},{name:"Tallarn Sand",type:"Layer"},{name:"Tau Light Ochre",type:"Layer"},
+      {name:"Temple Guard Blue",type:"Layer"},{name:"Thunderhawk Blue",type:"Layer"},{name:"Troll Slayer Orange",type:"Layer"},
+      {name:"Ulthuan Grey",type:"Layer"},{name:"Ungor Flesh",type:"Layer"},{name:"Ushabti Bone",type:"Layer"},
+      {name:"Vulkan Green",type:"Layer"},{name:"White Scar",type:"Layer"},{name:"Wild Rider Red",type:"Layer"},
+      {name:"Wych Flesh",type:"Layer"},{name:"Xereus Purple",type:"Layer"},
+      // CONTRAST
+      {name:"Apothecary White",type:"Contrast"},{name:"Aethermatic Blue",type:"Contrast"},
+      {name:"Black Templar",type:"Contrast"},{name:"Blood Angels Red",type:"Contrast"},
+      {name:"Bonewhite",type:"Contrast"},{name:"Creed Camo",type:"Contrast"},
+      {name:"Dark Angels Green",type:"Contrast"},{name:"Darkoath Flesh",type:"Contrast"},
+      {name:"Flesh Tearers Red",type:"Contrast"},{name:"Garaghaks Sewer",type:"Contrast"},
+      {name:"Gore-Grunta Fur",type:"Contrast"},{name:"Guilliman Flesh",type:"Contrast"},
+      {name:"Iyanden Yellow",type:"Contrast"},{name:"Leviadon Blue",type:"Contrast"},
+      {name:"Luxion Purple",type:"Contrast"},{name:"Magos Purple",type:"Contrast"},
+      {name:"Mantis Warriors Green",type:"Contrast"},{name:"Militarum Green",type:"Contrast"},
+      {name:"Nazdreg Yellow",type:"Contrast"},{name:"Nighthaunt Gloom",type:"Contrast"},
+      {name:"Ork Flesh",type:"Contrast"},{name:"Plaguebearer Flesh",type:"Contrast"},
+      {name:"Skeleton Horde",type:"Contrast"},{name:"Space Wolves Grey",type:"Contrast"},
+      {name:"Striking Scorpion Green",type:"Contrast"},{name:"Talassar Blue",type:"Contrast"},
+      {name:"Terradon Turquoise",type:"Contrast"},{name:"Ultramarines Blue",type:"Contrast"},
+      {name:"Volupus Pink",type:"Contrast"},{name:"Wyldwood",type:"Contrast"},
+      // DRY
+      {name:"Astorath Red",type:"Dry"},{name:"Changeling Pink",type:"Dry"},{name:"Chronus Blue",type:"Dry"},
+      {name:"Golgfag Brown",type:"Dry"},{name:"Hexos Palesun",type:"Dry"},{name:"Icestorm",type:"Dry"},
+      {name:"Lucius Lilac",type:"Dry"},{name:"Necron Compound",type:"Dry"},{name:"Nilakh Oxide",type:"Dry"},
+      {name:"Overload Orange",type:"Dry"},{name:"Praxeti White",type:"Dry"},{name:"Ryza Rust",type:"Dry"},
+      {name:"Sigmarite",type:"Dry"},{name:"Skullcrusher Brass",type:"Dry"},{name:"Sylvaneth Bark",type:"Dry"},
+      {name:"Terminus Stone",type:"Dry"},{name:"Underhive Ash",type:"Dry"},{name:"Ulgu Grey",type:"Dry"},
+    ];
 
-      const items = (wishlist||[])
-        .filter(i => i && i.faction===faction && i.unitId)
-        .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) || null }))
+    function ViewWishlist({ wishlist, paintWishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice, onAddPaint, onDeletePaint }) {
+      const [tab, setTab] = useState("units");       // "units" | "paints"
+      const [showModal, setShowModal] = useState(false);
+      const [sortBy, setSortBy] = useState("faction"); // "faction" | "role" | "status" | "price"
+      const [paintSearch, setPaintSearch] = useState("");
+      const [paintFilter, setPaintFilter] = useState("all");
+      const f = FACTIONS["SM"]; // accent par défaut pour header
+
+      // ── UNITS ─────────────────────────────────────────────
+      const allItems = (wishlist||[])
+        .filter(i => i && i.unitId)
+        .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) || null, fDef: FACTIONS[i.faction]||FACTIONS["SM"] }))
         .filter(i => i.unit);
 
-      const totalPrice = (wishlist||[]).reduce((s,i) => {
-        try {
-          const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
-          const p = i.price || (unit ? SHOP_PRICES[unit.name] : 0) || 0;
-          return s + p * (i.qty||1);
-        } catch { return s; }
-      }, 0);
-      const totalPts   = (wishlist||[]).reduce((s,i) => {
-        try {
-          const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
-          const p = ptsMap[`${i.faction}:${i.unitId}`] || (unit ? POINTS_DB[unit.name] : 0) || 0;
-          return s + p * (i.qty||1);
-        } catch { return s; }
-      }, 0);
+      const sortedItems = [...allItems].sort((a,b) => {
+        if (sortBy==="faction") return (a.faction||"").localeCompare(b.faction||"");
+        if (sortBy==="role")    return (a.unit?.role||"").localeCompare(b.unit?.role||"");
+        if (sortBy==="status")  return (a.status||"wanted").localeCompare(b.status||"wanted");
+        if (sortBy==="price") {
+          const pa = a.price || SHOP_PRICES[a.unit?.name] || 0;
+          const pb = b.price || SHOP_PRICES[b.unit?.name] || 0;
+          return pb - pa;
+        }
+        return 0;
+      });
+
+      const totalPrice = allItems.reduce((s,i) => s+(i.price||SHOP_PRICES[i.unit?.name]||0)*(i.qty||1), 0);
+      const totalPts   = allItems.reduce((s,i) => s+(ptsMap[`${i.faction}:${i.unitId}`]||POINTS_DB[i.unit?.name]||0)*(i.qty||1), 0);
 
       const cycleStatus = (id) => {
         const item = (wishlist||[]).find(i=>i.id===id);
@@ -2252,111 +2335,174 @@
         onSetStatus(id, WISH_STATUS_KEYS[(idx+1) % WISH_STATUS_KEYS.length]);
       };
 
-      // Group by role
-      const grouped = {};
-      ROLE_ORDER.forEach(r => { grouped[r] = []; });
-      items.forEach(item => {
-        const role = item.unit?.role || "QG";
-        if (!grouped[role]) grouped[role] = [];
-        grouped[role].push(item);
+      // ── PAINTS ────────────────────────────────────────────
+      const pw = paintWishlist || [];
+      const paintTotal = pw.reduce((s,p) => s+(CITADEL_TYPES[p.type]?.price||5.60)*(p.qty||1), 0);
+      const filteredPaints = CITADEL_PAINTS.filter(p => {
+        const matchType = paintFilter==="all" || p.type===paintFilter;
+        const matchSearch = !paintSearch || p.name.toLowerCase().includes(paintSearch.toLowerCase());
+        return matchType && matchSearch;
       });
-      const usedRoles = ROLE_ORDER.filter(r => grouped[r]?.length > 0);
+      const inWishlist = (name) => pw.some(p=>p.name===name);
+
+      // HEADER
+      const grandTotal = totalPrice + paintTotal;
 
       return (
-        <div style={pageStyle} className={`bg-wishlist`}>
+        <div style={pageStyle} className="bg-wishlist">
           {/* Header */}
-          <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✦</div>
+          <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"14px 16px 12px", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"60px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✦</div>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
               <div>
-                <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ACQUISITIONS FUTURES</div>
-                <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>WISHLIST</div>
-                <div style={{ display:"flex", gap:"12px", marginTop:"4px" }}>
-                  {(wishlist||[]).length>0 && <span style={{ color:"#252012", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif" }}>{(wishlist||[]).length} UNITÉS</span>}
-                  {totalPrice>0 && <span style={{ color:"#46402a", fontSize:"9px", letterSpacing:"1px" }}>~{totalPrice}€</span>}
+                <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"3px" }}>ACQUISITIONS FUTURES</div>
+                <div style={{ color:"#e8dfc0", fontSize:"17px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>WISHLIST</div>
+                <div style={{ display:"flex", gap:"10px", marginTop:"3px" }}>
+                  {grandTotal>0 && <span style={{ color:"#6a9a3a", fontSize:"10px", fontWeight:"700" }}>~{grandTotal.toFixed(0)}€ total</span>}
+                  {totalPts>0  && <span style={{ color:"#3a3020", fontSize:"9px" }}>{totalPts} pts</span>}
                 </div>
               </div>
-              <IconBtn onClick={() => setShowModal(true)}><Ic.Plus /></IconBtn>
+              {tab==="units" && <IconBtn onClick={() => setShowModal(true)}><Ic.Plus /></IconBtn>}
             </div>
           </div>
 
-          {/* Faction tabs */}
+          {/* Tabs : Figurines / Peintures */}
           <div style={{ display:"flex", background:"#020202", borderBottom:"1px solid #0f0f0f" }}>
-            {Object.entries(FACTIONS).map(([k,v]) => {
-              const cnt = (wishlist||[]).filter(i=>i.faction===k).length;
-              return (
-                <button key={k} onClick={() => setFaction(k)}
-                  style={{ flex:1, background:"none", border:"none", borderBottom:faction===k?`2px solid ${v.accent}`:"2px solid transparent", color:faction===k?v.accent:"#181410", padding:"10px 0 8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", textShadow:faction===k?`0 0 10px ${v.accent}66`:"none" }}>
-                  <div style={{ fontSize:"16px", marginBottom:"3px" }}>{v.icon}</div>
-                  {v.short}
-                  {cnt>0 && <div style={{ fontSize:"8px", color:faction===k?v.accent:"#252015", marginTop:"2px" }}>{cnt}</div>}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* List */}
-          <div style={{ flex:1, overflowY:"auto", padding:"12px 16px" }}>
-            {items.length===0 && <EmptyState icon="✦" title="Wishlist vide" sub={`Aucune unité ${f.label} souhaitée`} />}
-            {usedRoles.map(role => (
-              <div key={role} style={{ marginBottom:"16px" }}>
-                <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
-                  <div style={{ width:"2px", height:"12px", background:f.accent, opacity:0.6 }} />
-                  <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", flex:1 }}>{role.toUpperCase()}</span>
-                  <span style={{ color:"#3a3020", fontSize:"9px" }}>{grouped[role].length}</span>
-                </div>
-                {grouped[role].map(item => {
-                  const ws = WISH_STATUS[item.status||"wanted"];
-                  const unitPts = ptsMap[`${item.faction}:${item.unitId}`] || POINTS_DB[item.unit.name] || null;
-                  return (
-                    <div key={item.id} className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#121008 100%)", border:"1px solid #222018", borderLeft:`3px solid ${ws.color}`, marginBottom:"5px", display:"flex", alignItems:"stretch" }}>
-                      {/* Status cycle — acquisition status (souhaité/commandé/reçu) */}
-                      <button onClick={() => cycleStatus(item.id)} title={ws.label}
-                        style={{ width:"32px", flexShrink:0, background:"none", border:"none", borderRight:`1px solid ${ws.color}33`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"2px", cursor:"pointer", touchAction:"manipulation" }}>
-                        <span style={{ fontSize:"13px", color:ws.color }}>{ws.icon}</span>
-                        <span style={{ fontSize:"6px", color:ws.color, fontFamily:"'Cinzel',serif", letterSpacing:"0.5px" }}>{ws.label.slice(0,3).toUpperCase()}</span>
-                      </button>
-                      {/* Content */}
-                      <div style={{ flex:1, padding:"10px 10px", display:"flex", alignItems:"center", gap:"8px" }}>
-                        <div style={{ flex:1 }}>
-                          <div style={{ color:"#e8dfc0", fontSize:"13px", fontFamily:"'Cinzel',serif", lineHeight:1.3 }}>
-                            {item.qty>1 && <span style={{ color:f.accent, marginRight:"5px", fontSize:"11px" }}>×{item.qty}</span>}
-                            {item.unit.name}
-                          </div>
-                          <div style={{ display:"flex", gap:"6px", marginTop:"5px", alignItems:"center", flexWrap:"wrap" }}>
-                            <WahapediaBtn unitName={item.unit.name} faction={item.faction} accent={f.accent} />
-                          </div>
-                        </div>
-                        {/* Price + pts */}
-                        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"5px" }}>
-                          {unitPts && <span style={{ color:`${f.accent}99`, fontSize:"10px", fontFamily:"monospace" }}>{unitPts*item.qty} pts</span>}
-                          <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
-                            {(() => {
-                              const shopPrice = SHOP_PRICES[item.unit?.name];
-                              const displayPrice = item.price || shopPrice;
-                              const isAuto = !item.price && !!shopPrice;
-                              return (
-                                <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
-                                  <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
-                                    placeholder={shopPrice ? shopPrice.toFixed(0) : "prix"}
-                                    style={{ width:"58px", background: isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#5a8a3a":"#2a2215"}`, color: isAuto?"#8aba5a":"#8a7050", padding:"5px 6px", fontSize:"13px", fontFamily:"monospace", outline:"none", textAlign:"center", fontWeight:"700" }} />
-                                  <span style={{ color: isAuto?"#5a8a3a":"#3a3020", fontSize:"12px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px",marginLeft:"2px",opacity:0.7}}> auto</span>}</span>
-                                </div>
-                              );
-                            })()}
-                          </div>
-                          <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"none", color:"#181410", cursor:"pointer", padding:"2px" }}><Ic.Trash /></button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            {[{key:"units",label:"FIGURINES",icon:"⚔"},{key:"paints",label:"PEINTURES",icon:"🎨"}].map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)}
+                style={{ flex:1, background:"none", border:"none", borderBottom:tab===t.key?"2px solid #b8922a":"2px solid transparent",
+                  color:tab===t.key?"#b8922a":"#181410", padding:"10px 0", cursor:"pointer",
+                  fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px",
+                  textShadow:tab===t.key?"0 0 10px #b8922a66":"none" }}>
+                <div style={{ fontSize:"14px", marginBottom:"2px" }}>{t.icon}</div>
+                {t.label}
+                {t.key==="units" && allItems.length>0 && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#252015", marginTop:"1px" }}>{allItems.length}</div>}
+                {t.key==="paints" && pw.length>0 && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#252015", marginTop:"1px" }}>{pw.length}</div>}
+              </button>
             ))}
           </div>
 
-          {showModal && <ModalAddUnit faction={faction} inventory={[]} mode="wishlist" onClose={() => setShowModal(false)}
-            onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />}
+          {/* ── TAB: FIGURINES ────────────────────────────── */}
+          {tab==="units" && (<>
+            {/* Sort bar */}
+            <div style={{ display:"flex", gap:"4px", padding:"8px 12px", background:"#030202", borderBottom:"1px solid #0f0f0f", overflowX:"auto" }}>
+              <span style={{ color:"#3a3020", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", alignSelf:"center", flexShrink:0 }}>TRIER:</span>
+              {[{k:"faction",l:"FACTION"},{k:"role",l:"RÔLE"},{k:"status",l:"STATUT"},{k:"price",l:"PRIX"}].map(s => (
+                <button key={s.k} onClick={() => setSortBy(s.k)}
+                  style={{ padding:"4px 10px", background: sortBy===s.k?"#1a1200":"#060402", border:`1px solid ${sortBy===s.k?"#b8922a55":"#1c1c1c"}`, color:sortBy===s.k?"#b8922a":"#3a3020", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
+                  {s.l}
+                </button>
+              ))}
+            </div>
+            {/* Items — toutes factions confondues */}
+            <div style={{ flex:1, overflowY:"auto", padding:"10px 14px" }}>
+              {sortedItems.length===0 && <EmptyState icon="✦" title="Wishlist vide" sub="Ajoutez des unités avec le bouton +" />}
+              {sortedItems.map((item, idx) => {
+                if (!item.unit) return null;
+                const ws = WISH_STATUS[item.status||"wanted"];
+                const shopPrice = item.price || SHOP_PRICES[item.unit.name] || null;
+                const isAuto = !item.price && !!SHOP_PRICES[item.unit.name];
+                const unitPts = ptsMap[`${item.faction}:${item.unitId}`] || POINTS_DB[item.unit.name] || null;
+                return (
+                  <div key={item.id} className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#121008 100%)", border:"1px solid #222018", borderLeft:`3px solid ${ws.color}`, marginBottom:"5px", display:"flex", alignItems:"stretch", animation:`slideLeft 0.2s ${idx*20}ms ease both` }}>
+                    {/* Status */}
+                    <button onClick={() => cycleStatus(item.id)} title={ws.label}
+                      style={{ width:"30px", flexShrink:0, background:"none", border:"none", borderRight:`1px solid ${ws.color}22`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                      <span style={{ fontSize:"12px", color:ws.color }}>{ws.icon}</span>
+                      <span style={{ fontSize:"6px", color:ws.color, fontFamily:"'Cinzel',serif" }}>{ws.label.slice(0,3).toUpperCase()}</span>
+                    </button>
+                    {/* Content */}
+                    <div style={{ flex:1, padding:"8px 10px", display:"flex", alignItems:"center", gap:"8px" }}>
+                      <div style={{ flex:1 }}>
+                        <div style={{ display:"flex", alignItems:"center", gap:"6px", marginBottom:"3px" }}>
+                          <span style={{ fontSize:"12px", color:item.fDef.accent }}>{item.fDef.icon}</span>
+                          <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", lineHeight:1.2 }}>
+                            {item.qty>1 && <span style={{ color:item.fDef.accent, marginRight:"4px", fontSize:"10px" }}>×{item.qty}</span>}
+                            {item.unit.name}
+                          </div>
+                        </div>
+                        <div style={{ display:"flex", gap:"5px", alignItems:"center", flexWrap:"wrap" }}>
+                          <span style={{ color:"#2a2215", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>{item.unit.role}</span>
+                          <WahapediaBtn unitName={item.unit.name} faction={item.faction} accent={item.fDef.accent} />
+                        </div>
+                      </div>
+                      {/* Prix + pts */}
+                      <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"4px" }}>
+                        {unitPts && <span style={{ color:"#4a4028", fontSize:"9px", fontFamily:"monospace" }}>{unitPts*item.qty}pts</span>}
+                        <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
+                          <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
+                            placeholder={shopPrice ? shopPrice.toFixed(0) : "€"}
+                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#5a8a3a":"#2a2215"}`, color:isAuto?"#8aba5a":"#8a7050", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
+                          <span style={{ color:isAuto?"#5a8a3a":"#3a3020", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"7px",opacity:0.7}}> a</span>}</span>
+                        </div>
+                        <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"none", color:"#181410", cursor:"pointer", padding:"2px" }}><Ic.Trash /></button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {showModal && <ModalAddUnit faction="SM" inventory={[]} mode="wishlist" onClose={() => setShowModal(false)}
+              onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />}
+          </>)}
+
+          {/* ── TAB: PEINTURES ────────────────────────────── */}
+          {tab==="paints" && (<>
+            {/* Filtres */}
+            <div style={{ padding:"8px 12px", background:"#030202", borderBottom:"1px solid #0f0f0f" }}>
+              <input value={paintSearch} onChange={e=>setPaintSearch(e.target.value)}
+                placeholder="Rechercher une peinture..."
+                style={{ width:"100%", background:"#060402", border:"1px solid #1c1c1c", color:"#e8dfc0", padding:"8px 10px", fontSize:"12px", outline:"none", marginBottom:"8px", fontFamily:"'Crimson Pro',serif" }} />
+              <div style={{ display:"flex", gap:"4px", overflowX:"auto" }}>
+                {["all",...Object.keys(CITADEL_TYPES)].map(t => (
+                  <button key={t} onClick={() => setPaintFilter(t)}
+                    style={{ padding:"3px 10px", background:paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a")+"33":"#060402",
+                      border:`1px solid ${paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a")+"88":"#1c1c1c"}`,
+                      color:paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a"):"#3a3020",
+                      fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
+                    {t==="all"?"TOUT":t.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* Liste peintures */}
+            <div style={{ flex:1, overflowY:"auto", padding:"10px 14px" }}>
+              {pw.length>0 && (
+                <div style={{ marginBottom:"12px", padding:"8px 12px", background:"#0a0c08", border:"1px solid #2a3a1a", borderLeft:"3px solid #5a8a3a" }}>
+                  <div style={{ color:"#5a8a3a", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"6px" }}>MA LISTE ({pw.length} peintures)</div>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:"5px" }}>
+                    {pw.map(p => (
+                      <div key={p.id} style={{ display:"flex", alignItems:"center", gap:"4px", background:"#060804", border:`1px solid ${CITADEL_TYPES[p.type]?.color||"#555"}44`, padding:"3px 8px" }}>
+                        <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:CITADEL_TYPES[p.type]?.color||"#888", flexShrink:0 }} />
+                        <span style={{ color:"#c8b890", fontSize:"10px" }}>{p.name}</span>
+                        <span style={{ color:"#4a6a2a", fontSize:"9px", fontWeight:"700" }}>{(CITADEL_TYPES[p.type]?.price||5.60).toFixed(2)}€</span>
+                        <button onClick={() => onDeletePaint(p.id)} style={{ background:"none", border:"none", color:"#251810", cursor:"pointer", padding:"0 2px", fontSize:"10px" }}>✕</button>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ color:"#4a6a2a", fontSize:"10px", marginTop:"8px", fontWeight:"700" }}>Total : {paintTotal.toFixed(2)}€</div>
+                </div>
+              )}
+              {filteredPaints.map(paint => {
+                const added = inWishlist(paint.name);
+                const tc = CITADEL_TYPES[paint.type];
+                return (
+                  <div key={paint.name} style={{ display:"flex", alignItems:"center", gap:"10px", padding:"7px 10px", marginBottom:"3px", background:"#0d0b0a", border:`1px solid #1a1816`, borderLeft:`3px solid ${added?tc.color:tc.color+"33"}`, opacity: added?1:0.7, transition:"all 0.2s" }}>
+                    <div style={{ width:"10px", height:"10px", borderRadius:"50%", background:tc.color, flexShrink:0, boxShadow:added?`0 0 6px ${tc.color}`:"none" }} />
+                    <div style={{ flex:1 }}>
+                      <div style={{ color: added?"#e8dfc0":"#8a7050", fontSize:"11px", fontFamily:"'Cinzel',serif" }}>{paint.name}</div>
+                      <div style={{ color:tc.color, fontSize:"8px", opacity:0.7, letterSpacing:"1px" }}>{paint.type.toUpperCase()}</div>
+                    </div>
+                    <span style={{ color:"#5a8a3a", fontSize:"10px", fontWeight:"700", minWidth:"36px", textAlign:"right" }}>{tc.price.toFixed(2)}€</span>
+                    <button onClick={() => added ? onDeletePaint(pw.find(p=>p.name===paint.name)?.id) : onAddPaint({id:Date.now(), name:paint.name, type:paint.type, qty:1})}
+                      style={{ background: added?"#1a0a0a":"#0a1008", border:`1px solid ${added?"#7a1515":tc.color+"55"}`, color:added?"#c04040":tc.color, cursor:"pointer", padding:"4px 10px", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", flexShrink:0, touchAction:"manipulation" }}>
+                      {added?"RETIRER":"+ AJOUTER"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </>)}
         </div>
       );
     }
@@ -2475,7 +2621,7 @@
     }
 
     function App() {
-      const [appState, setAppState] = useState({ inventory:[], lists:[], ptsMap:{}, wishlist:[] });
+      const [appState, setAppState] = useState({ inventory:[], lists:[], ptsMap:{}, wishlist:[], paintWishlist:[] });
       const [loaded, setLoaded] = useState(false);
       const [confirm, confirmModal] = useConfirm();
       const [splashDone, setSplashDone] = useState(() => {
@@ -2492,7 +2638,7 @@
 
       useEffect(() => {
         loadApp().then(saved => {
-          if (saved) setAppState({ inventory:[], lists:[], ptsMap:{}, wishlist:[], ...saved });
+          if (saved) setAppState({ inventory:[], lists:[], ptsMap:{}, wishlist:[], paintWishlist:[], ...saved });
           setLoaded(true);
         });
       }, []);
@@ -2550,9 +2696,10 @@
               lists: [],
               ptsMap: {},
               wishlist: [],
+              paintWishlist: [],
               ...parsed,
-              // S'assurer que wishlist existe même si absent de l'ancienne sauvegarde
               wishlist: parsed.wishlist || [],
+              paintWishlist: parsed.paintWishlist || [],
               ptsMap: parsed.ptsMap || {},
             };
             setAppState(next);
@@ -2597,6 +2744,8 @@
       const deleteWish    = id       => confirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })));
       const setWishStatus = (id,status) => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,status}:i) }));
       const setWishPrice  = (id,price)  => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,price}:i) }));
+      const addPaintWish    = entry => updateApp(s => ({ ...s, paintWishlist:[...(s.paintWishlist||[]),entry] }));
+      const deletePaintWish = id    => updateApp(s => ({ ...s, paintWishlist:(s.paintWishlist||[]).filter(p=>p.id!==id) }));
 
       const addEntry = (listId,entry) => updateApp(s => {
         let inv=s.inventory, invId=entry.inventoryId;
@@ -2671,7 +2820,7 @@
             {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} onRename={name => renameList(activeListId,name)} onSetMaxPts={pts => setListMaxPts(activeListId,pts)} />}
             {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onReorder={reorderInventory} />}
             {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} />}
-            {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} />}
+            {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 

@@ -92,6 +92,8 @@
     // CONFIG
     // ══════════════════════════════════════════════════════════
 
+    const APP_VERSION = "1.0";  // ← incrémenter à chaque mise à jour GitHub
+
     const FACTIONS = {
       "SM": {
         label: "Space Marines", short: "SM", icon: "✠",
@@ -2144,7 +2146,10 @@
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
             <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ADMINISTRATION</div>
-            <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>CODEX</div>
+            <div style={{ display:"flex", alignItems:"baseline", gap:"12px" }}>
+              <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>CODEX</div>
+              <div style={{ color:"#b8922a", fontSize:"11px", fontFamily:"monospace", opacity:0.7, background:"#0f0c06", border:"1px solid #b8922a33", padding:"2px 8px", letterSpacing:"1px" }}>v{APP_VERSION}</div>
+            </div>
           </div>
 
           <div style={{ flex:1, overflowY:"auto", padding:"16px" }}>
@@ -2530,15 +2535,25 @@
           try {
             const parsed = JSON.parse(e.target.result);
             if (!parsed.inventory || !parsed.lists) { alert("Fichier invalide."); return; }
-            const confirmed = window.confirm(`Importer ${parsed.inventory.length} figurines et ${parsed.lists.length} listes ?
-
-Cela remplacera les données actuelles.`);
+            const confirmed = window.confirm(`Importer ${parsed.inventory.length} figurines et ${parsed.lists.length} listes ?\n\nCela remplacera les données actuelles.`);
             if (!confirmed) return;
-            const next = { inventory:[], lists:[], ptsMap:{}, ...parsed };
+            // Garantir tous les champs — compatibilité avec anciennes sauvegardes
+            const next = {
+              inventory: [],
+              lists: [],
+              ptsMap: {},
+              wishlist: [],
+              ...parsed,
+              // S'assurer que wishlist existe même si absent de l'ancienne sauvegarde
+              wishlist: parsed.wishlist || [],
+              ptsMap: parsed.ptsMap || {},
+            };
             setAppState(next);
             saveApp(next);
+            setActiveView("lists");
+            setActiveListId(null);
             setSplashDone(true);
-            alert("Import réussi ✓");
+            alert("Import réussi ✓ — " + next.inventory.length + " figurines, " + next.lists.length + " listes");
           } catch { alert("Erreur de lecture du fichier."); }
         };
         reader.readAsText(file);
@@ -2657,6 +2672,7 @@ Cela remplacera les données actuelles.`);
             <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:"430px", zIndex:50, background:"#030202", borderTop:"1px solid #0f0f0f", display:"flex" }}>
               <div style={{ position:"absolute", top:0, left:"15%", right:"15%", height:"1px", background:"linear-gradient(90deg,transparent,#b8922a44,transparent)" }} />
               <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", color:"#131313", fontSize:"14px" }}>✠</div>
+              <div style={{ position:"absolute", top:"3px", right:"6px", color:"#1a1610", fontSize:"7px", fontFamily:"monospace", letterSpacing:"0.5px", pointerEvents:"none" }}>v{APP_VERSION}</div>
               {[
                 { key:"lists",     symbol:"✠", label:"CROISADE" },
                 { key:"inventory", symbol:"⚜", label:"RELIQUES" },

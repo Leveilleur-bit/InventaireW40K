@@ -92,7 +92,20 @@
     // CONFIG
     // ══════════════════════════════════════════════════════════
 
-    const APP_VERSION = "1.0";  // ← incrémenter à chaque mise à jour GitHub
+    // Version automatique = date de dernière modification du fichier HTML
+    const APP_VERSION = (() => {
+      try {
+        // Utilise la date du script lui-même via document.lastModified
+        const d = new Date(document.lastModified);
+        if (isNaN(d.getTime())) return "?";
+        const day   = String(d.getDate()).padStart(2,"0");
+        const month = String(d.getMonth()+1).padStart(2,"0");
+        const year  = String(d.getFullYear()).slice(2);
+        const h     = String(d.getHours()).padStart(2,"0");
+        const m     = String(d.getMinutes()).padStart(2,"0");
+        return `${day}/${month}/${year} ${h}:${m}`;
+      } catch { return "?"; }
+    })();
 
     const FACTIONS = {
       "SM": {
@@ -2149,7 +2162,7 @@
             <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ADMINISTRATION</div>
             <div style={{ display:"flex", alignItems:"baseline", gap:"12px" }}>
               <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>CODEX</div>
-              <div style={{ color:"#b8922a", fontSize:"11px", fontFamily:"monospace", opacity:0.7, background:"#0f0c06", border:"1px solid #b8922a33", padding:"2px 8px", letterSpacing:"1px" }}>v{APP_VERSION}</div>
+              <div style={{ color:"#b8922a", fontSize:"10px", fontFamily:"monospace", opacity:0.7, background:"#0f0c06", border:"1px solid #b8922a33", padding:"2px 8px", letterSpacing:"0.5px" }}>{APP_VERSION}</div>
             </div>
           </div>
 
@@ -2687,28 +2700,31 @@
         reader.onload = e => {
           try {
             const parsed = JSON.parse(e.target.result);
-            if (!parsed.inventory || !parsed.lists) { alert("Fichier invalide."); return; }
-            const confirmed = window.confirm(`Importer ${parsed.inventory.length} figurines et ${parsed.lists.length} listes ?\n\nCela remplacera les données actuelles.`);
-            if (!confirmed) return;
-            // Garantir tous les champs — compatibilité avec anciennes sauvegardes
-            const next = {
-              inventory: [],
-              lists: [],
-              ptsMap: {},
-              wishlist: [],
-              paintWishlist: [],
-              ...parsed,
-              wishlist: parsed.wishlist || [],
-              paintWishlist: parsed.paintWishlist || [],
-              ptsMap: parsed.ptsMap || {},
-            };
-            setAppState(next);
-            saveApp(next);
-            setActiveView("lists");
-            setActiveListId(null);
-            setSplashDone(true);
-            alert("Import réussi ✓ — " + next.inventory.length + " figurines, " + next.lists.length + " listes");
-          } catch { alert("Erreur de lecture du fichier."); }
+            if (!parsed.inventory || !parsed.lists) { alert("Fichier invalide — inventory ou lists manquants."); return; }
+            // Utiliser confirm React au lieu de window.confirm (bloqué en PWA)
+            confirm(
+              `Importer ${parsed.inventory.length} figurines et ${parsed.lists.length} listes ? Cela remplacera les données actuelles.`,
+              () => {
+                const next = {
+                  inventory: [],
+                  lists: [],
+                  ptsMap: {},
+                  wishlist: [],
+                  paintWishlist: [],
+                  ...parsed,
+                  wishlist: parsed.wishlist || [],
+                  paintWishlist: parsed.paintWishlist || [],
+                  ptsMap: parsed.ptsMap || {},
+                };
+                setAppState(next);
+                saveApp(next);
+                setActiveView("lists");
+                setActiveListId(null);
+                setSplashDone(true);
+              },
+              "#b8922a"
+            );
+          } catch(err) { alert("Erreur de lecture : " + err.message); }
         };
         reader.readAsText(file);
       };
@@ -2828,7 +2844,7 @@
             <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:"430px", zIndex:50, background:"#030202", borderTop:"1px solid #0f0f0f", display:"flex" }}>
               <div style={{ position:"absolute", top:0, left:"15%", right:"15%", height:"1px", background:"linear-gradient(90deg,transparent,#b8922a44,transparent)" }} />
               <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", color:"#131313", fontSize:"14px" }}>✠</div>
-              <div style={{ position:"absolute", top:"3px", right:"6px", color:"#1a1610", fontSize:"7px", fontFamily:"monospace", letterSpacing:"0.5px", pointerEvents:"none" }}>v{APP_VERSION}</div>
+              <div style={{ position:"absolute", top:"3px", right:"6px", color:"#1a1610", fontSize:"7px", fontFamily:"monospace", letterSpacing:"0.5px", pointerEvents:"none" }}>{APP_VERSION}</div>
               {[
                 { key:"lists",     symbol:"✠", label:"CROISADE" },
                 { key:"inventory", symbol:"⚜", label:"RELIQUES" },

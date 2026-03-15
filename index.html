@@ -129,6 +129,187 @@
     };
 
 
+
+    // ══════════════════════════════════════════════════════════
+    // PRIX BOUTIQUE — myhobby.place/fr (remise ~20% sur PPC GW)
+    // ══════════════════════════════════════════════════════════
+    const SHOP_PRICES = {
+      // ── SPACE MARINES ──────────────────────────────────────
+      "Captain": 27.20,
+      "Captain in Gravis Armour": 33.60,
+      "Captain in Phobos Armour": 27.20,
+      "Captain in Terminator Armour": 33.60,
+      "Primaris Lieutenant": 27.20,
+      "Lieutenant": 22.40,
+      "Lieutenant in Phobos Armour": 27.20,
+      "Librarian": 27.20,
+      "Librarian in Phobos Armour": 27.20,
+      "Chaplain": 27.20,
+      "Chaplain on Bike": 29.60,
+      "Techmarine": 22.40,
+      "Apothecary": 27.20,
+      "Apothecary Biologis": 33.60,
+      "Company Ancient": 27.20,
+      "Company Heroes": 40.00,
+      "Roboute Guilliman": 79.20,
+      "Marneus Calgar": 44.00,
+      "Tigurius": 29.60,
+      "Sicarius": 29.60,
+      "Lysander": 29.60,
+      "Darnath Lysander": 29.60,
+      "Pedro Kantor": 29.60,
+      "Vulkan He'stan": 29.60,
+      "Kayvaan Shrike": 29.60,
+      "Iron Father Feirros": 33.60,
+      "Adrax Agatone": 29.60,
+      "Kor'sarro Khan": 29.60,
+      "Lion El'Jonson": 56.00,
+      "Intercessors": 41.20,
+      "Assault Intercessors": 40.00,
+      "Heavy Intercessors": 44.00,
+      "Tactical Squad": 40.00,
+      "Scouts": 34.00,
+      "Bladeguard Veterans": 44.00,
+      "Sternguard Veterans": 44.00,
+      "Vanguard Veterans": 40.00,
+      "Assault Squad": 40.00,
+      "Terminators": 49.60,
+      "Assault Terminators": 49.60,
+      "Deathwing Knights": 49.60,
+      "Reivers": 34.00,
+      "Incursors": 34.00,
+      "Infiltrators": 34.00,
+      "Eliminators": 34.00,
+      "Suppressors": 34.00,
+      "Inceptors": 40.00,
+      "Aggressors": 34.00,
+      "Eradicators": 40.00,
+      "Hellblasters": 44.00,
+      "Outriders": 40.00,
+      "Bladeguard Ancient": 27.20,
+      "Judiciar": 27.20,
+      "Company Champion": 22.40,
+      "Dreadnought": 38.00,
+      "Redemptor Dreadnought": 44.00,
+      "Brutalis Dreadnought": 44.00,
+      "Ballistus Dreadnought": 44.00,
+      "Venerable Dreadnought": 38.00,
+      "Ironclad Dreadnought": 38.00,
+      "Predator Annihilator": 52.00,
+      "Predator Destructor": 52.00,
+      "Whirlwind": 52.00,
+      "Vindicator": 52.00,
+      "Gladiator Lancer": 52.00,
+      "Gladiator Reaper": 52.00,
+      "Gladiator Valiant": 52.00,
+      "Repulsor Executioner": 76.00,
+      "Repulsor": 76.00,
+      "Impulsor": 44.00,
+      "Stormhawk Interceptor": 38.00,
+      "Stormraven Gunship": 68.00,
+      "Stormtalon Gunship": 38.00,
+      "Land Raider": 72.00,
+      "Land Raider Crusader": 72.00,
+      "Land Raider Redeemer": 72.00,
+      "Rhino": 38.00,
+      "Razorback": 44.00,
+      "Drop Pod": 30.40,
+      "Land Speeder": 30.40,
+      "Land Speeder Storm": 30.40,
+      "Bike Squad": 34.00,
+      "Attack Bike Squad": 22.40,
+      "Ravenwing Black Knights": 40.00,
+      "High Marshal Helbrecht": 33.60,
+      "Grimaldus": 29.60,
+      "The Emperor's Champion": 22.40,
+      "Crusader Squad": 40.00,
+      "Ragnar Blackmane": 33.60,
+      "Logan Grimnar": 44.00,
+      "Njal Stormcaller": 29.60,
+      "Bjorn the Fell-Handed": 44.00,
+      "Wulfen": 38.00,
+      "Azrael": 33.60,
+      "Ezekiel": 29.60,
+      "Asmodai": 22.40,
+      "Belial": 29.60,
+      "Sammael": 44.00,
+      "Inner Circle Companions": 44.00,
+      "Mephiston": 33.60,
+      "Commander Dante": 44.00,
+      "Astorath": 29.60,
+      "Lemartes": 22.40,
+      "Sanguinary Guard": 44.00,
+      "Death Company Marines": 40.00,
+      "Death Company Dreadnought": 44.00,
+      "Storm Speeder Hailstrike": 44.00,
+      "Storm Speeder Hammerstrike": 44.00,
+      "Storm Speeder Thunderstrike": 44.00,
+      "Astraeus Super-heavy Tank": 136.00,
+
+      // ── IMPERIAL KNIGHTS ───────────────────────────────────
+      "Armiger Warglaive": 64.00,   // Knight Armigers (2 dans la boîte)
+      "Armiger Helverin": 64.00,    // même kit
+      "Knight Paladin": 120.00,     // Knight Questoris
+      "Knight Errant": 120.00,
+      "Knight Gallant": 120.00,
+      "Knight Crusader": 120.00,
+      "Knight Warden": 120.00,
+      "Knight Preceptor": 120.00,
+      "Knight Castellan": 120.00,   // Knight Dominus
+      "Knight Valiant": 120.00,
+      "Canis Rex": 120.00,
+      "Cerastus Knight Lancer": 136.00,
+      "Cerastus Knight Castigator": 136.00,
+      "Cerastus Knight Acheron": 136.00,
+      "Cerastus Knight Atrapos": 136.00,
+
+      // ── TYRANIDES ─────────────────────────────────────────
+      "Hive Tyrant": 44.00,
+      "The Swarmlord": 44.00,
+      "Neurotyrant": 33.60,
+      "Neurothropes": 33.60,
+      "Broodlord": 29.60,
+      "Deathleaper": 22.40,
+      "Old One Eye": 44.00,
+      "Norn Assimilator": 72.00,
+      "Norn Emissary": 72.00,
+      "Genestealers": 34.00,
+      "Termagants": 34.00,
+      "Hormagaunts": 34.00,
+      "Von Ryan's Leapers": 34.00,
+      "Tyranid Warriors": 44.00,
+      "Tyranid Warriors (Ranged)": 44.00,
+      "Winged Tyranid Warriors": 44.00,
+      "Tyrant Guard": 40.00,
+      "Hive Guard": 40.00,
+      "Zoanthropes": 34.00,
+      "Venomthropes": 34.00,
+      "Lictors": 22.40,
+      "Raveners": 34.00,
+      "Gargoyles": 34.00,
+      "Screamer-Killer": 40.00,
+      "Carnifex": 40.00,
+      "Harpy": 52.00,
+      "Hive Crone": 52.00,
+      "Mawloc": 44.00,
+      "Trygon": 44.00,
+      "Trygon Prime": 44.00,
+      "Tervigon": 72.00,
+      "Exocrine": 52.00,
+      "Tyrannofex": 52.00,
+      "Toxicrene": 52.00,
+      "Haruspex": 52.00,
+      "Maleceptor": 52.00,
+      "Biovores": 34.00,
+      "Pyrovores": 34.00,
+      "Ripper Swarms": 22.40,
+      "Mucolid Spores": 22.40,
+      "Sporocyst": 40.00,
+      "Psychophage": 40.00,
+      "Dimachaeron": 72.00,
+      "Hierophant Bio-Titan": 320.00,
+    };
+
     // ══════════════════════════════════════════════════════════
     // POINTS DATABASE — MFM v2.8 mars 2026 (source: GW Munitorum Field Manual)
     // Modifiable manuellement depuis le badge dans l'app
@@ -778,7 +959,7 @@
     const btnSm     = { background:"transparent", border:"1px solid #1c1c1c", color:"#48402e", padding:"5px 12px", cursor:"pointer", fontSize:"11px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" };
     const qtyBtn    = { background:"#030303", border:"1px solid #1c1c1c", color:"#b8922a", width:"36px", height:"36px", cursor:"pointer", fontSize:"18px", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"serif" };
     const iconMiniBtn = { background:"none", border:"1px solid #1c1c1c", cursor:"pointer", padding:"8px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation", minWidth:"32px", minHeight:"32px" };
-    const pageStyle = { background:"#020202", minHeight:"100%", display:"flex", flexDirection:"column", fontFamily:"'Crimson Pro',Georgia,serif" };
+    const pageStyle = { minHeight:"100%", display:"flex", flexDirection:"column", fontFamily:"'Crimson Pro',Georgia,serif" };
     const pageClass = (view) => `bg-${view}`;
 
     // ══════════════════════════════════════════════════════════
@@ -837,7 +1018,7 @@
       <button onClick={onClick} style={{ width:"100%", padding:"14px", background:"linear-gradient(180deg,#131313 0%,#0d0d0d 100%)", border:`1px solid ${color}`, borderTop:`2px solid ${color}`, color, fontFamily:"'Cinzel',serif", fontSize:"13px", letterSpacing:"3px", cursor:"pointer", textTransform:"uppercase", textShadow:`0 0 10px ${color}66` }}>{children}</button>
     );
     const IconBtn = ({ children, onClick }) => (
-      <button onClick={onClick} style={{ background:"#030303", border:"1px solid #151515", width:"36px", height:"36px", cursor:"pointer", color:"#48402e", display:"flex", alignItems:"center", justifyContent:"center" }}>{children}</button>
+      <button onClick={onClick} style={{ background:"#0f0c08", border:"1px solid #2a2215", width:"36px", height:"36px", cursor:"pointer", color:"#b8922a", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>{children}</button>
     );
     const EmptyState = ({ icon, title, sub }) => (
       <div style={{ textAlign:"center", padding:"60px 20px" }}>
@@ -2043,7 +2224,10 @@
         .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) }))
         .filter(i => i.unit);
 
-      const totalPrice = (wishlist||[]).reduce((s,i) => s+(i.price||0)*i.qty, 0);
+      const totalPrice = (wishlist||[]).reduce((s,i) => {
+        const p = i.price || SHOP_PRICES[i.unit?.name] || 0;
+        return s + p * i.qty;
+      }, 0);
       const totalPts   = (wishlist||[]).reduce((s,i) => {
         const p = ptsMap[`${i.faction}:${i.unitId}`] || POINTS_DB[i.unit?.name] || 0;
         return s + p * i.qty;
@@ -2114,10 +2298,11 @@
                   const unitPts = ptsMap[`${item.faction}:${item.unitId}`] || POINTS_DB[item.unit.name] || null;
                   return (
                     <div key={item.id} className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#121008 100%)", border:"1px solid #222018", borderLeft:`3px solid ${ws.color}`, marginBottom:"5px", display:"flex", alignItems:"stretch" }}>
-                      {/* Status cycle */}
-                      <button onClick={() => cycleStatus(item.id)}
-                        style={{ width:"36px", flexShrink:0, background:"none", border:"none", borderRight:"1px solid #1a1a16", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"3px", cursor:"pointer", touchAction:"manipulation" }}>
-                        <span style={{ fontSize:"14px", color:ws.color }}>{ws.icon}</span>
+                      {/* Status cycle — acquisition status (souhaité/commandé/reçu) */}
+                      <button onClick={() => cycleStatus(item.id)} title={ws.label}
+                        style={{ width:"32px", flexShrink:0, background:"none", border:"none", borderRight:`1px solid ${ws.color}33`, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                        <span style={{ fontSize:"13px", color:ws.color }}>{ws.icon}</span>
+                        <span style={{ fontSize:"6px", color:ws.color, fontFamily:"'Cinzel',serif", letterSpacing:"0.5px" }}>{ws.label.slice(0,3).toUpperCase()}</span>
                       </button>
                       {/* Content */}
                       <div style={{ flex:1, padding:"10px 10px", display:"flex", alignItems:"center", gap:"8px" }}>
@@ -2127,18 +2312,26 @@
                             {item.unit.name}
                           </div>
                           <div style={{ display:"flex", gap:"6px", marginTop:"5px", alignItems:"center", flexWrap:"wrap" }}>
-                            <span style={{ fontSize:"9px", padding:"2px 7px", color:ws.color, border:`1px solid ${ws.color}33` }}>{ws.label}</span>
                             <WahapediaBtn unitName={item.unit.name} faction={item.faction} accent={f.accent} />
                           </div>
                         </div>
                         {/* Price + pts */}
                         <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"5px" }}>
                           {unitPts && <span style={{ color:`${f.accent}99`, fontSize:"10px", fontFamily:"monospace" }}>{unitPts*item.qty} pts</span>}
-                          <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
-                            <span style={{ color:"#3a3020", fontSize:"11px" }}>€</span>
-                            <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
-                              placeholder="0"
-                              style={{ width:"48px", background:"#060402", border:"1px solid #1c1c1c", color:"#6a5a4a", padding:"3px 5px", fontSize:"11px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
+                          <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
+                            {(() => {
+                              const shopPrice = SHOP_PRICES[item.unit?.name];
+                              const displayPrice = item.price || shopPrice;
+                              const isAuto = !item.price && !!shopPrice;
+                              return (
+                                <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
+                                  <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
+                                    placeholder={shopPrice ? shopPrice.toFixed(0) : "€"}
+                                    style={{ width:"52px", background: isAuto?"#0a0c06":"#060402", border:`1px solid ${isAuto?"#4a6a2a":"#1c1c1c"}`, color: isAuto?"#6a9a3a":"#6a5a4a", padding:"3px 5px", fontSize:"11px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
+                                  <span style={{ color: isAuto?"#4a6a2a":"#3a3020", fontSize:"10px" }}>€{isAuto&&<span style={{fontSize:"7px"}}> auto</span>}</span>
+                                </div>
+                              );
+                            })()}
                           </div>
                           <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"none", color:"#181410", cursor:"pointer", padding:"2px" }}><Ic.Trash /></button>
                         </div>

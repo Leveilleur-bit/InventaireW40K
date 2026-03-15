@@ -2115,7 +2115,7 @@
     // CONFIRM MODAL
     // ══════════════════════════════════════════════════════════
 
-    function ConfirmModal({ message, onConfirm, onCancel, accent="#b8922a" }) {
+    function ConfirmModal({ message, onConfirm, onCancel, accent="#b8922a", confirmLabel="CONFIRMER", danger=false }) {
       return (
         <Overlay>
           <div style={{ background:"#0a0806", border:`1px solid ${accent}44`, borderTop:`2px solid ${accent}`, padding:"24px 20px", width:"100%", maxWidth:"320px", margin:"0 16px" }}>
@@ -2123,12 +2123,12 @@
             <div style={{ color:"#6a5a4a", fontSize:"12px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", textAlign:"center", marginBottom:"20px", lineHeight:1.6 }}>{message}</div>
             <div style={{ display:"flex", gap:"8px" }}>
               <button onClick={onCancel}
-                style={{ flex:1, padding:"12px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a4028", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                style={{ flex:1, padding:"14px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a4028", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
                 ANNULER
               </button>
               <button onClick={onConfirm}
-                style={{ flex:1, padding:"12px", background:"#1a0a0a", border:`1px solid #7a1515`, color:"#c04040", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
-                SUPPRIMER
+                style={{ flex:1, padding:"14px", background: danger?"#1a0a0a":`${accent}22`, border:`1px solid ${danger?"#7a1515":accent}`, color: danger?"#c04040":accent, fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                {confirmLabel}
               </button>
             </div>
           </div>
@@ -2137,11 +2137,11 @@
     }
 
     function useConfirm() {
-      const [state, setState] = useState(null); // { message, onConfirm, accent }
-      const ask = (message, onConfirm, accent) => setState({ message, onConfirm, accent });
+      const [state, setState] = useState(null);
+      const ask = (message, onConfirm, accent, confirmLabel, danger) => setState({ message, onConfirm, accent, confirmLabel, danger });
       const cancel = () => setState(null);
       const confirm = () => { state?.onConfirm(); setState(null); };
-      const modal = state ? <ConfirmModal message={state.message} onConfirm={confirm} onCancel={cancel} accent={state.accent} /> : null;
+      const modal = state ? <ConfirmModal message={state.message} onConfirm={confirm} onCancel={cancel} accent={state.accent} confirmLabel={state.confirmLabel||"CONFIRMER"} danger={state.danger||false} /> : null;
       return [ask, modal];
     }
 
@@ -2722,7 +2722,7 @@
                 setActiveListId(null);
                 setSplashDone(true);
               },
-              "#b8922a"
+              "#b8922a", "IMPORTER", false
             );
           } catch(err) { alert("Erreur de lecture : " + err.message); }
         };
@@ -2730,10 +2730,10 @@
       };
 
       const createList    = m  => updateApp(s => ({ ...s, lists:[...s.lists,{id:Date.now(),...m,entries:[]}] }));
-      const deleteList    = id => confirm("Supprimer cette liste ?", () => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) })), "#b8922a");
+      const deleteList    = id => confirm("Supprimer cette liste ?", () => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) })), "#b8922a", "SUPPRIMER", true);
       const renameList    = (id,name)    => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,name}:l) }));
       const setListMaxPts = (id,maxPts) => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,maxPts}:l) }));
-      const deleteEntry   = (listId,entryId) => confirm("Retirer cette unité de la liste ?", () => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) })));
+      const deleteEntry   = (listId,entryId) => confirm("Retirer cette unité de la liste ?", () => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) })), "#b8922a", "RETIRER", true);
       const toggleWarlord = (listId,entryId) => updateApp(s => ({
         ...s, lists: s.lists.map(l => l.id!==listId ? l : {
           ...l, entries: l.entries.map(e => ({ ...e, warlord: e.id===entryId ? !e.warlord : false }))
@@ -2742,7 +2742,7 @@
       const addInventory  = entry => updateApp(s => ({
         ...s, inventory:[...s.inventory,{id:Date.now(),...entry}]
       }));
-      const deleteInventory = id => confirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })));
+      const deleteInventory = id => confirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })), "#b8922a", "SUPPRIMER", true);
       const updatePhoto     = (id,photo) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,photo}:i) }));
       const updatePaint     = (id,status) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,paintStatus:status}:i) }));
       const updateQty       = (id,qty)    => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i) }));
@@ -2757,7 +2757,7 @@
         return { ...s, inventory: inv };
       });
       const addWish       = entry    => updateApp(s => ({ ...s, wishlist:[...(s.wishlist||[]),entry] }));
-      const deleteWish    = id       => confirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })));
+      const deleteWish    = id       => confirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })), "#b8922a", "RETIRER", true);
       const setWishStatus = (id,status) => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,status}:i) }));
       const setWishPrice  = (id,price)  => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,price}:i) }));
       const addPaintWish    = entry => updateApp(s => ({ ...s, paintWishlist:[...(s.paintWishlist||[]),entry] }));

@@ -39,14 +39,17 @@
     html, body { height: 100%; background: #020202; overflow: hidden; }
     #root { height: 100%; }
 
-    @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    @keyframes breathe { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:.8;transform:scale(1.01)} }
-    @keyframes slideUp { from{transform:translateY(6px);opacity:0} to{transform:translateY(0);opacity:1} }
-    @keyframes goldPulse { 0%,100%{text-shadow:0 0 10px #b8922a33} 50%{text-shadow:0 0 25px #b8922a77,0 0 50px #b8922a22} }
-    @keyframes splashIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes pulse      { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    @keyframes breathe    { 0%,100%{opacity:.4;transform:scale(1)} 50%{opacity:.8;transform:scale(1.01)} }
+    @keyframes slideUp    { from{transform:translateY(6px);opacity:0} to{transform:translateY(0);opacity:1} }
+    @keyframes slideLeft  { from{transform:translateX(-8px);opacity:0} to{transform:translateX(0);opacity:1} }
+    @keyframes goldPulse  { 0%,100%{text-shadow:0 0 10px #b8922a33} 50%{text-shadow:0 0 25px #b8922a77,0 0 50px #b8922a22} }
+    @keyframes splashIn   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
     @keyframes splashFade { 0%{opacity:1} 80%{opacity:1} 100%{opacity:0} }
-    @keyframes crossGrow { from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1} }
-    @keyframes statSlide { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes crossGrow  { from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1} }
+    @keyframes statSlide  { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes paintPop   { 0%{transform:scale(1)} 40%{transform:scale(1.18)} 70%{transform:scale(0.93)} 100%{transform:scale(1)} }
+    @keyframes paintGlow  { 0%{opacity:0;transform:scale(0.6)} 50%{opacity:1;transform:scale(1.3)} 100%{opacity:0;transform:scale(1.8)} }
 
     body {
       background: #020202 !important;
@@ -62,6 +65,13 @@
     button:active { opacity: 0.55; transform: scale(0.97); }
     .hcard:active  { border-color: #b8922a66 !important; }
     .card-appear   { animation: slideUp 0.25s ease both; }
+    .card-stagger  { animation: slideLeft 0.22s ease both; }
+    .paint-pop     { animation: paintPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both; }
+    .bg-lists      { background-color:#020202; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='none'/%3E%3Cpath d='M0 20h80M0 40h80M0 60h80M20 0v80M40 0v80M60 0v80' stroke='%23b8922a' stroke-width='0.3' opacity='0.07'/%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%23b8922a' opacity='0.1'/%3E%3C/svg%3E"); background-size:80px 80px; transition:background 0.5s; }
+    .bg-inventory  { background-color:#030201; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.035' numOctaves='6' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.3  0 0 0 0 0.22  0 0 0 0 0.1  0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23p)'/%3E%3C/svg%3E"); background-size:400px 400px; transition:background 0.5s; }
+    .bg-stats      { background-color:#020202; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='none'/%3E%3Cpath d='M10 30h40M30 10v40M10 10l40 40M50 10L10 50' stroke='%23b8922a' stroke-width='0.4' opacity='0.05'/%3E%3C/svg%3E"); background-size:60px 60px; transition:background 0.5s; }
+    .bg-wishlist   { background-color:#020202; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='none'/%3E%3Ccircle cx='20' cy='30' r='1' fill='%23b8922a' opacity='0.15'/%3E%3Ccircle cx='80' cy='15' r='0.8' fill='%23b8922a' opacity='0.1'/%3E%3Ccircle cx='150' cy='50' r='1.2' fill='%23b8922a' opacity='0.12'/%3E%3Ccircle cx='40' cy='120' r='0.9' fill='%23b8922a' opacity='0.08'/%3E%3Ccircle cx='170' cy='140' r='1' fill='%23b8922a' opacity='0.1'/%3E%3Ccircle cx='100' cy='180' r='0.7' fill='%23b8922a' opacity='0.12'/%3E%3Cpath d='M20 30L80 15M150 50L170 140M80 15L150 50' stroke='%23b8922a' stroke-width='0.3' opacity='0.05'/%3E%3C/svg%3E"); background-size:200px 200px; transition:background 0.5s; }
+    .bg-codex      { background-color:#020202; transition:background 0.5s; }
     .vignette-wrap::after {
       content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 999;
       background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%);
@@ -83,9 +93,289 @@
     // ══════════════════════════════════════════════════════════
 
     const FACTIONS = {
-      "SM": { label: "Space Marines",    short: "SM", accent: "#b8922a", icon: "✠", bg: "#0a0a0a" },
-      "TY": { label: "Tyranides",        short: "TY", accent: "#7a1515", icon: "☠", bg: "#0a0505" },
-      "IK": { label: "Chevaliers Imp.",  short: "IK", accent: "#b8922a", icon: "⚜", bg: "#0a0a05" },
+      "SM": {
+        label: "Space Marines", short: "SM", icon: "✠",
+        accent: "#b8922a",        // or templier
+        accent2: "#c9a84c",       // or clair
+        bg: "#0c0a06",
+        bgCard: "linear-gradient(180deg,#1a1510 0%,#120e08 100%)",
+        borderColor: "#b8922a",
+        pageGrain: "#0a0806",
+        watermark: "✠",
+        glow: "#b8922a44",
+      },
+      "TY": {
+        label: "Tyranides",    short: "TY", icon: "☠",
+        accent: "#8a1a1a",        // rouge chitin
+        accent2: "#c43030",       // rouge sang vif
+        bg: "#0a0404",
+        bgCard: "linear-gradient(180deg,#1a0c0c 0%,#110606 100%)",
+        borderColor: "#8a1a1a",
+        pageGrain: "#080304",
+        watermark: "☠",
+        glow: "#8a1a1a44",
+      },
+      "IK": {
+        label: "Chevaliers Imp.", short: "IK", icon: "⚜",
+        accent: "#7a8a3a",        // vert acier héraldique
+        accent2: "#a0b050",       // vert clair
+        bg: "#060a04",
+        bgCard: "linear-gradient(180deg,#121a08 0%,#0a1006 100%)",
+        borderColor: "#7a8a3a",
+        pageGrain: "#060804",
+        watermark: "⚜",
+        glow: "#7a8a3a44",
+      },
+    };
+
+
+    // ══════════════════════════════════════════════════════════
+    // POINTS DATABASE — MFM v2.8 mars 2026 (source: GW Munitorum Field Manual)
+    // Modifiable manuellement depuis le badge dans l'app
+    // ══════════════════════════════════════════════════════════
+    const POINTS_DB = {
+      // ── SPACE MARINES ──────────────────────────────────────
+      "Captain": 80,
+      "Captain in Gravis Armour": 90,
+      "Captain in Phobos Armour": 80,
+      "Captain in Terminator Armour": 105,
+      "Primaris Lieutenant": 65,
+      "Lieutenant": 65,
+      "Lieutenant in Phobos Armour": 65,
+      "Lieutenant in Reiver Armour": 65,
+      "Lieutenant with Combi-weapon": 70,
+      "Librarian": 75,
+      "Librarian in Phobos Armour": 75,
+      "Librarian in Terminator Armour": 90,
+      "Chaplain": 65,
+      "Chaplain in Terminator Armour": 80,
+      "Chaplain on Bike": 80,
+      "Primaris Chaplain on Bike": 80,
+      "Master of Sanctity": 80,
+      "Techmarine": 45,
+      "Primaris Techmarine": 55,
+      "Apothecary": 55,
+      "Apothecary Biologis": 60,
+      "Chief Apothecary": 65,
+      "Primaris Apothecary": 55,
+      "Company Ancient": 50,
+      "Primaris Ancient": 55,
+      "Bladeguard Ancient": 55,
+      "Ancient in Terminator Armour": 65,
+      "Ancient on Bike": 60,
+      "Company Champion": 45,
+      "Master of the Forge": 65,
+      "Master of the Chapter": 80,
+      "Company Heroes": 80,
+      "Roboute Guilliman": 380,
+      "Marneus Calgar": 175,
+      "Tigurius": 110,
+      "Uriel Ventris": 90,
+      "Severus Agemman": 75,
+      "Sicarius": 100,
+      "Tor Garadon": 120,
+      "Lysander": 130,
+      "Darnath Lysander": 130,
+      "Pedro Kantor": 130,
+      "Vulkan He'stan": 130,
+      "Kayvaan Shrike": 100,
+      "Shrike": 100,
+      "Aethon Shaan": 80,
+      "Kor'sarro Khan": 95,
+      "Iron Father Feirros": 115,
+      "Adrax Agatone": 115,
+      "Intercessors": 85,
+      "Assault Intercessors": 75,
+      "Tactical Squad": 90,
+      "Scouts": 65,
+      "Heavy Intercessors": 95,
+      "Phobos Strike Team": 70,
+      "Crusader Squad": 90,
+      "Blood Claws": 75,
+      "Grey Hunters": 75,
+      "Bladeguard Veterans": 100,
+      "Sternguard Veterans": 95,
+      "Vanguard Veterans": 90,
+      "Assault Squad": 75,
+      "Terminators": 110,
+      "Assault Terminators": 110,
+      "Wolf Guard Terminators": 115,
+      "Deathwing Knights": 175,
+      "Primaris Sword Brethren": 100,
+      "Inner Circle Companions": 130,
+      "Reivers": 75,
+      "Incursors": 75,
+      "Infiltrators": 100,
+      "Eliminators": 75,
+      "Suppressors": 75,
+      "Inceptors": 80,
+      "Aggressors": 110,
+      "Eradicators": 95,
+      "Hellblasters": 100,
+      "Outriders": 85,
+      "Centurion Assault Squad": 120,
+      "Assault Centurions": 120,
+      "Centurion Devastators": 115,
+      "Centurion Devastator Squad": 115,
+      "Devastators": 95,
+      "Devastator Squad": 95,
+      "Wulfen": 130,
+      "Swiftclaws": 65,
+      "Thunderwolf Cavalry": 110,
+      "Sanguinary Guard": 115,
+      "Death Company Marines": 75,
+      "Ravenwing Black Knights": 150,
+      "Bike Squad": 85,
+      "Attack Bike Squad": 55,
+      "Dreadnought": 85,
+      "Redemptor Dreadnought": 155,
+      "Brutalis Dreadnought": 155,
+      "Ballistus Dreadnought": 150,
+      "Ironclad Dreadnought": 115,
+      "Venerable Dreadnought": 100,
+      "Death Company Dreadnought": 120,
+      "Predator Annihilator": 130,
+      "Predator Destructor": 130,
+      "Whirlwind": 95,
+      "Vindicator": 145,
+      "Gladiator Lancer": 140,
+      "Gladiator Reaper": 155,
+      "Gladiator Valiant": 160,
+      "Black Templars Gladiator Lancer": 170,
+      "Black Templars Gladiator Reaper": 170,
+      "Black Templars Gladiator Valiant": 170,
+      "Repulsor Executioner": 200,
+      "Astraeus Super-heavy Tank": 380,
+      "Storm Speeder Hailstrike": 120,
+      "Storm Speeder Hammerstrike": 130,
+      "Storm Speeder Thunderstrike": 130,
+      "Stormhawk Interceptor": 145,
+      "Stormraven Gunship": 225,
+      "Stormtalon Gunship": 130,
+      "Land Speeder": 70,
+      "Land Speeder Tornado": 80,
+      "Land Speeder Storm": 75,
+      "Land Raider": 235,
+      "Land Raider Crusader": 235,
+      "Land Raider Redeemer": 230,
+      "Rhino": 75,
+      "Razorback": 90,
+      "Drop Pod": 65,
+      "Impulsor": 75,
+      "Repulsor": 175,
+      // Characters spéciaux
+      "Mephiston": 150,
+      "Commander Dante": 175,
+      "Astorath": 85,
+      "Lemartes": 90,
+      "Sanguinor": 140,
+      "Tycho": 85,
+      "Sanguinary Ancient": 70,
+      "High Marshal Helbrecht": 160,
+      "Grimaldus": 90,
+      "Reclusiarch": 80,
+      "Marshal": 80,
+      "Castellan": 75,
+      "The Emperor's Champion": 75,
+      "Judiciar": 65,
+      "Helbrecht's Crusaders": 85,
+      "Ragnar Blackmane": 130,
+      "Logan Grimnar": 165,
+      "Njal Stormcaller": 120,
+      "Ulrik the Slayer": 95,
+      "Bjorn the Fell-Handed": 145,
+      "Wolf Guard": 95,
+      "Lukas the Trickster": 75,
+      "Arjac Rockfist": 105,
+      "Azrael": 135,
+      "Ezekiel": 110,
+      "Asmodai": 80,
+      "Belial": 130,
+      "Sammael": 150,
+      "Lion El'Jonson": 300,
+      "Ravenwing Darkshroud": 105,
+      "Ravenwing Land Speeder Vengeance": 105,
+      // Deathwatch
+      "Watch Captain": 80,
+      "Primaris Watch Master": 90,
+      "Deathwatch Veterans": 95,
+      "Deathwatch Kill Team": 110,
+
+      // ── IMPERIAL KNIGHTS ───────────────────────────────────
+      "Armiger Warglaive": 140,
+      "Armiger Helverin": 130,
+      "Knight Paladin": 375,
+      "Knight Errant": 355,
+      "Knight Gallant": 350,
+      "Knight Crusader": 415,
+      "Knight Warden": 390,
+      "Knight Preceptor": 390,
+      "Knight Desecrator": 380,
+      "Knight Rampager": 370,
+      "Knight Castellan": 410,
+      "Knight Valiant": 400,
+      "Knight Wardog": 130,
+      "Canis Rex": 415,
+      "Cerastus Knight Lancer": 395,
+      "Cerastus Knight Castigator": 390,
+      "Cerastus Knight Acheron": 400,
+      "Cerastus Knight Atrapos": 420,
+      "Acastus Knight Porphyrion": 700,
+      "Acastus Knight Asterius": 680,
+
+      // ── TYRANIDES ─────────────────────────────────────────
+      "Hive Tyrant": 200,
+      "Winged Hive Tyrant": 215,
+      "The Swarmlord": 300,
+      "Neurotyrant": 115,
+      "Neurothropes": 80,
+      "Broodlord": 95,
+      "Deathleaper": 80,
+      "Old One Eye": 175,
+      "Parasite of Mortrex": 85,
+      "Norn Emissary": 230,
+      "Norn Assimilator": 225,
+      "Tyranid Prime": 70,
+      "Neurolictor": 75,
+      "Psychophage": 95,
+      "Genestealers": 100,
+      "Termagants": 65,
+      "Hormagaunts": 60,
+      "Neurogaunts": 40,
+      "Barbgaunts": 75,
+      "Von Ryan's Leapers": 65,
+      "Tyranid Warriors": 95,
+      "Tyranid Warriors (Ranged)": 95,
+      "Winged Tyranid Warriors": 105,
+      "Tyrant Guard": 80,
+      "Hive Guard": 95,
+      "Zoanthropes": 75,
+      "Venomthropes": 65,
+      "Lictors": 60,
+      "Raveners": 85,
+      "Gargoyles": 60,
+      "Screamer-Killer": 105,
+      "Carnifex": 75,
+      "Stone Crusher Carnifex": 110,
+      "Harpy": 130,
+      "Hive Crone": 135,
+      "Mawloc": 110,
+      "Trygon": 135,
+      "Trygon Prime": 145,
+      "Tervigon": 185,
+      "Exocrine": 150,
+      "Tyrannofex": 165,
+      "Toxicrene": 130,
+      "Haruspex": 120,
+      "Maleceptor": 135,
+      "Biovores": 75,
+      "Pyrovores": 55,
+      "Mucolid Spores": 30,
+      "Spore Mines": 30,
+      "Ripper Swarms": 40,
+      "Sporocyst": 90,
+      "Dimachaeron": 175,
+      "Hierophant Bio-Titan": 800,
     };
 
     const UNITS_DB = {
@@ -223,6 +513,107 @@
         { id:"sm152", name:"Drop Pod",                        role:"Transport", chapter:"Générique" },
         { id:"sm153", name:"Impulsor",                        role:"Transport", chapter:"Générique" },
         { id:"sm154", name:"Repulsor",                        role:"Transport", chapter:"Générique" },
+
+        // ── Génériques manquants ──────────────────────────────
+        { id:"sm200", name:"Lieutenant with Combi-weapon",     role:"QG",     chapter:"Générique" },
+        { id:"sm201", name:"Master of the Chapter",            role:"QG",     chapter:"Générique" },
+        { id:"sm202", name:"Company Heroes",                   role:"QG",     chapter:"Générique" },
+        { id:"sm203", name:"Primaris Ancient",                 role:"QG",     chapter:"Générique" },
+        { id:"sm204", name:"Ancient in Terminator Armour",     role:"QG",     chapter:"Générique" },
+        { id:"sm205", name:"Ancient on Bike",                  role:"QG",     chapter:"Générique" },
+        { id:"sm206", name:"Primaris Chaplain on Bike",        role:"QG",     chapter:"Générique" },
+        { id:"sm207", name:"Primaris Techmarine",              role:"QG",     chapter:"Générique" },
+        { id:"sm208", name:"Primaris Apothecary",              role:"QG",     chapter:"Générique" },
+        { id:"sm209", name:"Sergeant Chronus",                 role:"QG",     chapter:"Ultramarines" },
+        { id:"sm210", name:"Sergeant Telion",                  role:"Élite",  chapter:"Ultramarines" },
+        { id:"sm211", name:"Bladeguard Ancient",               role:"QG",     chapter:"Générique" },
+        { id:"sm212", name:"Primaris Lieutenant",              role:"QG",     chapter:"Générique" },
+
+        // ── Troupes manquants ─────────────────────────────────
+        { id:"sm220", name:"Heavy Intercessors",               role:"Troupes",chapter:"Générique" },
+        { id:"sm221", name:"Phobos Strike Team",               role:"Troupes",chapter:"Générique" },
+
+        // ── Élite manquants ───────────────────────────────────
+        { id:"sm230", name:"Centurion Assault Squad",          role:"Élite",  chapter:"Générique" },
+        { id:"sm231", name:"Deathwing Terminator Squad",       role:"Élite",  chapter:"Dark Angels" },
+        { id:"sm232", name:"Wolf Guard Battle Leader",         role:"QG",     chapter:"Space Wolves" },
+        { id:"sm233", name:"Wolf Guard Battle Leader on Thunderwolf", role:"QG", chapter:"Space Wolves" },
+        { id:"sm234", name:"Thunderwolf Cavalry",              role:"Élite",  chapter:"Space Wolves" },
+        { id:"sm235", name:"Blood Claws",                      role:"Troupes",chapter:"Space Wolves" },
+        { id:"sm236", name:"Grey Hunters",                     role:"Troupes",chapter:"Space Wolves" },
+        { id:"sm237", name:"Long Fangs",                       role:"Lourd",  chapter:"Space Wolves" },
+        { id:"sm238", name:"Fenrisian Wolf Pack",              role:"Rapide", chapter:"Space Wolves" },
+        { id:"sm239", name:"Lukas the Trickster",              role:"QG",     chapter:"Space Wolves" },
+        { id:"sm240", name:"Arjac Rockfist",                   role:"QG",     chapter:"Space Wolves" },
+        { id:"sm241", name:"The Primaris Crusader Squad",      role:"Troupes",chapter:"Black Templars" },
+        { id:"sm242", name:"Primaris Sword Brethren",          role:"Élite",  chapter:"Black Templars" },
+
+        // ── Rapide manquants ──────────────────────────────────
+        { id:"sm250", name:"Land Speeder Tempest",             role:"Rapide", chapter:"Générique" },
+        { id:"sm251", name:"Invader ATV",                      role:"Rapide", chapter:"Générique" },
+        { id:"sm252", name:"Inceptor Squad",                   role:"Rapide", chapter:"Générique" },
+
+        // ── Lourd manquants ───────────────────────────────────
+        { id:"sm260", name:"Devastator Squad",                 role:"Lourd",  chapter:"Générique" },
+        { id:"sm261", name:"Centurion Devastator Squad",       role:"Lourd",  chapter:"Générique" },
+        { id:"sm262", name:"Whirlwind Hyperios",               role:"Lourd",  chapter:"Générique" },
+        { id:"sm263", name:"Hunter",                           role:"Lourd",  chapter:"Générique" },
+        { id:"sm264", name:"Stalker",                          role:"Lourd",  chapter:"Générique" },
+        { id:"sm265", name:"Thunderfire Cannon",               role:"Lourd",  chapter:"Générique" },
+        { id:"sm266", name:"Executioner",                      role:"Lourd",  chapter:"Générique" },
+
+        // ── Dark Angels manquants ─────────────────────────────
+        { id:"sm270", name:"Interrogator-Chaplain",            role:"QG",     chapter:"Dark Angels" },
+        { id:"sm271", name:"Ravenwing Apothecary",             role:"QG",     chapter:"Dark Angels" },
+        { id:"sm272", name:"Ravenwing Ancient",                role:"QG",     chapter:"Dark Angels" },
+        { id:"sm273", name:"Ravenwing Talonmaster",            role:"QG",     chapter:"Dark Angels" },
+        { id:"sm274", name:"Deathwing Ancient",                role:"QG",     chapter:"Dark Angels" },
+        { id:"sm275", name:"Deathwing Champion",               role:"QG",     chapter:"Dark Angels" },
+        { id:"sm276", name:"Deathwing Command Squad",          role:"Élite",  chapter:"Dark Angels" },
+        { id:"sm277", name:"Ravenwing Command Squad",          role:"Élite",  chapter:"Dark Angels" },
+        { id:"sm278", name:"Ravenwing Bike Squadron",          role:"Rapide", chapter:"Dark Angels" },
+
+        // ── Blood Angels manquants ────────────────────────────
+        { id:"sm280", name:"The Sanguinor",                    role:"QG",     chapter:"Blood Angels" },
+        { id:"sm281", name:"Brother Corbulo",                  role:"QG",     chapter:"Blood Angels" },
+        { id:"sm282", name:"Gabriel Seth",                     role:"QG",     chapter:"Blood Angels" },
+        { id:"sm283", name:"Flesh Tearers",                    role:"Troupes",chapter:"Blood Angels" },
+        { id:"sm284", name:"Primaris Chaplain",                role:"QG",     chapter:"Blood Angels" },
+
+        // ── Ultramarines manquants ────────────────────────────
+        { id:"sm290", name:"Chief Librarian Tigurius",         role:"QG",     chapter:"Ultramarines" },
+        { id:"sm291", name:"Primaris Honour Guard",            role:"Élite",  chapter:"Ultramarines" },
+        { id:"sm292", name:"Victrix Honour Guard",             role:"Élite",  chapter:"Ultramarines" },
+        { id:"sm293", name:"Primaris Vindicator",              role:"Lourd",  chapter:"Ultramarines" },
+
+        // ── Deathwatch ────────────────────────────────────────
+        { id:"sm300", name:"Deathwatch Watch Master",          role:"QG",     chapter:"Deathwatch" },
+        { id:"sm301", name:"Deathwatch Kill Team",             role:"Élite",  chapter:"Deathwatch" },
+        { id:"sm302", name:"Deathwatch Veterans",              role:"Élite",  chapter:"Deathwatch" },
+        { id:"sm303", name:"Deathwatch Dreadnought",           role:"Élite",  chapter:"Deathwatch" },
+        { id:"sm304", name:"Primaris Watch Master",            role:"QG",     chapter:"Deathwatch" },
+        { id:"sm305", name:"Watch Captain",                    role:"QG",     chapter:"Deathwatch" },
+        { id:"sm306", name:"Watch Captain in Terminator Armour", role:"QG",  chapter:"Deathwatch" },
+
+        // ── Iron Hands ────────────────────────────────────────
+        { id:"sm310", name:"Iron Father Feirros",              role:"QG",     chapter:"Iron Hands" },
+        { id:"sm311", name:"Forge Master",                     role:"QG",     chapter:"Iron Hands" },
+
+        // ── Raven Guard ───────────────────────────────────────
+        { id:"sm320", name:"Lias Issodon",                     role:"QG",     chapter:"Raven Guard" },
+
+        // ── Salamanders ───────────────────────────────────────
+        { id:"sm330", name:"Adrax Agatone",                    role:"QG",     chapter:"Salamanders" },
+
+        // ── White Scars ───────────────────────────────────────
+        { id:"sm340", name:"Kor'sarro Khan on Moondrakkan",    role:"QG",     chapter:"White Scars" },
+
+        // ── Imperial Fists ────────────────────────────────────
+        { id:"sm350", name:"Darnath Lysander",                 role:"QG",     chapter:"Imperial Fists" },
+
+        // ── Transports manquants ──────────────────────────────
+        { id:"sm360", name:"Land Raider Terminus Ultra",       role:"Transport", chapter:"Générique" },
+        { id:"sm361", name:"Thunderhawk Gunship",              role:"Transport", chapter:"Générique" },
       ],
       "TY": [
         { id:"ty001", name:"Hive Tyrant",              role:"QG" },
@@ -276,6 +667,17 @@
         { id:"ty064", name:"Sporocyst",                role:"Lourd" },
         { id:"ty065", name:"Hierophant Bio-Titan",     role:"Lourd" },
         { id:"ty066", name:"Dimachaeron",              role:"Lourd" },
+
+        // ── Tyranides manquants ───────────────────────────────
+        { id:"ty070", name:"The Norn Queen",                   role:"QG" },
+        { id:"ty071", name:"Tyranid Prime",                    role:"QG" },
+        { id:"ty072", name:"Winged Tyranid Prime",             role:"QG" },
+        { id:"ty073", name:"Tyranid Prime with Warriors",      role:"QG" },
+        { id:"ty074", name:"Neurospike Swarm",                 role:"Troupes" },
+        { id:"ty075", name:"Leapers",                          role:"Rapide" },
+        { id:"ty076", name:"Sky-Slasher Swarms",               role:"Rapide" },
+        { id:"ty077", name:"Spore Mine Cluster",               role:"Rapide" },
+        { id:"ty078", name:"Endless Multitude",                role:"Troupes" },
       ],
       "IK": [
         { id:"ik001", name:"Armiger Warglaive",              role:"Armiger" },
@@ -298,6 +700,15 @@
         { id:"ik036", name:"Acastus Knight Asterius",        role:"Chevalier Acastus" },
         { id:"ik040", name:"Canis Rex",                      role:"Seigneur de guerre" },
         { id:"ik041", name:"Gerantius",                      role:"Seigneur de guerre" },
+
+        // ── Chevaliers manquants ──────────────────────────────
+        { id:"ik050", name:"Knight Desecrator",               role:"Chevalier Questoris" },
+        { id:"ik051", name:"Knight Rampager",                  role:"Chevalier Questoris" },
+        { id:"ik052", name:"Knight Styrix",                    role:"Chevalier Questoris" },
+        { id:"ik053", name:"Knight Magaera",                   role:"Chevalier Questoris" },
+        { id:"ik054", name:"Armiger Talon",                    role:"Armiger" },
+        { id:"ik055", name:"Knight Abominant",                 role:"Chevalier Questoris" },
+        { id:"ik056", name:"Knight Tyrant",                    role:"Chevalier Dominus" },
       ],
     };
 
@@ -368,6 +779,7 @@
     const qtyBtn    = { background:"#030303", border:"1px solid #1c1c1c", color:"#b8922a", width:"36px", height:"36px", cursor:"pointer", fontSize:"18px", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"serif" };
     const iconMiniBtn = { background:"none", border:"1px solid #1c1c1c", cursor:"pointer", padding:"8px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation", minWidth:"32px", minHeight:"32px" };
     const pageStyle = { background:"#020202", minHeight:"100%", display:"flex", flexDirection:"column", fontFamily:"'Crimson Pro',Georgia,serif" };
+    const pageClass = (view) => `bg-${view}`;
 
     // ══════════════════════════════════════════════════════════
     // SHARED UI COMPONENTS
@@ -448,7 +860,15 @@
       const [editVal, setEditVal] = useState("");
       const inputRef = useRef(null);
       useEffect(() => { if (editing && inputRef.current) inputRef.current.focus(); }, [editing]);
-      const total = pts ? pts * qty : null;
+
+      // Lookup unit name to get default pts from POINTS_DB
+      const unit = UNITS_DB[faction]?.find(u => u.id === unitId);
+      const defaultPts = unit ? POINTS_DB[unit.name] : null;
+      // Use manual override if set, otherwise fall back to POINTS_DB
+      const effectivePts = pts || defaultPts;
+      const isDefault = !pts && !!defaultPts;  // true = from DB, not manually set
+      const total = effectivePts ? effectivePts * qty : null;
+
       const confirm = () => {
         const n = parseInt(editVal);
         if (!isNaN(n) && n > 0) onSetPts(unitId, faction, n);
@@ -460,29 +880,34 @@
             <div style={{ display:"flex", gap:"4px", alignItems:"center" }}>
               <input ref={inputRef} type="number" value={editVal} onChange={e => setEditVal(e.target.value)}
                 onKeyDown={e => { if(e.key==="Enter") confirm(); if(e.key==="Escape") setEditing(false); }}
-                placeholder={pts||"pts"}
+                placeholder={effectivePts||"pts"}
                 style={{ width:"60px", background:"#030303", border:`1px solid ${f.accent}`, color:f.accent, padding:"4px 6px", fontSize:"13px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
               <button onClick={confirm} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✓</button>
               <button onClick={() => setEditing(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✕</button>
             </div>
           ) : (
-            <div onClick={() => { setEditVal(pts||""); setEditing(true); }} title="Toucher pour saisir les points"
-              style={{ background:pts?`${f.accent}22`:"#131313", border:`1px solid ${pts?f.accent+"66":"#333"}`, padding:"4px 10px", display:"flex", alignItems:"center", minWidth:"70px", justifyContent:"center", cursor:"pointer" }}>
-              {pts
-                ? <span style={{ color:f.accent, fontWeight:"900", fontFamily:"monospace", fontSize:"15px" }}>{total} pts</span>
+            <div onClick={() => { setEditVal(effectivePts||""); setEditing(true); }} title={isDefault?"Points MFM (toucher pour modifier)":"Toucher pour modifier les points"}
+              style={{ background:effectivePts?`${f.accent}22`:"#131313", border:`1px solid ${effectivePts?f.accent+"66":"#333"}`, padding:"4px 10px", display:"flex", alignItems:"center", minWidth:"70px", justifyContent:"center", cursor:"pointer", flexDirection:"column", gap:"1px" }}>
+              {effectivePts
+                ? <>
+                    <span style={{ color:f.accent, fontWeight:"900", fontFamily:"monospace", fontSize:"15px" }}>{total} pts</span>
+                    {isDefault && <span style={{ color:`${f.accent}55`, fontSize:"7px", letterSpacing:"1px" }}>MFM</span>}
+                  </>
                 : <span style={{ color:"#46402a", fontSize:"11px" }}>+ pts</span>
               }
             </div>
           )}
-          {pts && !editing && <span style={{ color:"#2a4a2a", fontSize:"9px" }}>✎ manuel</span>}
+
         </div>
       );
     }
 
     function useTotalPts(entries, faction, ptsMap) {
       return entries.reduce((sum, e) => {
-        const p = ptsMap[`${faction}:${e.unitId}`];
-        return sum + (p ? p * e.qty : 0);
+        const manual = ptsMap[`${faction}:${e.unitId}`];
+        const unit = UNITS_DB[faction]?.find(u => u.id === e.unitId);
+        const p = manual || (unit ? POINTS_DB[unit.name] : 0) || 0;
+        return sum + p * e.qty;
       }, 0);
     }
 
@@ -501,11 +926,12 @@
     function wahapediaUrl(unitName, faction) {
       const factionSlug = WAHA_FACTIONS[faction] || "space-marines";
       const slug = unitName
-        .replace(/'/g, "")           // remove apostrophes
-        .replace(/[^a-zA-Z0-9\s-]/g, "") // remove special chars
+        .replace(/([a-z])'([A-Z])/g, "$1-$2") // apostrophe before uppercase → hyphen (El'Jonson → El-Jonson)
+        .replace(/'/g, "")                      // all other apostrophes → remove (Kor'sarro, 's, etc.)
+        .replace(/[^a-zA-Z0-9\s-]/g, "")      // other special chars → remove
         .trim()
         .split(/\s+/)
-        .map(w => w.charAt(0).toUpperCase() + w.slice(1)) // Title-Case
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1)) // Title-Case each word
         .join("-");
       return `https://wahapedia.ru/wh40k10ed/factions/${factionSlug}/${slug}`;
     }
@@ -528,7 +954,7 @@
       if (!unit) return null;
       return (
         <div style={{ marginBottom:"6px" }}>
-          <div style={{ background:"linear-gradient(180deg,#1a1714 0%,#141210 100%)", border:`1px solid ${entry.warlord?"#b8922a44":"#222"}`, borderLeft:`2px solid ${entry.warlord?"#b8922a":f.accent+"44"}`, overflow:"hidden" }}>
+          <div style={{ background:f.bgCard||"linear-gradient(180deg,#1a1714 0%,#141210 100%)", border:`1px solid ${entry.warlord?f.accent+"44":"#222"}`, borderLeft:`2px solid ${entry.warlord?f.accent:f.accent+"44"}`, overflow:"hidden", transition:"background 0.4s" }}>
             <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"10px 12px" }}>
               <div style={{ width:"46px", height:"46px", flexShrink:0, background:"#020202", border:`1px solid ${f.accent}22`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", position:"relative" }}>
                 {f.icon}
@@ -750,11 +1176,13 @@
             )}
             <PrimaryBtn color={f.accent} onClick={() => {
               if(!selected) return;
-              const invItem = inventory.find(i => i.unitId===selected && i.faction===faction);
+              // In list mode, link to an existing inventory item if available
+              // In inventory mode, always create a new separate entry
+              const invItem = mode==="list" ? inventory.find(i => i.unitId===selected && i.faction===faction) : null;
               onAdd({ unitId:selected, faction, qty, paintStatus:paint, photo, inventoryId:invItem?.id });
               onClose();
             }}>
-              {selected ? "AJOUTER (pts automatiques)" : "AJOUTER"}
+              AJOUTER
             </PrimaryBtn>
           </Sheet>
         </Overlay>
@@ -768,7 +1196,7 @@
     function ViewLists({ lists, inventory, ptsMap, onSelect, onCreate, onDelete }) {
       const [showModal, setShowModal] = useState(false);
       return (
-        <div style={pageStyle}>
+        <div style={pageStyle} className={`bg-lists`}>
           <div style={{ background:"linear-gradient(180deg,#0a0808 0%,#050505 100%)", borderBottom:"1px solid #131313", padding:"20px 16px 14px", display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", right:"60px", top:"50%", transform:"translateY(-50%)", fontSize:"80px", color:"#0f0f0f", fontFamily:"serif", pointerEvents:"none", lineHeight:1 }}>✠</div>
             <div>
@@ -789,12 +1217,17 @@
               </div>
             </div>
             {lists.length===0 && <EmptyState icon="✠" title="Aucune croisade" sub="Forgez votre première liste d'armée" />}
-            {lists.map(list => {
+            {lists.map((list, idx) => {
               const f = FACTIONS[list.faction];
-              const pts = (list.entries||[]).reduce((sum,e) => sum + ((ptsMap[`${list.faction}:${e.unitId}`]||0)*e.qty), 0);
+              const pts = (list.entries||[]).reduce((sum,e) => {
+                const manual = ptsMap[`${list.faction}:${e.unitId}`];
+                const unit = UNITS_DB[list.faction]?.find(u=>u.id===e.unitId);
+                const p = manual || (unit ? POINTS_DB[unit.name] : 0) || 0;
+                return sum + p * e.qty;
+              }, 0);
               const pct = Math.min(100, pts/list.maxPts*100);
               return (
-                <div key={list.id} onClick={() => onSelect(list.id)} className="hcard" style={{ background:"linear-gradient(180deg,#1c1916 0%,#151210 100%)", border:"1px solid #252220", borderTop:`2px solid ${f.accent}`, padding:"16px", marginBottom:"10px", cursor:"pointer", position:"relative", overflow:"hidden" }}>
+                <div key={list.id} onClick={() => onSelect(list.id)} className="hcard" style={{ background:"linear-gradient(180deg,#1c1916 0%,#151210 100%)", border:"1px solid #252220", borderTop:`2px solid ${f.accent}`, padding:"16px", marginBottom:"10px", cursor:"pointer", position:"relative", overflow:"hidden", animation:`slideUp 0.25s ${idx*60}ms ease both` }}>
                   <div style={{ position:"absolute", top:"6px", right:"8px", color:f.accent, fontSize:"10px", opacity:0.25 }}>✠</div>
                   <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start" }}>
                     <div>
@@ -826,8 +1259,26 @@
     // VIEW: List Detail
     // ══════════════════════════════════════════════════════════
 
-    function ViewListDetail({ list, inventory, ptsMap, onSetPts, onBack, onAddEntry, onDeleteEntry, onToggleWarlord }) {
+    function ViewListDetail({ list, inventory, ptsMap, onSetPts, onBack, onAddEntry, onDeleteEntry, onToggleWarlord, onRename, onSetMaxPts }) {
       const [showModal, setShowModal] = useState(false);
+      const [editingName, setEditingName] = useState(false);
+      const [editingMaxPts, setEditingMaxPts] = useState(false);
+      const [maxPtsVal, setMaxPtsVal] = useState(String(list.maxPts));
+      const maxPtsRef = useRef(null);
+      useEffect(() => { if (editingMaxPts && maxPtsRef.current) maxPtsRef.current.focus(); }, [editingMaxPts]);
+      const confirmMaxPts = () => {
+        const n = parseInt(maxPtsVal);
+        if (!isNaN(n) && n > 0) onSetMaxPts(n);
+        setEditingMaxPts(false);
+      };
+      const [nameVal, setNameVal] = useState(list.name);
+      const nameRef = useRef(null);
+      useEffect(() => { if (editingName && nameRef.current) nameRef.current.focus(); }, [editingName]);
+      const confirmRename = () => {
+        const v = nameVal.trim();
+        if (v && v !== list.name) onRename(v);
+        setEditingName(false);
+      };
       const f = FACTIONS[list.faction];
       const entries = (list.entries||[]).map(e => ({ ...e, inv:inventory.find(i=>i.id===e.inventoryId) }));
       const pts = useTotalPts(list.entries||[], list.faction, ptsMap);
@@ -835,32 +1286,67 @@
       const chars  = entries.filter(e => { const u=UNITS_DB[list.faction]?.find(u=>u.id===e.unitId); return u&&(u.role==="QG"||u.role==="Seigneur de guerre"); });
       const others = entries.filter(e => { const u=UNITS_DB[list.faction]?.find(u=>u.id===e.unitId); return u&&u.role!=="QG"&&u.role!=="Seigneur de guerre"; });
 
-      const SectionPts = ({ items }) => {
-        const s = items.reduce((sum,e) => sum+((ptsMap[`${list.faction}:${e.unitId}`]||0)*e.qty),0);
-        return s>0 ? <span style={{ color:"#48402e", fontFamily:"monospace", fontSize:"13px" }}>{s} pts</span> : null;
-      };
-      const Section = ({ title, items, startIndex=0 }) => items.length===0 ? null : (
-        <div style={{ marginBottom:"28px" }}>
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"12px" }}>
-            <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-              <div style={{ width:"2px", height:"14px", background:"#b8922a", opacity:0.5 }} />
-              <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"4px" }}>{title}</span>
+      const Section = ({ title, items }) => {
+        if (items.length===0) return null;
+        const sectionPts = items.reduce((sum,e) => {
+          const manual = ptsMap[`${list.faction}:${e.unitId}`];
+          const unit = UNITS_DB[list.faction]?.find(u=>u.id===e.unitId);
+          const p = manual || (unit ? POINTS_DB[unit.name] : 0) || 0;
+          return sum + p * e.qty;
+        }, 0);
+        const sectionPct = list.maxPts ? Math.round(sectionPts/list.maxPts*100) : 0;
+        return (
+          <div style={{ marginBottom:"28px" }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                <div style={{ width:"2px", height:"14px", background:"#b8922a", opacity:0.5 }} />
+                <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"4px" }}>{title}</span>
+                <span style={{ color:"#252015", fontSize:"9px" }}>{items.length}</span>
+              </div>
+              {sectionPts>0 && (
+                <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                  <span style={{ color:"#35281a", fontSize:"9px" }}>{sectionPct}%</span>
+                  <span style={{ color:f.accent, fontFamily:"monospace", fontSize:"13px", fontWeight:"700" }}>{sectionPts} pts</span>
+                </div>
+              )}
             </div>
-            <SectionPts items={items} />
+            {sectionPts>0 && (
+              <div style={{ height:"2px", background:"#0a0806", marginBottom:"10px" }}>
+                <div style={{ width:`${sectionPct}%`, height:"100%", background:`${f.accent}66`, transition:"width 0.4s" }} />
+              </div>
+            )}
+            {items.map((e,idx) => (
+              <div key={idx} style={{ animation:`slideLeft 0.2s ${idx*30}ms ease both` }}>
+                <UnitRow entry={e} faction={list.faction} ptsMap={ptsMap} onSetPts={onSetPts} onDelete={() => onDeleteEntry(e.id)} onToggleWarlord={onToggleWarlord} />
+              </div>
+            ))}
           </div>
-          {items.map((e,idx) => <UnitRow key={idx} entry={e} faction={list.faction} ptsMap={ptsMap} onSetPts={onSetPts} onDelete={() => onDeleteEntry(e.id)} onToggleWarlord={onToggleWarlord} />)}
-        </div>
-      );
+        );
+      };
 
       return (
-        <div style={pageStyle}>
+        <div style={pageStyle} className={`bg-lists`}>
           <div style={{ background:"linear-gradient(180deg,#0a0808 0%,#060606 100%)", borderBottom:`1px solid ${f.accent}33`, padding:"12px 16px", display:"flex", alignItems:"center", gap:"12px" }}>
             <IconBtn onClick={onBack}><Ic.Back /></IconBtn>
             <div style={{ display:"flex", alignItems:"center", gap:"12px", flex:1 }}>
               <div style={{ width:"38px", height:"38px", border:`1px solid ${f.accent}55`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", background:"#050505", flexShrink:0 }}>{f.icon}</div>
-              <div>
-                <div style={{ color:"#e8dfc0", fontSize:"15px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", fontWeight:"700" }}>{list.name}</div>
-                <div style={{ color:f.accent, fontSize:"10px", letterSpacing:"2px", fontFamily:"'Cinzel',serif" }}>{f.label.toUpperCase()}</div>
+              <div style={{ flex:1 }}>
+                {editingName ? (
+                  <div style={{ display:"flex", gap:"6px", alignItems:"center" }}>
+                    <input ref={nameRef} value={nameVal} onChange={e=>setNameVal(e.target.value)}
+                      onKeyDown={e=>{ if(e.key==="Enter") confirmRename(); if(e.key==="Escape") setEditingName(false); }}
+                      style={{ flex:1, background:"#060402", border:`1px solid ${f.accent}66`, color:"#e8dfc0", padding:"5px 8px", fontSize:"14px", fontFamily:"'Cinzel',serif", outline:"none", letterSpacing:"1px" }} />
+                    <button onClick={confirmRename} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"5px 10px", fontSize:"14px" }}>✓</button>
+                    <button onClick={()=>setEditingName(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"5px 10px", fontSize:"14px" }}>✕</button>
+                  </div>
+                ) : (
+                  <button onClick={()=>{ setNameVal(list.name); setEditingName(true); }}
+                    style={{ background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:0, display:"flex", alignItems:"center", gap:"8px" }}>
+                    <div style={{ color:"#e8dfc0", fontSize:"15px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", fontWeight:"700" }}>{list.name}</div>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2a2215" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                )}
+                {!editingName && <div style={{ color:f.accent, fontSize:"10px", letterSpacing:"2px", fontFamily:"'Cinzel',serif", marginTop:"2px" }}>{f.label.toUpperCase()}</div>}
               </div>
             </div>
             <IconBtn onClick={() => setShowModal(true)}><Ic.Plus /></IconBtn>
@@ -871,12 +1357,26 @@
                 <div style={{ color:"#35281a", fontSize:"9px", letterSpacing:"3px", fontFamily:"'Cinzel',serif", marginBottom:"4px" }}>POINTS DE CROISADE</div>
                 <div style={{ display:"flex", alignItems:"baseline", gap:"4px" }}>
                   <span style={{ color:pct>95?"#7a1515":"#e8dfc0", fontSize:"28px", fontFamily:"'Cinzel',serif", fontWeight:"900", lineHeight:1 }}>{pts}</span>
-                  <span style={{ color:"#35281a", fontSize:"13px", fontFamily:"'Cinzel',serif" }}>/ {list.maxPts}</span>
+                  {editingMaxPts ? (
+                    <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
+                      <span style={{ color:"#35281a", fontSize:"13px" }}>/</span>
+                      <input ref={maxPtsRef} type="number" value={maxPtsVal} onChange={e=>setMaxPtsVal(e.target.value)}
+                        onKeyDown={e=>{ if(e.key==="Enter") confirmMaxPts(); if(e.key==="Escape") setEditingMaxPts(false); }}
+                        style={{ width:"70px", background:"#060402", border:`1px solid ${f.accent}66`, color:"#e8dfc0", padding:"3px 6px", fontSize:"13px", fontFamily:"'Cinzel',serif", outline:"none" }} />
+                      <button onClick={confirmMaxPts} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"3px 8px", fontSize:"13px", touchAction:"manipulation" }}>✓</button>
+                      <button onClick={()=>setEditingMaxPts(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"3px 8px", fontSize:"13px", touchAction:"manipulation" }}>✕</button>
+                    </div>
+                  ) : (
+                    <button onClick={()=>{ setMaxPtsVal(String(list.maxPts)); setEditingMaxPts(true); }}
+                      style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"baseline", gap:"4px", padding:0 }}>
+                      <span style={{ color:"#35281a", fontSize:"13px", fontFamily:"'Cinzel',serif" }}>/ {list.maxPts}</span>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2a2215" strokeWidth="2" style={{marginBottom:"2px"}}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    </button>
+                  )}
                 </div>
               </div>
               <div style={{ textAlign:"right" }}>
-                <div style={{ color:"#35281a", fontSize:"9px", fontStyle:"italic" }}>✠ wahapedia</div>
-                <div style={{ color:pct>95?"#7a1515":"#3a3028", fontSize:"11px", marginTop:"2px" }}>{list.maxPts-pts} pts restants</div>
+                <div style={{ color:pct>95?"#7a1515":"#3a3028", fontSize:"11px" }}>{list.maxPts-pts} pts restants</div>
               </div>
             </div>
             <div style={{ background:"#060606", height:"4px", position:"relative" }}>
@@ -886,8 +1386,8 @@
           </div>
           <div style={{ flex:1, overflowY:"auto", padding:"16px" }}>
             {entries.length===0 && <EmptyState icon={f.icon} title="Liste vide" sub="Ajoutez des unités depuis votre inventaire" />}
-            <Section title="CHARACTERS" items={chars} startIndex={0} />
-            <Section title="OTHER DATASHEETS" items={others} startIndex={chars.length} />
+            <Section title="CHARACTERS" items={chars} />
+            <Section title="OTHER DATASHEETS" items={others} />
           </div>
           {showModal && <ModalAddUnit faction={list.faction} inventory={inventory} mode="list" onClose={() => setShowModal(false)} onAdd={entry => onAddEntry(list.id, entry)} />}
         </div>
@@ -906,13 +1406,29 @@
 
     function PaintCycleBtn({ status, onCycle }) {
       const ps = PAINT_STATUS[status]||PAINT_STATUS.unpainted;
+      const [animKey, setAnimKey] = useState(0);
+      const [showRipple, setShowRipple] = useState(false);
+      const handleClick = () => {
+        setAnimKey(k => k+1);
+        setShowRipple(true);
+        setTimeout(() => setShowRipple(false), 400);
+        onCycle();
+      };
       return (
-        <button onClick={onCycle} title="Changer le statut de peinture"
+        <button onClick={handleClick} title="Changer le statut de peinture"
           style={{ display:"flex", alignItems:"center", gap:"6px", padding:"6px 10px",
             background:"#0d0b08", border:`1px solid ${ps.color}66`, cursor:"pointer",
-            transition:"all 0.15s", touchAction:"manipulation" }}>
-          <div style={{ width:"8px", height:"8px", borderRadius:"50%", background:ps.color, flexShrink:0, boxShadow:`0 0 5px ${ps.color}88` }} />
-          <span style={{ fontSize:"10px", color:ps.color, fontFamily:"'Cinzel',serif", letterSpacing:"1px", whiteSpace:"nowrap" }}>{ps.label}</span>
+            transition:"border-color 0.3s, background 0.3s", touchAction:"manipulation",
+            position:"relative", overflow:"hidden" }}>
+          {/* Ripple effect */}
+          {showRipple && (
+            <div style={{ position:"absolute", inset:0, background:`${ps.color}22`,
+              animation:"paintPop 0.35s ease both", borderRadius:"inherit", pointerEvents:"none" }} />
+          )}
+          <div key={animKey} style={{ width:"8px", height:"8px", borderRadius:"50%", background:ps.color, flexShrink:0,
+            boxShadow:`0 0 6px ${ps.color}`, animation:"paintPop 0.35s cubic-bezier(0.34,1.56,0.64,1) both" }} />
+          <span key={animKey+"t"} style={{ fontSize:"10px", color:ps.color, fontFamily:"'Cinzel',serif", letterSpacing:"1px", whiteSpace:"nowrap",
+            animation:"slideLeft 0.2s ease both" }}>{ps.label}</span>
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={ps.color} strokeWidth="2.5" opacity="0.7"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
       );
@@ -945,7 +1461,7 @@
       // ── GRID CARD ─────────────────────────────────────────
       if (viewMode === "grid") {
         return (
-          <div className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#0e0c0a 100%)", border:"1px solid #222018", borderTop:`2px solid ${borderColor}`, display:"flex", flexDirection:"column", overflow:"hidden", position:"relative", transition:"border-color 0.3s" }}>
+          <div className="hcard card-stagger" style={{ background:f.bgCard||"linear-gradient(180deg,#181512 0%,#0e0c0a 100%)", border:`1px solid ${borderColor}22`, borderTop:`2px solid ${borderColor}`, display:"flex", flexDirection:"column", overflow:"hidden", position:"relative", transition:"background 0.4s, border-color 0.3s" }}>
             {/* Photo zone — takes most of the card */}
             <div onClick={() => onEditPhoto(item)} style={{ height:"110px", cursor:"pointer", background:"#040404", position:"relative", overflow:"hidden" }}>
               {item.photo
@@ -983,7 +1499,7 @@
 
       // ── LIST CARD (default) ────────────────────────────────
       return (
-        <div className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#121008 100%)", border:"1px solid #222018", borderLeft:`3px solid ${borderColor}`, marginBottom:"5px", display:"flex", alignItems:"stretch", transition:"border-color 0.3s" }}>
+        <div className="hcard card-stagger" style={{ background:f.bgCard||"linear-gradient(180deg,#181512 0%,#121008 100%)", border:`1px solid ${borderColor}22`, borderLeft:`3px solid ${borderColor}`, marginBottom:"5px", display:"flex", alignItems:"stretch", transition:"background 0.4s, border-color 0.3s" }}>
           {/* Drag handle */}
           <div {...dragHandleProps} style={{ width:"22px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", cursor:"grab", borderRight:"1px solid #1a1a16", touchAction:"none" }}>
             <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><circle cx="3" cy="3" r="1.5" fill="#3a3020"/><circle cx="7" cy="3" r="1.5" fill="#3a3020"/><circle cx="3" cy="8" r="1.5" fill="#3a3020"/><circle cx="7" cy="8" r="1.5" fill="#3a3020"/><circle cx="3" cy="13" r="1.5" fill="#3a3020"/><circle cx="7" cy="13" r="1.5" fill="#3a3020"/></svg>
@@ -1088,7 +1604,7 @@
       };
 
       return (
-        <div style={pageStyle}>
+        <div style={pageStyle} className={`bg-inventory`}>
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
@@ -1117,7 +1633,7 @@
               const total   = fItems.length;
               const pct     = total ? Math.round(painted/total*100) : 0;
               return (
-                <button key={k} onClick={() => setFaction(k)} style={{ flex:1, background:"none", border:"none", borderBottom:faction===k?`2px solid ${v.accent}`:"2px solid transparent", color:faction===k?v.accent:"#181410", padding:"10px 0 8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", textShadow:faction===k?`0 0 10px ${v.accent}66`:"none" }}>
+                <button key={k} onClick={() => setFaction(k)} style={{ flex:1, background: faction===k?`${v.bg||"#020202"}`:"none", border:"none", borderBottom:faction===k?`2px solid ${v.accent}`:"2px solid transparent", color:faction===k?v.accent:"#181410", padding:"10px 0 8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", textShadow:faction===k?`0 0 10px ${v.accent}66`:"none", transition:"background 0.3s" }}>
                   <div style={{ fontSize:"16px", marginBottom:"3px" }}>{v.icon}</div>
                   {v.short}
                   {total>0 && (
@@ -1148,7 +1664,7 @@
                 {!collapsedRoles[role] && (
                   viewMode==="grid" ? (
                     <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"6px", marginBottom:"4px" }}>
-                      {grouped[role].map(item => (
+                      {grouped[role].map((item, idx) => (
                         <InventoryItem key={item.id}
                           item={item} faction={faction} ptsMap={ptsMap} onSetPts={onSetPts}
                           onDelete={onDelete} onEditPhoto={setEditPhotoItem}
@@ -1159,9 +1675,9 @@
                       ))}
                     </div>
                   ) : (
-                    grouped[role].map(item => (
+                    grouped[role].map((item, idx) => (
                       <div key={item.id} data-itemid={item.id}
-                        style={{ opacity: draggingId===item.id ? 0.4 : 1, outline: dragOverId===item.id ? `1px solid ${f.accent}88` : "none", transition:"opacity 0.15s" }}
+                        style={{ opacity: draggingId===item.id ? 0.4 : 1, outline: dragOverId===item.id ? `1px solid ${f.accent}88` : "none", transition:"opacity 0.15s", animation:`slideLeft 0.2s ${idx*25}ms ease both` }}
                         onDragOver={e => onDragOver(e, item)}
                         onDrop={e => onDrop(e, item)}
                         onTouchStart={e => onTouchStart(e, item, role)}
@@ -1217,7 +1733,12 @@
         const items = inventory.filter(i=>i.faction===k);
         const models = items.reduce((s,i)=>s+i.qty,0);
         const painted = items.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+i.qty,0);
-        const pts = items.reduce((s,i)=>s+(ptsMap[`${k}:${i.unitId}`]||0)*i.qty,0);
+        const pts = items.reduce((s,i)=>{
+          const manual = ptsMap[`${k}:${i.unitId}`];
+          const unit = UNITS_DB[k]?.find(u=>u.id===i.unitId);
+          const p = manual || (unit ? POINTS_DB[unit.name] : 0) || 0;
+          return s + p * i.qty;
+        }, 0);
         // Répartition par rôle
         const byRole = {};
         items.forEach(i => {
@@ -1252,7 +1773,7 @@
       const accent = "#b8922a";
 
       return (
-        <div style={pageStyle}>
+        <div style={pageStyle} className={`bg-stats`}>
           {/* Header */}
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
@@ -1394,6 +1915,40 @@
     }
 
     // ══════════════════════════════════════════════════════════
+    // CONFIRM MODAL
+    // ══════════════════════════════════════════════════════════
+
+    function ConfirmModal({ message, onConfirm, onCancel, accent="#b8922a" }) {
+      return (
+        <Overlay>
+          <div style={{ background:"#0a0806", border:`1px solid ${accent}44`, borderTop:`2px solid ${accent}`, padding:"24px 20px", width:"100%", maxWidth:"320px", margin:"0 16px" }}>
+            <div style={{ color:"#e8dfc0", fontSize:"14px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", marginBottom:"8px", textAlign:"center" }}>CONFIRMATION</div>
+            <div style={{ color:"#6a5a4a", fontSize:"12px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", textAlign:"center", marginBottom:"20px", lineHeight:1.6 }}>{message}</div>
+            <div style={{ display:"flex", gap:"8px" }}>
+              <button onClick={onCancel}
+                style={{ flex:1, padding:"12px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a4028", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                ANNULER
+              </button>
+              <button onClick={onConfirm}
+                style={{ flex:1, padding:"12px", background:"#1a0a0a", border:`1px solid #7a1515`, color:"#c04040", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                SUPPRIMER
+              </button>
+            </div>
+          </div>
+        </Overlay>
+      );
+    }
+
+    function useConfirm() {
+      const [state, setState] = useState(null); // { message, onConfirm, accent }
+      const ask = (message, onConfirm, accent) => setState({ message, onConfirm, accent });
+      const cancel = () => setState(null);
+      const confirm = () => { state?.onConfirm(); setState(null); };
+      const modal = state ? <ConfirmModal message={state.message} onConfirm={confirm} onCancel={cancel} accent={state.accent} /> : null;
+      return [ask, modal];
+    }
+
+    // ══════════════════════════════════════════════════════════
     // VIEW: Codex (paramètres + données)
     // ══════════════════════════════════════════════════════════
 
@@ -1403,7 +1958,7 @@
       const totalWithPhoto = inventory.filter(i=>i.photo).length;
 
       return (
-        <div style={pageStyle}>
+        <div style={pageStyle} className={`bg-codex`}>
           {/* Header */}
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
             <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
@@ -1468,6 +2023,140 @@
     }
 
     // ══════════════════════════════════════════════════════════
+    // VIEW: Wishlist
+    // ══════════════════════════════════════════════════════════
+
+    const WISH_STATUS = {
+      "wanted":   { label:"Souhaité",  color:"#46402a",  icon:"✦" },
+      "ordered":  { label:"Commandé", color:"#7a6a00",  icon:"⟳" },
+      "received": { label:"Reçu",     color:"#2a6a5a",  icon:"✓" },
+    };
+    const WISH_STATUS_KEYS = ["wanted","ordered","received"];
+
+    function ViewWishlist({ wishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice }) {
+      const [showModal, setShowModal] = useState(false);
+      const [faction, setFaction] = useState("SM");
+      const f = FACTIONS[faction];
+
+      const items = (wishlist||[])
+        .filter(i => i.faction===faction)
+        .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) }))
+        .filter(i => i.unit);
+
+      const totalPrice = (wishlist||[]).reduce((s,i) => s+(i.price||0)*i.qty, 0);
+      const totalPts   = (wishlist||[]).reduce((s,i) => {
+        const p = ptsMap[`${i.faction}:${i.unitId}`] || POINTS_DB[i.unit?.name] || 0;
+        return s + p * i.qty;
+      }, 0);
+
+      const cycleStatus = (id) => {
+        const item = (wishlist||[]).find(i=>i.id===id);
+        if (!item) return;
+        const idx = WISH_STATUS_KEYS.indexOf(item.status||"wanted");
+        onSetStatus(id, WISH_STATUS_KEYS[(idx+1) % WISH_STATUS_KEYS.length]);
+      };
+
+      // Group by role
+      const grouped = {};
+      ROLE_ORDER.forEach(r => { grouped[r] = []; });
+      items.forEach(item => {
+        const role = item.unit.role;
+        if (!grouped[role]) grouped[role] = [];
+        grouped[role].push(item);
+      });
+      const usedRoles = ROLE_ORDER.filter(r => grouped[r]?.length > 0);
+
+      return (
+        <div style={pageStyle} className={`bg-wishlist`}>
+          {/* Header */}
+          <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
+            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✦</div>
+            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
+              <div>
+                <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ACQUISITIONS FUTURES</div>
+                <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>WISHLIST</div>
+                <div style={{ display:"flex", gap:"12px", marginTop:"4px" }}>
+                  {(wishlist||[]).length>0 && <span style={{ color:"#252012", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif" }}>{(wishlist||[]).length} UNITÉS</span>}
+                  {totalPrice>0 && <span style={{ color:"#46402a", fontSize:"9px", letterSpacing:"1px" }}>~{totalPrice}€</span>}
+                </div>
+              </div>
+              <IconBtn onClick={() => setShowModal(true)}><Ic.Plus /></IconBtn>
+            </div>
+          </div>
+
+          {/* Faction tabs */}
+          <div style={{ display:"flex", background:"#020202", borderBottom:"1px solid #0f0f0f" }}>
+            {Object.entries(FACTIONS).map(([k,v]) => {
+              const cnt = (wishlist||[]).filter(i=>i.faction===k).length;
+              return (
+                <button key={k} onClick={() => setFaction(k)}
+                  style={{ flex:1, background:"none", border:"none", borderBottom:faction===k?`2px solid ${v.accent}`:"2px solid transparent", color:faction===k?v.accent:"#181410", padding:"10px 0 8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px", textShadow:faction===k?`0 0 10px ${v.accent}66`:"none" }}>
+                  <div style={{ fontSize:"16px", marginBottom:"3px" }}>{v.icon}</div>
+                  {v.short}
+                  {cnt>0 && <div style={{ fontSize:"8px", color:faction===k?v.accent:"#252015", marginTop:"2px" }}>{cnt}</div>}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* List */}
+          <div style={{ flex:1, overflowY:"auto", padding:"12px 16px" }}>
+            {items.length===0 && <EmptyState icon="✦" title="Wishlist vide" sub={`Aucune unité ${f.label} souhaitée`} />}
+            {usedRoles.map(role => (
+              <div key={role} style={{ marginBottom:"16px" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px" }}>
+                  <div style={{ width:"2px", height:"12px", background:f.accent, opacity:0.6 }} />
+                  <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", flex:1 }}>{role.toUpperCase()}</span>
+                  <span style={{ color:"#3a3020", fontSize:"9px" }}>{grouped[role].length}</span>
+                </div>
+                {grouped[role].map(item => {
+                  const ws = WISH_STATUS[item.status||"wanted"];
+                  const unitPts = ptsMap[`${item.faction}:${item.unitId}`] || POINTS_DB[item.unit.name] || null;
+                  return (
+                    <div key={item.id} className="hcard" style={{ background:"linear-gradient(180deg,#181512 0%,#121008 100%)", border:"1px solid #222018", borderLeft:`3px solid ${ws.color}`, marginBottom:"5px", display:"flex", alignItems:"stretch" }}>
+                      {/* Status cycle */}
+                      <button onClick={() => cycleStatus(item.id)}
+                        style={{ width:"36px", flexShrink:0, background:"none", border:"none", borderRight:"1px solid #1a1a16", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:"3px", cursor:"pointer", touchAction:"manipulation" }}>
+                        <span style={{ fontSize:"14px", color:ws.color }}>{ws.icon}</span>
+                      </button>
+                      {/* Content */}
+                      <div style={{ flex:1, padding:"10px 10px", display:"flex", alignItems:"center", gap:"8px" }}>
+                        <div style={{ flex:1 }}>
+                          <div style={{ color:"#e8dfc0", fontSize:"13px", fontFamily:"'Cinzel',serif", lineHeight:1.3 }}>
+                            {item.qty>1 && <span style={{ color:f.accent, marginRight:"5px", fontSize:"11px" }}>×{item.qty}</span>}
+                            {item.unit.name}
+                          </div>
+                          <div style={{ display:"flex", gap:"6px", marginTop:"5px", alignItems:"center", flexWrap:"wrap" }}>
+                            <span style={{ fontSize:"9px", padding:"2px 7px", color:ws.color, border:`1px solid ${ws.color}33` }}>{ws.label}</span>
+                            <WahapediaBtn unitName={item.unit.name} faction={item.faction} accent={f.accent} />
+                          </div>
+                        </div>
+                        {/* Price + pts */}
+                        <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"5px" }}>
+                          {unitPts && <span style={{ color:`${f.accent}99`, fontSize:"10px", fontFamily:"monospace" }}>{unitPts*item.qty} pts</span>}
+                          <div style={{ display:"flex", alignItems:"center", gap:"4px" }}>
+                            <span style={{ color:"#3a3020", fontSize:"11px" }}>€</span>
+                            <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
+                              placeholder="0"
+                              style={{ width:"48px", background:"#060402", border:"1px solid #1c1c1c", color:"#6a5a4a", padding:"3px 5px", fontSize:"11px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
+                          </div>
+                          <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"none", color:"#181410", cursor:"pointer", padding:"2px" }}><Ic.Trash /></button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+
+          {showModal && <ModalAddUnit faction={faction} inventory={[]} mode="inventory" onClose={() => setShowModal(false)}
+            onAdd={entry => onAdd({ ...entry, id:Date.now(), status:"wanted", price:0 })} />}
+        </div>
+      );
+    }
+
+    // ══════════════════════════════════════════════════════════
     // ROOT APP
     // ══════════════════════════════════════════════════════════
 
@@ -1476,10 +2165,12 @@
       const totalModels  = inventory.reduce((s,i)=>s+i.qty,0);
       const painted      = inventory.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+i.qty,0);
       const paintPct     = totalModels ? Math.round(painted/totalModels*100) : 0;
-      const totalPts     = Object.entries(ptsMap).reduce((s,[k,v])=>{
-        const [faction,unitId] = k.split(":");
-        return s + inventory.filter(i=>i.faction===faction&&i.unitId===unitId).reduce((ss,i)=>ss+v*i.qty,0);
-      },0);
+      const totalPts = inventory.reduce((s,i) => {
+        const manual = ptsMap[`${i.faction}:${i.unitId}`];
+        const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
+        const p = manual || (unit ? POINTS_DB[unit.name] : 0) || 0;
+        return s + p * i.qty;
+      }, 0);
 
       useEffect(() => {
         const t1 = setTimeout(() => setPhase("out"), 2600);
@@ -1579,9 +2270,16 @@
     }
 
     function App() {
-      const [appState, setAppState] = useState({ inventory:[], lists:[], ptsMap:{} });
+      const [appState, setAppState] = useState({ inventory:[], lists:[], ptsMap:{}, wishlist:[] });
       const [loaded, setLoaded] = useState(false);
-      const [splashDone, setSplashDone] = useState(false);
+      const [confirm, confirmModal] = useConfirm();
+      const [splashDone, setSplashDone] = useState(() => {
+        // Show splash max 3 times
+        try {
+          const n = parseInt(localStorage.getItem("wh40k-splash-count")||"0");
+          return n >= 3;
+        } catch { return false; }
+      });
       const [activeView, setActiveView] = useState("lists");
       const [activeListId, setActiveListId] = useState(null);
       const [lastSaved, setLastSaved] = useState(null); // timestamp
@@ -1589,7 +2287,7 @@
 
       useEffect(() => {
         loadApp().then(saved => {
-          if (saved) setAppState({ inventory:[], lists:[], ptsMap:{}, ...saved });
+          if (saved) setAppState({ inventory:[], lists:[], ptsMap:{}, wishlist:[], ...saved });
           setLoaded(true);
         });
       }, []);
@@ -1654,19 +2352,19 @@ Cela remplacera les données actuelles.`);
       };
 
       const createList    = m  => updateApp(s => ({ ...s, lists:[...s.lists,{id:Date.now(),...m,entries:[]}] }));
-      const deleteList    = id => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) }));
-      const deleteEntry   = (listId,entryId) => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) }));
+      const deleteList    = id => confirm("Supprimer cette liste ?", () => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) })), "#b8922a");
+      const renameList    = (id,name)    => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,name}:l) }));
+      const setListMaxPts = (id,maxPts) => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,maxPts}:l) }));
+      const deleteEntry   = (listId,entryId) => confirm("Retirer cette unité de la liste ?", () => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) })));
       const toggleWarlord = (listId,entryId) => updateApp(s => ({
         ...s, lists: s.lists.map(l => l.id!==listId ? l : {
           ...l, entries: l.entries.map(e => ({ ...e, warlord: e.id===entryId ? !e.warlord : false }))
         })
       }));
-      const addInventory  = entry => updateApp(s => {
-        const ex = s.inventory.find(i=>i.unitId===entry.unitId&&i.faction===entry.faction);
-        if(ex) return {...s,inventory:s.inventory.map(i=>i.id===ex.id?{...i,qty:i.qty+entry.qty}:i)};
-        return {...s,inventory:[...s.inventory,{id:Date.now(),...entry}]};
-      });
-      const deleteInventory = id => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) }));
+      const addInventory  = entry => updateApp(s => ({
+        ...s, inventory:[...s.inventory,{id:Date.now(),...entry}]
+      }));
+      const deleteInventory = id => confirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })));
       const updatePhoto     = (id,photo) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,photo}:i) }));
       const updatePaint     = (id,status) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,paintStatus:status}:i) }));
       const updateQty       = (id,qty)    => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i) }));
@@ -1680,6 +2378,11 @@ Cela remplacera les données actuelles.`);
         inv.splice(targetIdx,0,moved);
         return { ...s, inventory: inv };
       });
+      const addWish       = entry    => updateApp(s => ({ ...s, wishlist:[...(s.wishlist||[]),entry] }));
+      const deleteWish    = id       => confirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })));
+      const setWishStatus = (id,status) => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,status}:i) }));
+      const setWishPrice  = (id,price)  => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,price}:i) }));
+
       const addEntry = (listId,entry) => updateApp(s => {
         let inv=s.inventory, invId=entry.inventoryId;
         if(!invId) {
@@ -1722,8 +2425,16 @@ Cela remplacera les données actuelles.`);
 
       return (
         <div className="vignette-wrap" style={{ background:"#020202", maxWidth:"430px", margin:"0 auto", height:"100vh", display:"flex", flexDirection:"column", position:"relative", overflow:"hidden" }}>
+          {/* Confirm modal */}
+          {confirmModal}
           {/* Splash overlay — shown on first open after load */}
-          {!splashDone && <SplashOverlay inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} onDone={() => setSplashDone(true)} />}
+          {!splashDone && <SplashOverlay inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} onDone={() => {
+            try {
+              const n = parseInt(localStorage.getItem("wh40k-splash-count")||"0");
+              localStorage.setItem("wh40k-splash-count", String(n+1));
+            } catch {}
+            setSplashDone(true);
+          }} />}
           {/* Save indicator — persistent bottom-right label */}
           {savedLabel && (
             <div style={{ position:"fixed", bottom:"72px", right:"12px", zIndex:200, display:"flex", alignItems:"center", gap:"5px",
@@ -1742,10 +2453,11 @@ Cela remplacera les données actuelles.`);
 
           <div style={{ flex:1, overflowY:"auto", paddingBottom:"64px" }}>
             {activeView==="lists" && !activeList && <ViewLists lists={appState.lists} inventory={appState.inventory} ptsMap={ptsMap} onSelect={setActiveListId} onCreate={createList} onDelete={deleteList} />}
-            {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} />}
+            {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} onRename={name => renameList(activeListId,name)} onSetMaxPts={pts => setListMaxPts(activeListId,pts)} />}
             {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onReorder={reorderInventory} />}
-            {activeView==="stats" && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} />}
-            {activeView==="codex" && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
+            {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} />}
+            {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} />}
+            {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
           {!activeList && (
@@ -1755,6 +2467,7 @@ Cela remplacera les données actuelles.`);
               {[
                 { key:"lists",     symbol:"✠", label:"CROISADE" },
                 { key:"inventory", symbol:"⚜", label:"RELIQUES" },
+                { key:"wishlist",  symbol:"✦", label:"WISHLIST" },
                 { key:"stats",     symbol:"◈", label:"STATS"    },
                 { key:"codex",     symbol:"⚙", label:"CODEX"    },
               ].map(t => (

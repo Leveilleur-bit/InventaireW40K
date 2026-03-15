@@ -1341,7 +1341,7 @@
                   <span style={{ color:"#e8dfc0", fontSize:"20px", fontWeight:"700", minWidth:"30px", textAlign:"center" }}>{qty}</span>
                   <button onClick={() => setQty(qty+1)} style={qtyBtn}>+</button>
                 </div>
-                {mode==="inventory" && (
+                {(mode==="inventory") && (
                   <>
                     <Label>Statut peinture</Label>
                     <div style={{ display:"flex", gap:"6px", marginBottom:"16px", flexWrap:"wrap" }}>
@@ -2338,9 +2338,9 @@
                               return (
                                 <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
                                   <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
-                                    placeholder={shopPrice ? shopPrice.toFixed(0) : "€"}
-                                    style={{ width:"52px", background: isAuto?"#0a0c06":"#060402", border:`1px solid ${isAuto?"#4a6a2a":"#1c1c1c"}`, color: isAuto?"#6a9a3a":"#6a5a4a", padding:"3px 5px", fontSize:"11px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
-                                  <span style={{ color: isAuto?"#4a6a2a":"#3a3020", fontSize:"10px" }}>€{isAuto&&<span style={{fontSize:"7px"}}> auto</span>}</span>
+                                    placeholder={shopPrice ? shopPrice.toFixed(0) : "prix"}
+                                    style={{ width:"58px", background: isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#5a8a3a":"#2a2215"}`, color: isAuto?"#8aba5a":"#8a7050", padding:"5px 6px", fontSize:"13px", fontFamily:"monospace", outline:"none", textAlign:"center", fontWeight:"700" }} />
+                                  <span style={{ color: isAuto?"#5a8a3a":"#3a3020", fontSize:"12px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px",marginLeft:"2px",opacity:0.7}}> auto</span>}</span>
                                 </div>
                               );
                             })()}
@@ -2355,8 +2355,8 @@
             ))}
           </div>
 
-          {showModal && <ModalAddUnit faction={faction} inventory={[]} mode="inventory" onClose={() => setShowModal(false)}
-            onAdd={entry => onAdd({ ...entry, id:Date.now(), status:"wanted", price:0 })} />}
+          {showModal && <ModalAddUnit faction={faction} inventory={[]} mode="wishlist" onClose={() => setShowModal(false)}
+            onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />}
         </div>
       );
     }

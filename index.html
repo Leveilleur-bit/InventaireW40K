@@ -2225,17 +2225,23 @@
       const f = FACTIONS[faction];
 
       const items = (wishlist||[])
-        .filter(i => i.faction===faction)
-        .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) }))
+        .filter(i => i && i.faction===faction && i.unitId)
+        .map(i => ({ ...i, unit: UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) || null }))
         .filter(i => i.unit);
 
       const totalPrice = (wishlist||[]).reduce((s,i) => {
-        const p = i.price || SHOP_PRICES[i.unit?.name] || 0;
-        return s + p * i.qty;
+        try {
+          const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
+          const p = i.price || (unit ? SHOP_PRICES[unit.name] : 0) || 0;
+          return s + p * (i.qty||1);
+        } catch { return s; }
       }, 0);
       const totalPts   = (wishlist||[]).reduce((s,i) => {
-        const p = ptsMap[`${i.faction}:${i.unitId}`] || POINTS_DB[i.unit?.name] || 0;
-        return s + p * i.qty;
+        try {
+          const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
+          const p = ptsMap[`${i.faction}:${i.unitId}`] || (unit ? POINTS_DB[unit.name] : 0) || 0;
+          return s + p * (i.qty||1);
+        } catch { return s; }
       }, 0);
 
       const cycleStatus = (id) => {
@@ -2249,7 +2255,7 @@
       const grouped = {};
       ROLE_ORDER.forEach(r => { grouped[r] = []; });
       items.forEach(item => {
-        const role = item.unit.role;
+        const role = item.unit?.role || "QG";
         if (!grouped[role]) grouped[role] = [];
         grouped[role].push(item);
       });
@@ -2691,7 +2697,22 @@
       );
     }
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    class ErrorBoundary extends React.Component {
+      constructor(props) { super(props); this.state = { error: null }; }
+      static getDerivedStateFromError(e) { return { error: e }; }
+      render() {
+        if (this.state.error) return (
+          <div style={{ background:"#020202", height:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"24px", fontFamily:"'Cinzel',serif", gap:"16px" }}>
+            <div style={{ fontSize:"40px", color:"#7a1515" }}>⚠</div>
+            <div style={{ color:"#e8dfc0", fontSize:"14px", letterSpacing:"2px", textAlign:"center" }}>ERREUR — RECHARGER LA PAGE</div>
+            <div style={{ color:"#3a3020", fontSize:"10px", fontFamily:"monospace", textAlign:"center", maxWidth:"300px", lineHeight:1.6 }}>{this.state.error.message}</div>
+            <button onClick={() => window.location.reload()} style={{ background:"#0f0c08", border:"1px solid #b8922a55", color:"#b8922a", padding:"10px 24px", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"3px", cursor:"pointer", marginTop:"8px" }}>RECHARGER</button>
+          </div>
+        );
+        return this.props.children;
+      }
+    }
+    ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
   </script>
 </body>
 </html>

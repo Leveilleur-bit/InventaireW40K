@@ -366,7 +366,9 @@
       "Roboute Guilliman": 380,
       "Marneus Calgar": 175,
       "Tigurius": 110,
+      "Captain Titus": 90,
       "Uriel Ventris": 90,
+        { id:"sm_titus", name:"Captain Titus",              role:"QG", chapter:"Ultramarines" },
       "Severus Agemman": 75,
       "Sicarius": 100,
       "Tor Garadon": 120,
@@ -2712,6 +2714,30 @@
       });
       const [activeView, setActiveView] = useState("lists");
       const [activeListId, setActiveListId] = useState(null);
+      const activeViewRef  = useRef("lists");
+      const activeListRef  = useRef(null);
+
+      // Syncer les refs pour y accéder dans le listener popstate
+      useEffect(() => { activeViewRef.current = activeView; }, [activeView]);
+      useEffect(() => { activeListRef.current = activeListId; }, [activeListId]);
+
+      // Bouton retour Android — navigation dans l'app
+      useEffect(() => {
+        window.history.pushState({ app: true }, "");
+        const onPop = () => {
+          window.history.pushState({ app: true }, ""); // garder l'état
+          // Si on est dans le détail d'une liste → revenir à la liste
+          if (activeListRef.current !== null) {
+            setActiveListId(null);
+          } else if (activeViewRef.current !== "lists") {
+            // Sinon revenir à l'onglet Croisade
+            setActiveView("lists");
+          }
+          // Si déjà sur Croisade sans liste ouverte → ne rien faire
+        };
+        window.addEventListener("popstate", onPop);
+        return () => window.removeEventListener("popstate", onPop);
+      }, []);
       const [lastSaved, setLastSaved] = useState(null); // timestamp
       const [saveAnim, setSaveAnim] = useState(false);   // flash animation
 

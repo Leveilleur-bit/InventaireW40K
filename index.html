@@ -1686,9 +1686,12 @@
       );
     }
 
-    function InventoryItem({ item, faction, ptsMap, onSetPts, onDelete, onEditPhoto, onUpdatePaint, onUpdateQty, accent, viewMode, dragHandleProps }) {
+    function InventoryItem({ item, faction, ptsMap, onSetPts, onDelete, onEditPhoto, onUpdatePaint, onUpdateQty, onUpdateModelCount, accent, viewMode, dragHandleProps }) {
       const f = FACTIONS[faction] || FACTIONS["SM"];
       const ps = PAINT_STATUS[item.paintStatus]||PAINT_STATUS.unpainted;
+      const defaultCount = MODEL_COUNT[item.unit?.name] || 1;
+      const modelCount = item.modelCount || defaultCount;
+      const totalFigs = modelCount * (item.qty||1);
       const cycleStatus = () => {
         const idx = PAINT_KEYS.indexOf(item.paintStatus||"unpainted");
         const next = PAINT_KEYS[(idx+1) % PAINT_KEYS.length];
@@ -1727,6 +1730,13 @@
             {/* Bottom controls */}
             <div style={{ padding:"7px 8px", display:"flex", alignItems:"center", justifyContent:"space-between", gap:"4px" }}>
               <QtyEditor qty={item.qty} accent={accent} onUpdate={n => onUpdateQty(item.id, n)} />
+              <div style={{ display:"flex", alignItems:"center", gap:"2px" }}>
+                <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, Math.max(1, modelCount-1))}
+                  style={{ width:"16px", height:"16px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a3a28", cursor:"pointer", fontSize:"10px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
+                <span style={{ color: item.modelCount ? accent : "#3a3020", fontSize:"9px", fontFamily:"monospace", minWidth:"20px", textAlign:"center" }}>{modelCount}</span>
+                <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, modelCount+1)}
+                  style={{ width:"16px", height:"16px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a3a28", cursor:"pointer", fontSize:"10px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>+</button>
+              </div>
               <button onClick={cycleStatus} title="Changer statut peinture"
                 style={{ display:"flex", alignItems:"center", gap:"3px", padding:"2px 6px", background:"#060402", border:`1px solid ${ps.color}33`, cursor:"pointer" }}>
                 <div style={{ width:"5px", height:"5px", borderRadius:"50%", background:ps.color }} />
@@ -1765,7 +1775,18 @@
               <div style={{ color:"#e8dfc0", fontSize:"13px", fontFamily:"'Cinzel',serif", lineHeight:1.3 }}>
                 {item.unit.name}
               </div>
-              <div style={{ display:"flex", gap:"6px", marginTop:"6px", alignItems:"center", flexWrap:"wrap" }}>
+              {/* Taille de squad — sous le nom */}
+              <div style={{ display:"flex", alignItems:"center", gap:"4px", marginTop:"4px" }}>
+                <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, Math.max(1, modelCount-1))}
+                  style={{ width:"20px", height:"20px", background:"#060402", border:"1px solid #2a2215", color:"#6a5a4a", cursor:"pointer", fontSize:"13px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
+                <div style={{ display:"flex", alignItems:"baseline", gap:"2px" }}>
+                  <span style={{ color: item.modelCount ? accent : "#5a4a38", fontSize:"12px", fontFamily:"monospace", fontWeight:"700" }}>{modelCount}</span>
+                  <span style={{ color:"#3a3020", fontSize:"9px", fontFamily:"'Cinzel',serif" }}>fig{item.qty>1?` × ${item.qty} = ${totalFigs}`:""}</span>
+                </div>
+                <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, modelCount+1)}
+                  style={{ width:"20px", height:"20px", background:"#060402", border:"1px solid #2a2215", color:"#6a5a4a", cursor:"pointer", fontSize:"13px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>+</button>
+              </div>
+              <div style={{ display:"flex", gap:"6px", marginTop:"4px", alignItems:"center", flexWrap:"wrap" }}>
                 <PaintCycleBtn status={item.paintStatus||"unpainted"} onCycle={cycleStatus} />
                 <WahapediaBtn unitName={item.unit.name} faction={faction} accent={accent} />
               </div>
@@ -1780,7 +1801,7 @@
       );
     }
 
-    function ViewInventory({ inventory, ptsMap, onSetPts, onAdd, onDelete, onUpdatePhoto, onUpdatePaint, onUpdateQty, onReorder }) {
+    function ViewInventory({ inventory, ptsMap, onSetPts, onAdd, onDelete, onUpdatePhoto, onUpdatePaint, onUpdateQty, onUpdateModelCount, onReorder }) {
       const [showModal, setShowModal] = useState(false);
       const [editPhotoItem, setEditPhotoItem] = useState(null);
       const [faction, setFaction] = useState("IK");
@@ -1942,7 +1963,7 @@
                         <InventoryItem key={item.id}
                           item={item} faction={faction} ptsMap={ptsMap} onSetPts={onSetPts}
                           onDelete={onDelete} onEditPhoto={setEditPhotoItem}
-                          onUpdatePaint={onUpdatePaint} onUpdateQty={onUpdateQty}
+                          onUpdatePaint={onUpdatePaint} onUpdateQty={onUpdateQty} onUpdateModelCount={onUpdateModelCount}
                           accent={f.accent} viewMode="grid"
                           dragHandleProps={{}}
                         />
@@ -1959,7 +1980,7 @@
                         <InventoryItem
                           item={item} faction={faction} ptsMap={ptsMap} onSetPts={onSetPts}
                           onDelete={onDelete} onEditPhoto={setEditPhotoItem}
-                          onUpdatePaint={onUpdatePaint} onUpdateQty={onUpdateQty}
+                          onUpdatePaint={onUpdatePaint} onUpdateQty={onUpdateQty} onUpdateModelCount={onUpdateModelCount}
                           accent={f.accent} viewMode="list"
                           dragHandleProps={{
                             draggable: true,
@@ -2006,7 +2027,8 @@
       // Points investis par faction
       const factionStats = Object.entries(FACTIONS).map(([k,f]) => {
         const items = inventory.filter(i=>i.faction===k);
-        const models = items.reduce((s,i)=>s+i.qty,0);
+        const models = items.reduce((s,i)=>{ const u=UNITS_DB[k]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
+        const units = items.reduce((s,i)=>s+(i.qty||1),0);
         const painted = items.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+i.qty,0);
         const pts = items.reduce((s,i)=>{
           const manual = ptsMap[`${k}:${i.unitId}`];
@@ -2118,7 +2140,7 @@
               <div style={{ marginBottom:"20px" }}>
                 <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>PAR FACTION</div>
                 {factionStats.map(({ key, f, models, painted, pts, byRole, uniqueUnits }) => {
-                  const pct = models ? Math.round(painted/models*100) : 0;
+                  const pct = units ? Math.round(painted/units*100) : 0;
                   const topRoles = Object.entries(byRole).sort((a,b)=>b[1]-a[1]).slice(0,4);
                   return (
                     <div key={key} style={{ background:"linear-gradient(180deg,#131110 0%,#0d0b0a 100%)", border:"1px solid #1c1a18", borderLeft:`3px solid ${f.accent}`, padding:"12px 14px", marginBottom:"8px" }}>
@@ -2434,6 +2456,7 @@
     function ViewWishlist({ wishlist, paintWishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice, onAddPaint, onDeletePaint }) {
       const [tab, setTab] = useState("units");
       const [showModal, setShowModal] = useState(false);
+      const [modalFaction, setModalFaction] = useState("SM");
       const [sortBy, setSortBy] = useState("faction");
       const [paintSearch, setPaintSearch] = useState("");
       const [paintFilter, setPaintFilter] = useState("all");
@@ -2564,8 +2587,29 @@
                 );
               })}
             </div>
-            {showModal && <ModalAddUnit faction="SM" inventory={[]} mode="wishlist" onClose={() => setShowModal(false)}
-              onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />}
+            {showModal && (<>
+              {/* Sélecteur de faction en overlay */}
+              <Overlay>
+                <div style={{ background:"#0a0806", border:"1px solid #b8922a44", borderTop:"2px solid #b8922a", width:"100%", maxWidth:"420px", margin:"0 16px", padding:"12px 16px 0" }}>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"10px" }}>
+                    <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>FACTION</div>
+                    <button onClick={() => setShowModal(false)} style={{ background:"none", border:"none", color:"#4a4028", cursor:"pointer", fontSize:"18px", lineHeight:1 }}>✕</button>
+                  </div>
+                  <div style={{ display:"flex", gap:"6px", marginBottom:"12px" }}>
+                    {Object.entries(FACTIONS).map(([k,v]) => (
+                      <button key={k} onClick={() => setModalFaction(k)}
+                        style={{ flex:1, padding:"8px 4px", background:modalFaction===k?`${v.accent}15`:"#060402", border:`1px solid ${modalFaction===k?v.accent:"#1c1c1c"}`, color:modalFaction===k?v.accent:"#252015", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", display:"flex", flexDirection:"column", alignItems:"center", gap:"3px" }}>
+                        <span style={{ fontSize:"18px" }}>{v.icon}</span>
+                        {v.short}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </Overlay>
+              <ModalAddUnit faction={modalFaction} inventory={[]} mode="wishlist"
+                onClose={() => setShowModal(false)}
+                onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />
+            </>)}
           </>)}
 
           {/* ── TAB PEINTURES ── */}
@@ -2651,7 +2695,8 @@
 
       const factionSummary = Object.entries(FACTIONS).map(([k,f]) => {
         const items = inventory.filter(i=>i.faction===k);
-        const models = items.reduce((s,i)=>s+i.qty,0);
+        const models = items.reduce((s,i)=>{ const u=UNITS_DB[k]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
+        const units = items.reduce((s,i)=>s+(i.qty||1),0);
         const p = items.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+i.qty,0);
         return { key:k, f, models, painted:p };
       }).filter(s=>s.models>0);
@@ -2847,7 +2892,8 @@
       const deleteInventory = id => confirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })), "#b8922a", "SUPPRIMER", true);
       const updatePhoto     = (id,photo) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,photo}:i) }));
       const updatePaint     = (id,status) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,paintStatus:status}:i) }));
-      const updateQty       = (id,qty)    => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i) }));
+      const updateQty        = (id,qty)    => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i) }));
+      const updateModelCount = (id,count) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,modelCount:count>0?count:null}:i) }));
       // Reorder: move draggedId to position of targetId within same faction
       const reorderInventory = (draggedId, targetId, faction) => updateApp(s => {
         const inv = [...s.inventory];
@@ -2936,7 +2982,7 @@
           <div style={{ flex:1, overflowY:"auto", paddingBottom:"64px" }}>
             {activeView==="lists" && !activeList && <ViewLists lists={appState.lists} inventory={appState.inventory} ptsMap={ptsMap} onSelect={setActiveListId} onCreate={createList} onDelete={deleteList} />}
             {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} onRename={name => renameList(activeListId,name)} onSetMaxPts={pts => setListMaxPts(activeListId,pts)} />}
-            {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onReorder={reorderInventory} />}
+            {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onUpdateModelCount={updateModelCount} onReorder={reorderInventory} />}
             {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
             {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}

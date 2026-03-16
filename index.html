@@ -2043,7 +2043,7 @@
           if (!unit) return;
           byRole[unit.role] = (byRole[unit.role]||0) + i.qty;
         });
-        return { key:k, f, models, painted, pts, byRole, uniqueUnits:items.length };
+        return { key:k, f, models, units, painted, pts, byRole, uniqueUnits:items.length };
       }).filter(s=>s.models>0);
 
       // Unités les plus présentes dans les listes
@@ -2139,7 +2139,7 @@
             {factionStats.length>0 && (
               <div style={{ marginBottom:"20px" }}>
                 <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>PAR FACTION</div>
-                {factionStats.map(({ key, f, models, painted, pts, byRole, uniqueUnits }) => {
+                {factionStats.map(({ key, f, models, units, painted, pts, byRole, uniqueUnits }) => {
                   const pct = units ? Math.round(painted/units*100) : 0;
                   const topRoles = Object.entries(byRole).sort((a,b)=>b[1]-a[1]).slice(0,4);
                   return (
@@ -2455,7 +2455,8 @@
 
     function ViewWishlist({ wishlist, paintWishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice, onAddPaint, onDeletePaint }) {
       const [tab, setTab] = useState("units");
-      const [showModal, setShowModal] = useState(false);
+      const [showFactionPicker, setShowFactionPicker] = useState(false);
+      const [showUnitModal, setShowUnitModal] = useState(false);
       const [modalFaction, setModalFaction] = useState("SM");
       const [sortBy, setSortBy] = useState("faction");
       const [paintSearch, setPaintSearch] = useState("");
@@ -2513,7 +2514,7 @@
                   {totalPts>0  && <span style={{ color:"#3a3020", fontSize:"9px" }}>{totalPts} pts</span>}
                 </div>
               </div>
-              {tab==="units" && <IconBtn onClick={() => setShowModal(true)}><Ic.Plus /></IconBtn>}
+              {tab==="units" && <IconBtn onClick={() => setShowFactionPicker(true)}><Ic.Plus /></IconBtn>}
             </div>
           </div>
 
@@ -2587,29 +2588,32 @@
                 );
               })}
             </div>
-            {showModal && (<>
-              {/* Sélecteur de faction en overlay */}
+            {/* Étape 1 : choisir la faction */}
+            {showFactionPicker && !showUnitModal && (
               <Overlay>
-                <div style={{ background:"#0a0806", border:"1px solid #b8922a44", borderTop:"2px solid #b8922a", width:"100%", maxWidth:"420px", margin:"0 16px", padding:"12px 16px 0" }}>
-                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"10px" }}>
-                    <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>FACTION</div>
-                    <button onClick={() => setShowModal(false)} style={{ background:"none", border:"none", color:"#4a4028", cursor:"pointer", fontSize:"18px", lineHeight:1 }}>✕</button>
+                <div style={{ background:"#0a0806", border:"1px solid #b8922a44", borderTop:"2px solid #b8922a", width:"100%", maxWidth:"360px", margin:"0 16px", padding:"20px 16px" }}>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
+                    <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>CHOISIR UNE FACTION</div>
+                    <button onClick={() => setShowFactionPicker(false)} style={{ background:"none", border:"none", color:"#4a4028", cursor:"pointer", fontSize:"18px", lineHeight:1 }}>✕</button>
                   </div>
-                  <div style={{ display:"flex", gap:"6px", marginBottom:"12px" }}>
+                  <div style={{ display:"flex", gap:"8px" }}>
                     {Object.entries(FACTIONS).map(([k,v]) => (
-                      <button key={k} onClick={() => setModalFaction(k)}
-                        style={{ flex:1, padding:"8px 4px", background:modalFaction===k?`${v.accent}15`:"#060402", border:`1px solid ${modalFaction===k?v.accent:"#1c1c1c"}`, color:modalFaction===k?v.accent:"#252015", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"1px", display:"flex", flexDirection:"column", alignItems:"center", gap:"3px" }}>
-                        <span style={{ fontSize:"18px" }}>{v.icon}</span>
+                      <button key={k} onClick={() => { setModalFaction(k); setShowFactionPicker(false); setShowUnitModal(true); }}
+                        style={{ flex:1, padding:"14px 4px", background:`${v.accent}11`, border:`1px solid ${v.accent}44`, color:v.accent, cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", display:"flex", flexDirection:"column", alignItems:"center", gap:"6px", touchAction:"manipulation" }}>
+                        <span style={{ fontSize:"24px" }}>{v.icon}</span>
                         {v.short}
                       </button>
                     ))}
                   </div>
                 </div>
               </Overlay>
+            )}
+            {/* Étape 2 : choisir l'unité */}
+            {showUnitModal && (
               <ModalAddUnit faction={modalFaction} inventory={[]} mode="wishlist"
-                onClose={() => setShowModal(false)}
-                onAdd={entry => onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 })} />
-            </>)}
+                onClose={() => setShowUnitModal(false)}
+                onAdd={entry => { onAdd({ unitId:entry.unitId, faction:entry.faction, qty:entry.qty||1, id:Date.now(), status:"wanted", price:0 }); setShowUnitModal(false); }} />
+            )}
           </>)}
 
           {/* ── TAB PEINTURES ── */}

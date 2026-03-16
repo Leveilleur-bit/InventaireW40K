@@ -1994,13 +1994,14 @@
     }
 
     function ViewStats({ inventory, lists, ptsMap, wishlist }) {
-      const totalModels   = inventory.reduce((s,i) => s+i.qty, 0);
+      const totalUnits    = inventory.reduce((s,i) => s+(i.qty||1), 0);
+      const totalModels   = inventory.reduce((s,i) => { const u=UNITS_DB[i.faction]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1); }, 0);
       const totalUnique   = inventory.length;
-      const totalPainted  = inventory.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+i.qty,0);
-      const totalPrimed   = inventory.filter(i=>i.paintStatus==="primed").reduce((s,i)=>s+i.qty,0);
-      const totalWip      = inventory.filter(i=>i.paintStatus==="wip").reduce((s,i)=>s+i.qty,0);
-      const totalUnpainted= inventory.filter(i=>i.paintStatus==="unpainted"||!i.paintStatus).reduce((s,i)=>s+i.qty,0);
-      const paintPct      = totalModels ? Math.round(totalPainted/totalModels*100) : 0;
+      const totalPainted  = inventory.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+(i.qty||1),0);
+      const totalPrimed   = inventory.filter(i=>i.paintStatus==="primed").reduce((s,i)=>s+(i.qty||1),0);
+      const totalWip      = inventory.filter(i=>i.paintStatus==="wip").reduce((s,i)=>s+(i.qty||1),0);
+      const totalUnpainted= inventory.filter(i=>i.paintStatus==="unpainted"||!i.paintStatus).reduce((s,i)=>s+(i.qty||1),0);
+      const paintPct      = totalUnits ? Math.round(totalPainted/totalUnits*100) : 0;
 
       // Points investis par faction
       const factionStats = Object.entries(FACTIONS).map(([k,f]) => {

@@ -49,10 +49,7 @@
     @keyframes crossGrow  { from{transform:scale(0.6);opacity:0} to{transform:scale(1);opacity:1} }
     @keyframes statSlide  { from{opacity:0;transform:translateX(-8px)} to{opacity:1;transform:translateX(0)} }
     @keyframes paintPop   { 0%{transform:scale(1)} 40%{transform:scale(1.18)} 70%{transform:scale(0.93)} 100%{transform:scale(1)} }
-    @keyframes paintGlow  { 0%{opacity:0;transform:scale(0.6)} 50%{opacity:1;transform:scale(1.3)} 100%{opacity:0;transform:scale(1.8)} }
-    @keyframes viewEnter  { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes viewEnterLeft  { from{opacity:0;transform:translateX(18px)} to{opacity:1;transform:translateX(0)} }
-    @keyframes viewEnterRight { from{opacity:0;transform:translateX(-18px)} to{opacity:1;transform:translateX(0)} }
+    @keyframes paintGlow  { 0%{opacity:0;transform:scale(0.6)} 50%{opacity:1;transform:scale(1.3)} 100%{opacity:0;transform:scale(1.8)} } to{opacity:1;transform:translateY(0)} } to{opacity:1;transform:translateX(0)} } to{opacity:1;transform:translateX(0)} }
 
     body {
       background: #020202 !important;
@@ -370,7 +367,6 @@
       "Tigurius": 110,
       "Captain Titus": 90,
       "Uriel Ventris": 90,
-        { id:"sm_titus", name:"Captain Titus",              role:"QG", chapter:"Ultramarines" },
       "Severus Agemman": 75,
       "Sicarius": 100,
       "Tor Garadon": 120,
@@ -605,6 +601,7 @@
         { id:"sm021", name:"Marneus Calgar",                  role:"QG", chapter:"Ultramarines" },
         { id:"sm022", name:"Tigurius",                        role:"QG", chapter:"Ultramarines" },
         { id:"sm023", name:"Uriel Ventris",                   role:"QG", chapter:"Ultramarines" },
+        { id:"sm_titus", name:"Captain Titus",          role:"QG", chapter:"Ultramarines" },
         { id:"sm024", name:"Sicarius",                        role:"QG", chapter:"Ultramarines" },
         { id:"sm025", name:"Severus Agemman",                 role:"QG", chapter:"Ultramarines" },
         { id:"sm026", name:"High Marshal Helbrecht",          role:"QG", chapter:"Black Templars" },
@@ -1109,17 +1106,9 @@
           return n >= 3;
         } catch { return false; }
       });
-      const VIEW_ORDER = ["lists","inventory","wishlist","stats","codex"];
       const [activeView, setActiveView] = useState("lists");
       const [activeListId, setActiveListId] = useState(null);
-      const [viewKey, setViewKey] = useState(0); // force re-mount pour animation
-      const prevViewRef = useRef("lists");
-
-      const navigateTo = (newView) => {
-        prevViewRef.current = activeView;
-        setViewKey(k => k+1);
-        setActiveView(newView);
-      };
+      const navigateTo = setActiveView;
 
       const [lastSaved, setLastSaved] = useState(null); // timestamp
       const [saveAnim, setSaveAnim] = useState(false);   // flash animation
@@ -1307,22 +1296,12 @@
           )}
 
           <div style={{ flex:1, overflowY:"auto", paddingBottom:"64px" }}>
-            {(() => {
-              const prevIdx = VIEW_ORDER.indexOf(prevViewRef.current);
-              const currIdx = VIEW_ORDER.indexOf(activeView);
-              const dir = currIdx > prevIdx ? "viewEnterLeft" : currIdx < prevIdx ? "viewEnterRight" : "viewEnter";
-              const anim = `${dir} 0.22s cubic-bezier(0.25,0.46,0.45,0.94) both`;
-              return (
-                <div key={viewKey} style={{ animation: anim, minHeight:"100%" }}>
-                  {activeView==="lists" && !activeList && <ViewLists lists={appState.lists} inventory={appState.inventory} ptsMap={ptsMap} onSelect={setActiveListId} onCreate={createList} onDelete={deleteList} />}
-                  {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} onRename={name => renameList(activeListId,name)} onSetMaxPts={pts => setListMaxPts(activeListId,pts)} />}
-                  {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onReorder={reorderInventory} />}
-                  {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
-                  {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
-                  {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
-                </div>
-              );
-            })()}
+            {activeView==="lists" && !activeList && <ViewLists lists={appState.lists} inventory={appState.inventory} ptsMap={ptsMap} onSelect={setActiveListId} onCreate={createList} onDelete={deleteList} />}
+            {activeView==="lists" && activeList && <ViewListDetail list={activeList} inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onBack={() => setActiveListId(null)} onAddEntry={addEntry} onDeleteEntry={id => deleteEntry(activeListId,id)} onToggleWarlord={id => toggleWarlord(activeListId,id)} onRename={name => renameList(activeListId,name)} onSetMaxPts={pts => setListMaxPts(activeListId,pts)} />}
+            {activeView==="inventory" && <ViewInventory inventory={appState.inventory} ptsMap={ptsMap} onSetPts={handleSetPts} onAdd={addInventory} onDelete={deleteInventory} onUpdatePhoto={updatePhoto} onUpdatePaint={updatePaint} onUpdateQty={updateQty} onReorder={reorderInventory} />}
+            {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
+            {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
+            {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
           {!activeList && (

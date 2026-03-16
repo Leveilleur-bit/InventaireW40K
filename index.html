@@ -1341,21 +1341,7 @@
         );
         return this.props.children;
       }
-    }
-    // Bouton retour Android — empêche de quitter l'app accidentellement
-    // Approche : on pousse un état vide dans l'historique au chargement,
-    // et on le repousse à chaque fois que le bouton retour est pressé.
-    // Entièrement hors de React, pas de risque de crash.
-    (function() {
-      try {
-        window.history.pushState(null, "", window.location.href);
-        window.addEventListener("popstate", function() {
-          window.history.pushState(null, "", window.location.href);
-        });
-      } catch(e) {}
-    })();
 
-    ReactDOM.createRoot(document.getElementById("root")).render(<ErrorBoundary><App /></ErrorBoundary>);
   </script>
 </body>
 </html>

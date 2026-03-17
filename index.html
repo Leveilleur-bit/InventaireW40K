@@ -19,7 +19,7 @@
       background_color: "#020202",
       theme_color: "#020202",
       icons: [{
-        src: "data:image/svg+xml," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23020202'/><text x='256' y='340' font-size='320' text-anchor='middle' fill='%23b8922a' font-family='serif'>✠</text></svg>`),
+        src: "data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%20512%20512%27%3E%3Crect%20width%3D%27512%27%20height%3D%27512%27%20fill%3D%27%25230a0806%27%20rx%3D%2790%27/%3E%3Ctext%20x%3D%27256%27%20y%3D%27355%27%20font-size%3D%27340%27%20text-anchor%3D%27middle%27%20fill%3D%27%2523b8922a%27%20font-family%3D%27serif%27%3E%E2%9C%A0%3C/text%3E%3C/svg%3E"",
         sizes: "512x512", type: "image/svg+xml", purpose: "any maskable"
       }]
     };
@@ -2438,7 +2438,8 @@
 
     function ViewCodex({ onExport, onImport, inventory, lists }) {
       const importRef = useRef(null);
-      const totalModels = inventory.reduce((s,i)=>s+i.qty,0);
+      const totalModels = inventory.reduce((s,i) => { const u=UNITS_DB[i.faction]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
+      const totalUnits  = inventory.reduce((s,i)=>s+(i.qty||1),0);
       const totalWithPhoto = inventory.filter(i=>i.photo).length;
 
       return (
@@ -2469,6 +2470,7 @@
                   { val: inventory.length, label:"RÉFÉRENCES" },
                   { val: lists.length,     label:"LISTES"     },
                   { val: totalModels,      label:"FIGURINES"  },
+                  { val: totalUnits,       label:"UNITÉS"     },
                 ].map(c => (
                   <div key={c.label} style={{ background:"#080604", border:"1px solid #1a1714", padding:"8px", textAlign:"center" }}>
                     <div style={{ color:"#b8922a", fontSize:"16px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{c.val}</div>
@@ -2530,7 +2532,7 @@
       "Dry":      { color:"#a08060", price:5.60 },
       "Contrast": { color:"#8040a0", price:6.40 },
       "Technical":{ color:"#408060", price:5.60 },
-      "Air":      { color:"#40a0c0", price:5.60 },
+      "Spray":    { color:"#6060a0", price:14.40 },
     };
     const CITADEL_PAINTS = [
       {name:"Abaddon Black",type:"Base"},{name:"Averland Sunset",type:"Base"},{name:"Balthasar Gold",type:"Base"},
@@ -2582,6 +2584,13 @@
       {name:"Contrast Medium",type:"Technical"},{name:"Martian Ironearth",type:"Technical"},
       {name:"Nihilakh Oxide",type:"Technical"},{name:"Nurgles Rot",type:"Technical"},
       {name:"Stormshield",type:"Technical"},{name:"Typhus Corrosion",type:"Technical"},{name:"Valhallan Blizzard",type:"Technical"},
+      // Sprays / Bombes
+      {name:"Chaos Black Spray",type:"Spray"},{name:"Corax White Spray",type:"Spray"},
+      {name:"Wraithbone Spray",type:"Spray"},{name:"Grey Seer Spray",type:"Spray"},
+      {name:"Leadbelcher Spray",type:"Spray"},{name:"Zandri Dust Spray",type:"Spray"},
+      {name:"Mephiston Red Spray",type:"Spray"},{name:"Macragge Blue Spray",type:"Spray"},
+      {name:"Death Guard Green Spray",type:"Spray"},{name:"Caledor Sky Spray",type:"Spray"},
+      {name:"Retributor Armour Spray",type:"Spray"},{name:"Averland Sunset Spray",type:"Spray"},
     ];
 
     function ViewWishlist({ wishlist, paintWishlist, ptsMap, onAdd, onDelete, onSetStatus, onSetPrice, onAddPaint, onDeletePaint }) {
@@ -2710,7 +2719,7 @@
                           <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
                             placeholder={shopPrice?shopPrice.toFixed(0):"€"}
                             style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#5a8a3a":"#2a2215"}`, color:isAuto?"#8aba5a":"#8a7050", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
-                          <span style={{ color:isAuto?"#5a8a3a":"#3a3020", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"7px",opacity:0.7}}> a</span>}</span>
+                          <span style={{ color:isAuto?"#8aba5a":"#3a3020", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px"}}> a</span>}</span>
                         </div>
                         <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"1px solid #2a2215", color:"#6a4a3a", cursor:"pointer", padding:"5px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}><Ic.Trash /></button>
                       </div>

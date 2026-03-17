@@ -1397,7 +1397,7 @@
             <button onClick={() => cameraRef.current?.click()} style={{ flex:1, padding:"11px 0", background:"#060504", border:`1px solid ${accent}55`, color:accent, fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", cursor:"pointer" }}>📷 APPAREIL</button>
             <button onClick={() => galleryRef.current?.click()} style={{ flex:1, padding:"11px 0", background:"#060504", border:"1px solid #1c1c1c", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", cursor:"pointer" }}>🖼 GALERIE</button>
           </div>
-          <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:"none" }} />
+          <input ref={cameraRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
         </div>
       );
@@ -1410,7 +1410,7 @@
             <button onClick={() => cameraRef.current?.click()} style={{ padding:"7px 14px", background:"#060504", border:`1px solid ${accent}55`, color:accent, fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", cursor:"pointer" }}>📷 Appareil photo</button>
             <button onClick={() => galleryRef.current?.click()} style={{ padding:"7px 14px", background:"#060504", border:"1px solid #1c1c1c", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", cursor:"pointer" }}>🖼 Galerie</button>
           </div>
-          <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:"none" }} />
+          <input ref={cameraRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
         </div>
       );

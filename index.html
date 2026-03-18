@@ -1326,9 +1326,11 @@
         <div style={{ marginBottom:"6px" }}>
           <div style={{ background:f.bgCard||"linear-gradient(180deg,#1a1714 0%,#141210 100%)", border:`1px solid ${entry.warlord?f.accent+"44":"#222"}`, borderLeft:`2px solid ${entry.warlord?f.accent:f.accent+"44"}`, overflow:"hidden", transition:"background 0.4s" }}>
             <div style={{ display:"flex", alignItems:"center", gap:"12px", padding:"10px 12px" }}>
-              <div style={{ width:"46px", height:"46px", flexShrink:0, background:"#020202", border:`1px solid ${f.accent}22`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", position:"relative" }}>
-                {f.icon}
-                <div style={{ position:"absolute", bottom:"1px", right:"2px", fontSize:"7px", color:f.accent, opacity:0.3 }}>✠</div>
+              <div style={{ width:"46px", height:"46px", flexShrink:0, background:"#020202", border:`1px solid ${f.accent}22`, overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"20px", position:"relative" }}>
+                {inv?.photo
+                  ? <img src={inv.photo} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                  : <>{f.icon}<div style={{ position:"absolute", bottom:"1px", right:"2px", fontSize:"7px", color:f.accent, opacity:0.3 }}>✠</div></>
+                }
               </div>
               <div style={{ flex:1 }}>
                 {entry.warlord && (
@@ -1424,15 +1426,21 @@
       const f = FACTIONS[faction];
       const unit = UNITS_DB[faction]?.find(u => u.id === item.unitId);
       const [photo, setPhoto] = useState(item.photo||null);
+      // Sauvegarder immédiatement dans IndexedDB dès que la photo est prise
+      // pour survivre au rechargement Android PWA après capture caméra
+      const handlePhoto = (newPhoto) => {
+        setPhoto(newPhoto);
+        onSave(newPhoto); // sauvegarde immédiate sans attendre ENREGISTRER
+      };
       return (
         <Overlay>
           <Sheet accent={f.accent}>
             <SheetHeader title="Photo de la figurine" onClose={onClose} accent={f.accent} />
             <div style={{ color:"#4a4038", fontSize:"12px", textAlign:"center", marginBottom:"16px", fontStyle:"italic" }}>{unit?.name}</div>
-            <PhotoPicker photo={photo} onPhoto={setPhoto} accent={f.accent} size={180} />
-            {photo && <button onClick={() => setPhoto(null)} style={{ display:"block", width:"100%", marginTop:"12px", background:"none", border:"1px solid #1c1c1c", color:"#3a2020", padding:"8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px" }}>✕ SUPPRIMER LA PHOTO</button>}
+            <PhotoPicker photo={photo} onPhoto={handlePhoto} accent={f.accent} size={180} />
+            {photo && <button onClick={() => { setPhoto(null); onSave(null); }} style={{ display:"block", width:"100%", marginTop:"12px", background:"none", border:"1px solid #1c1c1c", color:"#3a2020", padding:"8px", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px" }}>✕ SUPPRIMER LA PHOTO</button>}
             <div style={{ marginTop:"20px" }}>
-              <PrimaryBtn color={f.accent} onClick={() => { onSave(photo); onClose(); }}>ENREGISTRER</PrimaryBtn>
+              <PrimaryBtn color={f.accent} onClick={() => { onClose(); }}>FERMER</PrimaryBtn>
             </div>
           </Sheet>
         </Overlay>
@@ -1611,7 +1619,7 @@
                     </div>
                   </div>
                   <div style={{ marginTop:"14px", background:"#0d0d0d", height:"3px", overflow:"hidden" }}>
-                    <div style={{ width:`${pct}%`, height:"100%", background:pct>95?"#7a1515":f.accent, transition:"width 0.4s" }} />
+                    <div style={{ width:`${pct}%`, height:"100%", background:pts>list.maxPts?"#7a1515":f.accent, transition:"width 0.4s" }} />
                   </div>
                   <div style={{ display:"flex", justifyContent:"space-between", marginTop:"8px", alignItems:"center" }}>
                     <div style={{ color:"#35281a", fontSize:"11px", fontStyle:"italic" }}>{(list.entries||[]).length} frères de bataille</div>
@@ -1747,11 +1755,11 @@
                 </div>
               </div>
               <div style={{ textAlign:"right" }}>
-                <div style={{ color:pct>95?"#7a1515":"#3a3028", fontSize:"11px" }}>{list.maxPts-pts} pts restants</div>
+                <div style={{ color:pts>list.maxPts?"#7a1515":"#3a3028", fontSize:"11px" }}>{list.maxPts-pts} pts restants</div>
               </div>
             </div>
             <div style={{ background:"#060606", height:"4px", position:"relative" }}>
-              <div style={{ width:`${pct}%`, height:"100%", background:pct>95?"#7a1515":`linear-gradient(90deg,${f.accent}88,${f.accent})`, transition:"width 0.5s" }} />
+              <div style={{ width:`${pct}%`, height:"100%", background:pts>list.maxPts?"#7a1515":`linear-gradient(90deg,${f.accent}88,${f.accent})`, transition:"width 0.5s" }} />
               {[25,50,75].map(p => <div key={p} style={{ position:"absolute", top:0, left:`${p}%`, width:"1px", height:"100%", background:"#131313" }} />)}
             </div>
           </div>
@@ -2863,8 +2871,8 @@
                         <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
                           <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
                             placeholder={shopPrice?shopPrice.toFixed(0):"€"}
-                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#2a2215"}`, color:isAuto?"#6a9a4a":"#8a7050", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
-                          <span style={{ color:isAuto?"#6a9a4a":"#3a3020", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px"}}> a</span>}</span>
+                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#2a2215"}`, color:isAuto?"#b8e890":"#e8dfc0", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
+                          <span style={{ color:isAuto?"#b8e890":"#e8dfc0", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px"}}> a</span>}</span>
                         </div>
                         <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"1px solid #2a2215", color:"#6a4a3a", cursor:"pointer", padding:"5px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}><Ic.Trash /></button>
                       </div>

@@ -2871,7 +2871,7 @@
                         <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
                           <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
                             placeholder={shopPrice?shopPrice.toFixed(0):"€"}
-                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#2a2215"}`, color:isAuto?"#b8e890":"#e8dfc0", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
+                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#2a2215"}`, color:isAuto?"##6a9a4a":"#e8dfc0", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
                           <span style={{ color:isAuto?"#b8e890":"#e8dfc0", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px"}}> a</span>}</span>
                         </div>
                         <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"1px solid #2a2215", color:"#6a4a3a", cursor:"pointer", padding:"5px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}><Ic.Trash /></button>

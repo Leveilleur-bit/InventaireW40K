@@ -458,7 +458,8 @@
       "Harpy": 130,
       "Haruspex": 120,
       "Heavy Intercessor Squad": 95,
-      "      "Hellblaster Squad": 100,
+
+      "Hellblaster Squad": 100,
       "Hierophant Bio-Titan": 800,
       "High Marshal Helbrecht": 160,
       "Hive Crone": 135,
@@ -660,6 +661,7 @@
       "Sanguinary Guard":5,"Death Company Marines":5,
       "Ravenwing Black Knights":3,"Ravenwing Bike Squadron":3,
       "Company Heroes":5,"Victrix Honour Guard":2,"Primaris Honour Guard":2,
+      "Inner Circle Companions":4,"Primaris Sword Brethren":5,"Helbrecht's Crusaders":5,
       "Bike Squad":3,"Veteran Intercessor Squad":5,"Company Veterans":5,
       // Tyranids squads
       "Gargoyles":10,"Hormagaunts":10,"Termagants":10,"Neurogaunts":10,
@@ -750,7 +752,7 @@
         { id:"sm060", name:"Intercessor Squad",                    role:"Troupes", chapter:"Générique" },
         { id:"sm061", name:"Assault Intercessor Squad",            role:"Troupes", chapter:"Générique" },
         { id:"sm062", name:"Scout Squad",                          role:"Troupes", chapter:"Générique" , forbidden:["Deathwatch"]},
-        { id:"sm063", name:"Tactical Squad",                  role:"Troupes", chapter:"Générique" , forbidden:["Space Wolves", "Deathwatch"]},
+        { id:"sm063", name:"Tactical Squad",                  role:"Troupes", chapter:"Générique" , forbidden:["Deathwatch","Space Wolves"]},
         { id:"sm064", name:"Crusader Squad",                  role:"Troupes", chapter:"Black Templars" },
         { id:"sm065", name:"Infiltrator Squad",                    role:"Troupes", chapter:"Générique" },
         { id:"sm066", name:"Incursor Squad",                       role:"Troupes", chapter:"Générique" },
@@ -803,7 +805,7 @@
         { id:"sm125", name:"Ravenwing Black Knights",         role:"Rapide", chapter:"Dark Angels" },
         { id:"sm126", name:"Ravenwing Darkshroud",            role:"Rapide", chapter:"Dark Angels" },
         { id:"sm127", name:"Ravenwing Land Speeder Vengeance",role:"Rapide", chapter:"Dark Angels" },
-        { id:"sm130", name:"Devastator Squad",                     role:"Lourd", chapter:"Générique" , forbidden:["Space Wolves", "Deathwatch"]},
+        { id:"sm130", name:"Devastator Squad",                     role:"Lourd", chapter:"Générique" , forbidden:["Deathwatch","Space Wolves"]},
         { id:"sm131", name:"Centurion Devastator Squad",           role:"Lourd", chapter:"Générique" },
         { id:"sm132", name:"Predator Annihilator",            role:"Lourd", chapter:"Générique" },
         { id:"sm133", name:"Predator Destructor",             role:"Lourd", chapter:"Générique" },
@@ -863,7 +865,7 @@
         { id:"sm252", name:"Inceptor Squad",                   role:"Rapide", chapter:"Générique" },
 
         // ── Lourd manquants ───────────────────────────────────
-        { id:"sm260", name:"Devastator Squad",                 role:"Lourd",  chapter:"Générique" },
+        { id:"sm260", name:"Devastator Squad",                 role:"Lourd",  chapter:"Générique" , forbidden:["Deathwatch","Space Wolves"]},
         { id:"sm261", name:"Centurion Devastator Squad",       role:"Lourd",  chapter:"Générique" },
         { id:"sm262", name:"Whirlwind Hyperios",               role:"Lourd",  chapter:"Générique" },
         { id:"sm263", name:"Hunter",                           role:"Lourd",  chapter:"Générique" },
@@ -1932,6 +1934,7 @@
       const [showModal, setShowModal] = useState(false);
       const [editPhotoItem, setEditPhotoItem] = useState(null);
       const [faction, setFaction] = useState("IK");
+      const [chapterFilter, setChapterFilter] = useState("all");
       const [viewMode, setViewMode] = useState("list");
       const [paintFilter, setPaintFilter] = useState("all");
       const [collapsedRoles, setCollapsedRoles] = useState({});
@@ -1940,11 +1943,25 @@
       const [dragOverId, setDragOverId] = useState(null);
       const f = FACTIONS[faction];
 
+      const availableChapters = faction === "SM" ? ["all", ...Array.from(new Set(
+        inventory.filter(i=>i.faction==="SM")
+          .map(i => UNITS_DB["SM"]?.find(u=>u.id===i.unitId)?.chapter || "Générique")
+          .filter(Boolean)
+      ))] : [];
+
       const rawItems = inventory
         .filter(i=>i.faction===faction)
         .filter(i=> paintFilter==="all" || (paintFilter==="unpainted" ? (!i.paintStatus||i.paintStatus==="unpainted") : i.paintStatus===paintFilter))
         .map(i => ({ ...i, unit:UNITS_DB[i.faction]?.find(u=>u.id===i.unitId) }))
-        .filter(i=>i.unit);
+        .filter(i=>i.unit)
+        .filter(i=> {
+          if (faction !== "SM" || chapterFilter === "all") return true;
+          const ch = i.unit?.chapter || "Générique";
+          const forbidden = i.unit?.forbidden || [];
+          if (forbidden.includes(chapterFilter)) return false;
+          if (ch === "Générique") return true;
+          return ch === chapterFilter;
+        });
 
       // Group by role, respecting custom order (inventory order within each role)
       const grouped = {};
@@ -2049,7 +2066,18 @@
               );
             })}
           </div>
-          {/* Filtre statut peinture */}
+          {/* Filtre chapter SM */}
+          {faction === "SM" && availableChapters.length > 2 && (
+            <div style={{ display:"flex", gap:"4px", overflowX:"auto", padding:"5px 12px", borderBottom:"1px solid #0f0e0d", scrollbarWidth:"none" }}>
+              {availableChapters.map(ch => (
+                <button key={ch} onClick={() => setChapterFilter(ch)}
+                  style={{ flexShrink:0, padding:"3px 8px", background:chapterFilter===ch?`${f.accent}22`:"transparent", border:`1px solid ${chapterFilter===ch?f.accent:"#1a1816"}`, color:chapterFilter===ch?f.accent:"#3a3020", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", touchAction:"manipulation" }}>
+                  {ch==="all"?"TOUS":ch.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          )}
+      {/* Filtre statut peinture */}
           <div style={{ display:"flex", gap:"4px", padding:"6px 12px", background:"#020202", borderBottom:"1px solid #0a0a0a", overflowX:"auto" }}>
             {[
               { key:"all",      label:"TOUT",      color:"#6a5a4a", dot:null },

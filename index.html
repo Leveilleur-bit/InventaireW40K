@@ -211,7 +211,7 @@
       "Judiciar": 27.20,
       "Company Champion": 22.40,
       "Dreadnought": 38.00,
-      "Redemptor Dreadnought": 205.00,
+      "Redemptor Dreadnought": 44.00,
       "Brutalis Dreadnought": 44.00,
       "Ballistus Dreadnought": 44.00,
       "Venerable Dreadnought": 38.00,
@@ -223,7 +223,7 @@
       "Gladiator Lancer": 52.00,
       "Gladiator Reaper": 52.00,
       "Gladiator Valiant": 52.00,
-      "Repulsor Executioner": 230.00,
+      "Repulsor Executioner": 72.00,
       "Repulsor": 76.00,
       "Impulsor": 44.00,
       "Stormhawk Interceptor": 38.00,
@@ -243,7 +243,7 @@
       "High Marshal Helbrecht": 33.60,
       "Chaplain Grimaldus": 29.60,
       "Emperor's Champion": 22.40,
-      "Crusader Squad": 150.00,
+      "Crusader Squad": 36.00,
       "Ragnar Blackmane": 33.60,
       "Logan Grimnar": 44.00,
       "Njal Stormcaller": 29.60,
@@ -271,8 +271,8 @@
       "Armiger Warglaive": 64.00,   // Knight Armigers (2 dans la boîte)
       "Armiger Helverin": 135.00,    // même kit
       "Knight Paladin": 120.00,     // Knight Questoris
-      "Knight Errant": 355.00,
-      "Knight Gallant": 355.00,
+      "Knight Errant": 96.00,
+      "Knight Gallant": 96.00,
       "Knight Crusader": 120.00,
       "Knight Warden": 120.00,
       "Knight Preceptor": 120.00,
@@ -333,7 +333,7 @@
       "Callidus Assassin": 27.20, "Culexus Assassin": 27.20,
       "Eversor Assassin": 27.20, "Vindicare Assassin": 27.20,
       "Inquisitor": 65.40, "Inquisitor Coteaz": 29.60,
-      "Inquisitor Draxus": 110.60, "Inquisitor Greyfax": 29.60,
+      "Inquisitor Draxus": 29.60, "Inquisitor Greyfax": 29.60,
       "Ministorum Priest": 18.00, "Navigator": 22.40,
       "Watch Captain Artemis": 29.60, "Watch Master": 29.60,
       "Aquila Kill Team": 44.00, "Deathwatch Kill Team": 44.00,
@@ -1662,8 +1662,38 @@
       const entries = (list.entries||[]).map(e => ({ ...e, inv:inventory.find(i=>i.id===e.inventoryId) }));
       const pts = useTotalPts(list.entries||[], list.faction, ptsMap);
       const pct = Math.min(100, pts/list.maxPts*100);
-      const chars  = entries.filter(e => { const u=UNITS_DB[list.faction]?.find(u=>u.id===e.unitId); return u&&(u.role==="QG"||u.role==="Seigneur de guerre"); });
-      const others = entries.filter(e => { const u=UNITS_DB[list.faction]?.find(u=>u.id===e.unitId); return u&&u.role!=="QG"&&u.role!=="Seigneur de guerre"; });
+      const SECTION_ORDER = [
+        { key:"QG",        title:"CHARACTERS" },
+        { key:"Troupes",   title:"BATTLELINE" },
+        { key:"Élite",     title:"ÉLITE" },
+        { key:"Attaque rapide", title:"FAST ATTACK" },
+        { key:"Soutien lourd",  title:"HEAVY SUPPORT" },
+        { key:"Transport", title:"DEDICATED TRANSPORTS" },
+        { key:"Armiger",   title:"ARMIGERS" },
+        { key:"Chevalier Questoris", title:"KNIGHTS" },
+        { key:"Chevalier Dominus",   title:"KNIGHTS" },
+        { key:"Chevalier Cerastus",  title:"KNIGHTS" },
+        { key:"Chevalier Acastus",   title:"KNIGHTS" },
+      ];
+      const sectionedEntries = SECTION_ORDER.map(s => ({
+        ...s,
+        items: entries.filter(e => {
+          const u = UNITS_DB[list.faction]?.find(u=>u.id===e.unitId);
+          return u && u.role === s.key;
+        })
+      })).filter(s => s.items.length > 0);
+      // Fusionner les sections Knights en une seule
+      const knightKeys = new Set(["Armiger","Chevalier Questoris","Chevalier Dominus","Chevalier Cerastus","Chevalier Acastus"]);
+      const mergedSections = [];
+      let knightSection = null;
+      for (const s of sectionedEntries) {
+        if (knightKeys.has(s.key)) {
+          if (!knightSection) { knightSection = { key:"knights", title:"KNIGHTS", items:[] }; mergedSections.push(knightSection); }
+          knightSection.items = [...knightSection.items, ...s.items];
+        } else {
+          mergedSections.push(s);
+        }
+      }
 
       const Section = ({ title, items }) => {
         if (items.length===0) return null;
@@ -1765,8 +1795,7 @@
           </div>
           <div style={{ flex:1, overflowY:"auto", padding:"16px" }}>
             {entries.length===0 && <EmptyState icon={f.icon} title="Liste vide" sub="Ajoutez des unités depuis votre inventaire" />}
-            <Section title="CHARACTERS" items={chars} />
-            <Section title="OTHER DATASHEETS" items={others} />
+            {mergedSections.map(s => <Section key={s.key} title={s.title} items={s.items} />)}
           </div>
           {showModal && <ModalAddUnit faction={list.faction} inventory={inventory} mode="list" onClose={() => setShowModal(false)} onAdd={entry => onAddEntry(list.id, entry)} />}
         </div>
@@ -2131,7 +2160,6 @@
                         style={{ opacity: draggingId===item.id ? 0.4 : 1, outline: dragOverId===item.id ? `1px solid ${f.accent}88` : "none", transition:"opacity 0.15s", animation:`slideLeft 0.2s ${idx*25}ms ease both` }}
                         onDragOver={e => onDragOver(e, item)}
                         onDrop={e => onDrop(e, item)}
-                        onTouchStart={e => onTouchStart(e, item, role)}
                       >
                         <InventoryItem
                           item={item} faction={faction} ptsMap={ptsMap} onSetPts={onSetPts}
@@ -2142,6 +2170,7 @@
                             draggable: true,
                             onDragStart: e => onDragStart(e, item, role),
                             onDragEnd,
+                            onTouchStart: e => onTouchStart(e, item, role),
                           }}
                         />
                       </div>

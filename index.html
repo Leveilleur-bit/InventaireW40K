@@ -2351,18 +2351,18 @@
                           <span style={{ fontSize:"20px" }}>{f.icon}</span>
                           <div>
                             <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>{f.label}</div>
-                            <div style={{ color:"#3a3020", fontSize:"9px", marginTop:"1px" }}>{uniqueUnits} unités · {models} figurines</div>
+                            <div style={{ color:"#6a5a4a", fontSize:"9px", marginTop:"1px" }}>{uniqueUnits} unités · {models} figurines</div>
                           </div>
                         </div>
                         <div style={{ textAlign:"right" }}>
                           <div style={{ color: pct===100?"#2a7a2a":f.accent, fontSize:"20px", fontFamily:"'Cinzel',serif", fontWeight:"900" }}>{pct}%</div>
-                          {pts>0 && <div style={{ color:"#3a3020", fontSize:"9px" }}>{pts} pts</div>}
+                          {pts>0 && <div style={{ color:"#6a5a4a", fontSize:"9px" }}>{pts} pts</div>}
                         </div>
                       </div>
                       {/* Paint bar */}
                       <div style={{ display:"flex", height:"3px", marginBottom:"10px", gap:"1px" }}>
-                        {painted>0   && <div style={{ flex:painted,         background:PAINT_STATUS.painted.color }} />}
-                        {(models-painted)>0 && <div style={{ flex:models-painted, background:"#1c1a16" }} />}
+                        {painted>0          && <div style={{ flex:painted,        background:PAINT_STATUS.painted.color }} />}
+                        {(units-painted)>0  && <div style={{ flex:units-painted,  background:"#1c1a16" }} />}
                       </div>
                       {/* Role breakdown */}
                       {topRoles.length>0 && (
@@ -2370,7 +2370,7 @@
                           {topRoles.map(([role,cnt]) => (
                             <div key={role} style={{ background:"#080604", border:`1px solid ${f.accent}22`, padding:"2px 8px", display:"flex", gap:"5px", alignItems:"center" }}>
                               <span style={{ color:f.accent, fontSize:"11px", fontWeight:"700" }}>{cnt}</span>
-                              <span style={{ color:"#3a3020", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>
+                              <span style={{ color:"#6a5a4a", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>
                                 {{"Seigneur de guerre":"Seigneur","Attaque rapide":"Rapide","Soutien lourd":"Lourd","Chevalier Questoris":"Questoris","Chevalier Dominus":"Dominus","Chevalier Cerastus":"Cerastus","Chevalier Acastus":"Acastus"}[role]||role}
                               </span>
                             </div>

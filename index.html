@@ -1134,7 +1134,7 @@
     // SHARED STYLES
     // ══════════════════════════════════════════════════════════
 
-    const btnSm     = { background:"transparent", border:"1px solid #1c1c1c", color:"#48402e", padding:"5px 12px", cursor:"pointer", fontSize:"11px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" };
+    const btnSm     = { background:"transparent", border:"1px solid #1c1c1c", color:"#786858", padding:"5px 12px", cursor:"pointer", fontSize:"11px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" };
     const qtyBtn    = { background:"#030303", border:"1px solid #1c1c1c", color:"#b8922a", width:"36px", height:"36px", cursor:"pointer", fontSize:"18px", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"serif" };
     const iconMiniBtn = { background:"none", border:"1px solid #1c1c1c", cursor:"pointer", padding:"8px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation", minWidth:"32px", minHeight:"32px" };
     const pageStyle = { minHeight:"100%", display:"flex", flexDirection:"column", fontFamily:"'Crimson Pro',Georgia,serif" };
@@ -1242,7 +1242,7 @@
                 placeholder={effectivePts||"pts"}
                 style={{ width:"60px", background:"#030303", border:`1px solid ${f.accent}`, color:f.accent, padding:"4px 6px", fontSize:"13px", fontFamily:"monospace", outline:"none", textAlign:"center" }} />
               <button onClick={confirm} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✓</button>
-              <button onClick={() => setEditing(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✕</button>
+              <button onClick={() => setEditing(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#786858", cursor:"pointer", padding:"6px 12px", fontSize:"14px", touchAction:"manipulation" }}>✕</button>
             </div>
           ) : (
             <div onClick={() => { setEditVal(effectivePts||""); setEditing(true); }} title={isDefault?"Points MFM (toucher pour modifier)":"Toucher pour modifier les points"}
@@ -1342,7 +1342,7 @@
                   {unit.name}
                 </div>
                 <div style={{ display:"flex", alignItems:"center", gap:"8px", marginTop:"4px" }}>
-                  <span style={{ color:"#3a3020", fontSize:"10px", letterSpacing:"1px", fontFamily:"'Cinzel',serif", textTransform:"uppercase" }}>{unit.role}</span>
+                  <span style={{ color:"#9a8a78", fontSize:"10px", letterSpacing:"1px", fontFamily:"'Cinzel',serif", textTransform:"uppercase" }}>{unit.role}</span>
                   <WahapediaBtn unitName={unit.name} faction={faction} accent={f.accent} />
                 </div>
               </div>
@@ -1350,10 +1350,10 @@
                 <PtsBadge unitId={unit.id} faction={faction} qty={entry.qty} pts={ptsMap[`${faction}:${unit.id}`]} onSetPts={onSetPts} />
                 <div style={{ display:"flex", gap:"4px" }}>
                   <button onClick={() => onToggleWarlord(entry.id)} title={entry.warlord?"Retirer Seigneur de Guerre":"Désigner comme Seigneur de Guerre"}
-                    style={{ ...iconMiniBtn, color: entry.warlord?"#b8922a":"#2a2215", background: entry.warlord?"#1a1000":"none", borderColor: entry.warlord?"#b8922a44":"#131313" }}>
+                    style={{ ...iconMiniBtn, color: entry.warlord?"#b8922a":"#7a6a58", background: entry.warlord?"#1a1000":"none", borderColor: entry.warlord?"#b8922a44":"#131313" }}>
                     <span style={{ fontSize:"11px", lineHeight:1 }}>✠</span>
                   </button>
-                  <button onClick={() => setOpen(!open)} style={{ ...iconMiniBtn, color:"#3a3020" }}>
+                  <button onClick={() => setOpen(!open)} style={{ ...iconMiniBtn, color:"#9a8a78" }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points={open?"18 15 12 9 6 15":"6 9 12 15 18 9"}/></svg>
                   </button>
                   <button onClick={onDelete} style={{ ...iconMiniBtn, color:"#2a1a1a" }}><Ic.Trash /></button>
@@ -1364,7 +1364,7 @@
               <div style={{ borderTop:"1px solid #0f0f0f", padding:"8px 12px", background:"#030303" }}>
                 <CrossDivider color="#111" />
                 <div style={{ display:"flex", gap:"8px", alignItems:"center", marginTop:"6px" }}>
-                  <span style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif" }}>PEINTURE:</span>
+                  <span style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif" }}>PEINTURE:</span>
                   <span style={{ color:PAINT_STATUS[inv.paintStatus]?.color||"#333", fontSize:"11px", fontStyle:"italic" }}>{PAINT_STATUS[inv.paintStatus]?.label||"–"}</span>
                 </div>
               </div>
@@ -1396,7 +1396,7 @@
           </div>
           <div style={{ display:"flex", gap:"10px", width:"100%" }}>
             <button onClick={() => cameraRef.current?.click()} style={{ flex:1, padding:"11px 0", background:"#060504", border:`1px solid ${accent}55`, color:accent, fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", cursor:"pointer" }}>📷 APPAREIL</button>
-            <button onClick={() => galleryRef.current?.click()} style={{ flex:1, padding:"11px 0", background:"#060504", border:"1px solid #1c1c1c", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", cursor:"pointer" }}>🖼 GALERIE</button>
+            <button onClick={() => galleryRef.current?.click()} style={{ flex:1, padding:"11px 0", background:"#060504", border:"1px solid #1c1c1c", color:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"1px", cursor:"pointer" }}>🖼 GALERIE</button>
           </div>
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:"none" }} />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
@@ -1409,7 +1409,7 @@
           </div>
           <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
             <button onClick={() => cameraRef.current?.click()} style={{ padding:"7px 14px", background:"#060504", border:`1px solid ${accent}55`, color:accent, fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", cursor:"pointer" }}>📷 Appareil photo</button>
-            <button onClick={() => galleryRef.current?.click()} style={{ padding:"7px 14px", background:"#060504", border:"1px solid #1c1c1c", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", cursor:"pointer" }}>🖼 Galerie</button>
+            <button onClick={() => galleryRef.current?.click()} style={{ padding:"7px 14px", background:"#060504", border:"1px solid #1c1c1c", color:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"1px", cursor:"pointer" }}>🖼 Galerie</button>
           </div>
           <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFile} style={{ display:"none" }} />
           <input ref={galleryRef} type="file" accept="image/*" onChange={handleFile} style={{ display:"none" }} />
@@ -1710,8 +1710,8 @@
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:"8px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
                 <div style={{ width:"2px", height:"14px", background:"#b8922a", opacity:0.5 }} />
-                <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"4px" }}>{title}</span>
-                <span style={{ color:"#252015", fontSize:"9px" }}>{items.length}</span>
+                <span style={{ color:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"4px" }}>{title}</span>
+                <span style={{ color:"#7a6a58", fontSize:"9px" }}>{items.length}</span>
               </div>
               {sectionPts>0 && (
                 <div style={{ display:"flex", alignItems:"center", gap:"8px" }}>
@@ -1747,13 +1747,13 @@
                       onKeyDown={e=>{ if(e.key==="Enter") confirmRename(); if(e.key==="Escape") setEditingName(false); }}
                       style={{ flex:1, background:"#060402", border:`1px solid ${f.accent}66`, color:"#e8dfc0", padding:"5px 8px", fontSize:"14px", fontFamily:"'Cinzel',serif", outline:"none", letterSpacing:"1px" }} />
                     <button onClick={confirmRename} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"5px 10px", fontSize:"14px" }}>✓</button>
-                    <button onClick={()=>setEditingName(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"5px 10px", fontSize:"14px" }}>✕</button>
+                    <button onClick={()=>setEditingName(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#786858", cursor:"pointer", padding:"5px 10px", fontSize:"14px" }}>✕</button>
                   </div>
                 ) : (
                   <button onClick={()=>{ setNameVal(list.name); setEditingName(true); }}
                     style={{ background:"none", border:"none", cursor:"pointer", textAlign:"left", padding:0, display:"flex", alignItems:"center", gap:"8px" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"15px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", fontWeight:"700" }}>{list.name}</div>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2a2215" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#7a6a58" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   </button>
                 )}
                 {!editingName && <div style={{ color:f.accent, fontSize:"10px", letterSpacing:"2px", fontFamily:"'Cinzel',serif", marginTop:"2px" }}>{f.label.toUpperCase()}</div>}
@@ -1774,19 +1774,19 @@
                         onKeyDown={e=>{ if(e.key==="Enter") confirmMaxPts(); if(e.key==="Escape") setEditingMaxPts(false); }}
                         style={{ width:"70px", background:"#060402", border:`1px solid ${f.accent}66`, color:"#e8dfc0", padding:"3px 6px", fontSize:"13px", fontFamily:"'Cinzel',serif", outline:"none" }} />
                       <button onClick={confirmMaxPts} style={{ background:`${f.accent}33`, border:`1px solid ${f.accent}`, color:f.accent, cursor:"pointer", padding:"3px 8px", fontSize:"13px", touchAction:"manipulation" }}>✓</button>
-                      <button onClick={()=>setEditingMaxPts(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#48402e", cursor:"pointer", padding:"3px 8px", fontSize:"13px", touchAction:"manipulation" }}>✕</button>
+                      <button onClick={()=>setEditingMaxPts(false)} style={{ background:"none", border:"1px solid #1c1c1c", color:"#786858", cursor:"pointer", padding:"3px 8px", fontSize:"13px", touchAction:"manipulation" }}>✕</button>
                     </div>
                   ) : (
                     <button onClick={()=>{ setMaxPtsVal(String(list.maxPts)); setEditingMaxPts(true); }}
                       style={{ background:"none", border:"none", cursor:"pointer", display:"flex", alignItems:"baseline", gap:"4px", padding:0 }}>
                       <span style={{ color:"#35281a", fontSize:"13px", fontFamily:"'Cinzel',serif" }}>/ {list.maxPts}</span>
-                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#2a2215" strokeWidth="2" style={{marginBottom:"2px"}}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#7a6a58" strokeWidth="2" style={{marginBottom:"2px"}}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                     </button>
                   )}
                 </div>
               </div>
               <div style={{ textAlign:"right" }}>
-                <div style={{ color:pts>list.maxPts?"#7a1515":"#3a3028", fontSize:"11px" }}>{list.maxPts-pts} pts restants</div>
+                <div style={{ color:pts>list.maxPts?"#7a1515":"#6a5a48", fontSize:"11px" }}>{list.maxPts-pts} pts restants</div>
               </div>
             </div>
             <div style={{ background:"#060606", height:"4px", position:"relative" }}>
@@ -1852,7 +1852,7 @@
       return (
         <div style={{ display:"flex", alignItems:"center", gap:"2px" }}>
           <button onClick={() => qty>1 && onUpdate(qty-1)}
-            style={{ width:"32px", height:"32px", background:"#0f0c08", border:`1px solid ${accent}55`, color: qty>1?accent:"#2a2215", cursor: qty>1?"pointer":"default", fontSize:"18px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
+            style={{ width:"32px", height:"32px", background:"#0f0c08", border:`1px solid ${accent}55`, color: qty>1?accent:"#7a6a58", cursor: qty>1?"pointer":"default", fontSize:"18px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
           <div style={{ minWidth:"30px", textAlign:"center", fontSize:"13px", color:accent, fontFamily:"monospace", fontWeight:"700", background:"#080604", border:`1px solid ${accent}33`, padding:"4px 6px" }}>{qty}</div>
           <button onClick={() => onUpdate(qty+1)}
             style={{ width:"32px", height:"32px", background:"#0f0c08", border:`1px solid ${accent}55`, color:accent, cursor:"pointer", fontSize:"18px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>+</button>
@@ -1907,7 +1907,7 @@
               <div style={{ display:"flex", alignItems:"center", gap:"2px" }}>
                 <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, Math.max(1, modelCount-1))}
                   style={{ width:"16px", height:"16px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a3a28", cursor:"pointer", fontSize:"10px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>−</button>
-                <span style={{ color: item.modelCount ? accent : "#3a3020", fontSize:"9px", fontFamily:"monospace", minWidth:"20px", textAlign:"center" }}>{modelCount}</span>
+                <span style={{ color: item.modelCount ? accent : "#9a8a78", fontSize:"9px", fontFamily:"monospace", minWidth:"20px", textAlign:"center" }}>{modelCount}</span>
                 <button onClick={() => onUpdateModelCount && onUpdateModelCount(item.id, modelCount+1)}
                   style={{ width:"16px", height:"16px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a3a28", cursor:"pointer", fontSize:"10px", lineHeight:1, display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}>+</button>
               </div>
@@ -1927,7 +1927,7 @@
         <div className="hcard card-stagger" style={{ background:f.bgCard||"linear-gradient(180deg,#181512 0%,#121008 100%)", border:`1px solid ${borderColor}22`, borderLeft:`3px solid ${borderColor}`, marginBottom:"5px", display:"flex", alignItems:"stretch", transition:"background 0.4s, border-color 0.3s" }}>
           {/* Drag handle */}
           <div {...dragHandleProps} style={{ width:"22px", flexShrink:0, display:"flex", alignItems:"center", justifyContent:"center", cursor:"grab", borderRight:"1px solid #1a1a16", touchAction:"none" }}>
-            <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><circle cx="3" cy="3" r="1.5" fill="#3a3020"/><circle cx="7" cy="3" r="1.5" fill="#3a3020"/><circle cx="3" cy="8" r="1.5" fill="#3a3020"/><circle cx="7" cy="8" r="1.5" fill="#3a3020"/><circle cx="3" cy="13" r="1.5" fill="#3a3020"/><circle cx="7" cy="13" r="1.5" fill="#3a3020"/></svg>
+            <svg width="10" height="16" viewBox="0 0 10 16" fill="none"><circle cx="3" cy="3" r="1.5" fill="#9a8a78"/><circle cx="7" cy="3" r="1.5" fill="#9a8a78"/><circle cx="3" cy="8" r="1.5" fill="#9a8a78"/><circle cx="7" cy="8" r="1.5" fill="#9a8a78"/><circle cx="3" cy="13" r="1.5" fill="#9a8a78"/><circle cx="7" cy="13" r="1.5" fill="#9a8a78"/></svg>
           </div>
           {/* Photo */}
           <div onClick={() => onEditPhoto(item)} style={{ width:"46px", flexShrink:0, cursor:"pointer", borderRight:"1px solid #0c0c0c", overflow:"hidden", position:"relative" }}>
@@ -1948,7 +1948,7 @@
             <div style={{ flex:1 }}>
               <div style={{ display:"flex", alignItems:"baseline", gap:"6px" }}>
                 <div style={{ color:"#e8dfc0", fontSize:"13px", fontFamily:"'Cinzel',serif", lineHeight:1.3 }}>{item.unit.name}</div>
-                {modelCount > 1 && <span style={{ color:item.modelCount?accent:"#3a3020", fontSize:"9px", fontFamily:"monospace" }}>{totalFigs>modelCount?`${modelCount}×${item.qty}`:`${modelCount}`}fig</span>}
+                {modelCount > 1 && <span style={{ color:item.modelCount?accent:"#9a8a78", fontSize:"9px", fontFamily:"monospace" }}>{totalFigs>modelCount?`${modelCount}×${item.qty}`:`${modelCount}`}fig</span>}
               </div>
               {/* Taille de squad — inline avec le nom, compact */}
               <div style={{ display:"flex", gap:"6px", marginTop:"3px", alignItems:"center", flexWrap:"wrap" }}>
@@ -2055,7 +2055,7 @@
               <div>
                 <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>REGISTRE DES RELIQUES</div>
                 <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700", textShadow:"0 0 20px #b8922a22" }}>INVENTAIRE</div>
-                <div style={{ color:"#252012", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif", marginTop:"3px" }}>{inventory.length} RÉFÉRENCES</div>
+                <div style={{ color:"#7a6a58", fontSize:"9px", letterSpacing:"2px", fontFamily:"'Cinzel',serif", marginTop:"3px" }}>{inventory.length} RÉFÉRENCES</div>
               </div>
               <div style={{ display:"flex", gap:"6px", alignItems:"center" }}>
                 <button onClick={() => setViewMode(v => v==="list"?"grid":"list")}
@@ -2093,7 +2093,7 @@
                       ].filter(s=>s.count>0).map(s => (
                         <div key={s.key} style={{ display:"flex", alignItems:"center", gap:"1px" }}>
                           <div style={{ width:"5px", height:"5px", borderRadius:"50%", background: faction===k ? s.color : s.color+"55" }} />
-                          <span style={{ fontSize:"7px", color: faction===k ? s.color : "#252015", fontFamily:"monospace" }}>{s.count}</span>
+                          <span style={{ fontSize:"7px", color: faction===k ? s.color : "#7a6a58", fontFamily:"monospace" }}>{s.count}</span>
                         </div>
                       ))}
                     </div>
@@ -2107,7 +2107,7 @@
             <div style={{ display:"flex", gap:"4px", overflowX:"auto", padding:"5px 12px", borderBottom:"1px solid #0f0e0d", scrollbarWidth:"none" }}>
               {availableChapters.map(ch => (
                 <button key={ch} onClick={() => setChapterFilter(ch)}
-                  style={{ flexShrink:0, padding:"3px 8px", background:chapterFilter===ch?`${f.accent}22`:"transparent", border:`1px solid ${chapterFilter===ch?f.accent:"#1a1816"}`, color:chapterFilter===ch?f.accent:"#3a3020", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", touchAction:"manipulation" }}>
+                  style={{ flexShrink:0, padding:"3px 8px", background:chapterFilter===ch?`${f.accent}22`:"transparent", border:`1px solid ${chapterFilter===ch?f.accent:"#1a1816"}`, color:chapterFilter===ch?f.accent:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", touchAction:"manipulation" }}>
                   {ch==="all"?"TOUS":ch.toUpperCase()}
                 </button>
               ))}
@@ -2116,7 +2116,7 @@
       {/* Filtre statut peinture */}
           <div style={{ display:"flex", gap:"4px", padding:"6px 12px", background:"#020202", borderBottom:"1px solid #0a0a0a", overflowX:"auto" }}>
             {[
-              { key:"all",      label:"TOUT",      color:"#6a5a4a", dot:null },
+              { key:"all",      label:"TOUT",      color:"#9a8a78", dot:null },
               { key:"painted",  label:"PEINT",     color:PAINT_STATUS.painted.color,  dot:PAINT_STATUS.painted.color },
               { key:"wip",      label:"EN COURS",  color:PAINT_STATUS.wip.color,      dot:PAINT_STATUS.wip.color },
               { key:"primed",   label:"APPRÊTÉ",   color:PAINT_STATUS.primed.color,   dot:PAINT_STATUS.primed.color },
@@ -2128,10 +2128,10 @@
               const active = paintFilter===fi.key;
               return (
                 <button key={fi.key} onClick={() => setPaintFilter(fi.key)}
-                  style={{ display:"flex", alignItems:"center", gap:"4px", padding:"4px 10px", background:active?`${fi.color}22`:"#060402", border:`1px solid ${active?fi.color+"66":"#1c1c1c"}`, color:active?fi.color:"#3a3020", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0, touchAction:"manipulation" }}>
+                  style={{ display:"flex", alignItems:"center", gap:"4px", padding:"4px 10px", background:active?`${fi.color}22`:"#060402", border:`1px solid ${active?fi.color+"66":"#1c1c1c"}`, color:active?fi.color:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0, touchAction:"manipulation" }}>
                   {fi.dot && <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:fi.dot, flexShrink:0 }} />}
                   {fi.label}
-                  {cnt>0 && <span style={{ color:active?fi.color:"#252015", fontFamily:"monospace", fontSize:"9px" }}>{cnt}</span>}
+                  {cnt>0 && <span style={{ color:active?fi.color:"#7a6a58", fontFamily:"monospace", fontSize:"9px" }}>{cnt}</span>}
                 </button>
               );
             })}
@@ -2143,9 +2143,9 @@
                 {/* Role header */}
                 <button onClick={() => toggleRole(role)} style={{ width:"100%", background:"none", border:"none", display:"flex", alignItems:"center", gap:"10px", marginBottom:"8px", cursor:"pointer", padding:"4px 0" }}>
                   <div style={{ width:"2px", height:"12px", background:f.accent, opacity:0.6, flexShrink:0 }} />
-                  <span style={{ color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", flex:1, textAlign:"left" }}>{role.toUpperCase()}</span>
-                  <span style={{ color:"#3a3020", fontSize:"10px" }}>{grouped[role].length} — </span>
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#3a3020" strokeWidth="2.5"><polyline points={collapsedRoles[role]?"6 9 12 15 18 9":"18 15 12 9 6 15"}/></svg>
+                  <span style={{ color:"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"4px", flex:1, textAlign:"left" }}>{role.toUpperCase()}</span>
+                  <span style={{ color:"#9a8a78", fontSize:"10px" }}>{grouped[role].length} — </span>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#9a8a78" strokeWidth="2.5"><polyline points={collapsedRoles[role]?"6 9 12 15 18 9":"18 15 12 9 6 15"}/></svg>
                 </button>
                 {!collapsedRoles[role] && (
                   viewMode==="grid" ? (
@@ -2276,7 +2276,7 @@
             </div>
             {totalValue > 0 && <div style={{ marginTop:"4px", display:"flex", alignItems:"baseline", gap:"6px" }}>
               <div style={{ color:"#8aba5a", fontSize:"16px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{totalValue.toFixed(0)}€</div>
-              <div style={{ color:"#3a3020", fontSize:"7px", letterSpacing:"2px" }}>VALEUR COLLECTION</div>
+              <div style={{ color:"#9a8a78", fontSize:"7px", letterSpacing:"2px" }}>VALEUR COLLECTION</div>
             </div>}
           </div>
 
@@ -2284,19 +2284,19 @@
 
             {/* ── GLOBAL ─────────────────────── */}
             <div style={{ marginBottom:"20px" }}>
-              <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>COLLECTION GLOBALE</div>
+              <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>COLLECTION GLOBALE</div>
 
               {/* Big paint ring simulation via stacked bars */}
               <div style={{ background:"linear-gradient(180deg,#131110 0%,#0d0b0a 100%)", border:"1px solid #1c1a18", borderTop:`2px solid ${accent}`, padding:"16px", marginBottom:"8px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom:"12px" }}>
                   <div>
                     <div style={{ color:"#e8dfc0", fontSize:"32px", fontFamily:"'Cinzel',serif", fontWeight:"900", lineHeight:1 }}>{paintPct}<span style={{ fontSize:"16px", color:accent }}>%</span></div>
-                    <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"2px", marginTop:"2px" }}>PEINT</div>
+                    <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"2px", marginTop:"2px" }}>PEINT</div>
                   </div>
                   <div style={{ textAlign:"right" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"20px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{totalModels}</div>
-                    <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"2px" }}>FIGURINES</div>
-                    <div style={{ color:"#252015", fontSize:"8px", marginTop:"1px" }}>{totalUnits} unités</div>
+                    <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"2px" }}>FIGURINES</div>
+                    <div style={{ color:"#7a6a58", fontSize:"8px", marginTop:"1px" }}>{totalUnits} unités</div>
                   </div>
                 </div>
                 {/* Stacked bar */}
@@ -2316,7 +2316,7 @@
                   ].map(s => s.val>0 && (
                     <div key={s.key} style={{ display:"flex", alignItems:"center", gap:"5px" }}>
                       <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:PAINT_STATUS[s.key].color }} />
-                      <span style={{ color:"#4a3c28", fontSize:"9px" }}>{s.label} <span style={{ color:"#8a7050" }}>{s.val}</span></span>
+                      <span style={{ color:"#7a6a58", fontSize:"9px" }}>{s.label} <span style={{ color:"#8a7050" }}>{s.val}</span></span>
                     </div>
                   ))}
                 </div>
@@ -2331,7 +2331,7 @@
                 ].map(c => (
                   <div key={c.label} style={{ background:"#0d0b0a", border:"1px solid #1a1816", padding:"10px 8px", textAlign:"center" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{c.val}</div>
-                    <div style={{ color:"#2a2215", fontSize:"7px", letterSpacing:"2px", marginTop:"3px" }}>{c.label}</div>
+                    <div style={{ color:"#7a6a58", fontSize:"7px", letterSpacing:"2px", marginTop:"3px" }}>{c.label}</div>
                   </div>
                 ))}
               </div>
@@ -2340,7 +2340,7 @@
             {/* ── PAR FACTION ────────────────── */}
             {factionStats.length>0 && (
               <div style={{ marginBottom:"20px" }}>
-                <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>PAR FACTION</div>
+                <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>PAR FACTION</div>
                 {factionStats.map(({ key, f, models, units, painted, pts, byRole, uniqueUnits }) => {
                   const pct = units ? Math.round(painted/units*100) : 0;
                   const topRoles = Object.entries(byRole).sort((a,b)=>b[1]-a[1]).slice(0,4);
@@ -2351,12 +2351,12 @@
                           <span style={{ fontSize:"20px" }}>{f.icon}</span>
                           <div>
                             <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>{f.label}</div>
-                            <div style={{ color:"#6a5a4a", fontSize:"9px", marginTop:"1px" }}>{uniqueUnits} unités · {models} figurines</div>
+                            <div style={{ color:"#9a8a78", fontSize:"9px", marginTop:"1px" }}>{uniqueUnits} unités · {models} figurines</div>
                           </div>
                         </div>
                         <div style={{ textAlign:"right" }}>
                           <div style={{ color: pct===100?"#2a7a2a":f.accent, fontSize:"20px", fontFamily:"'Cinzel',serif", fontWeight:"900" }}>{pct}%</div>
-                          {pts>0 && <div style={{ color:"#6a5a4a", fontSize:"9px" }}>{pts} pts</div>}
+                          {pts>0 && <div style={{ color:"#9a8a78", fontSize:"9px" }}>{pts} pts</div>}
                         </div>
                       </div>
                       {/* Paint bar */}
@@ -2370,7 +2370,7 @@
                           {topRoles.map(([role,cnt]) => (
                             <div key={role} style={{ background:"#080604", border:`1px solid ${f.accent}22`, padding:"2px 8px", display:"flex", gap:"5px", alignItems:"center" }}>
                               <span style={{ color:f.accent, fontSize:"11px", fontWeight:"700" }}>{cnt}</span>
-                              <span style={{ color:"#6a5a4a", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>
+                              <span style={{ color:"#9a8a78", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>
                                 {{"Seigneur de guerre":"Seigneur","Attaque rapide":"Rapide","Soutien lourd":"Lourd","Chevalier Questoris":"Questoris","Chevalier Dominus":"Dominus","Chevalier Cerastus":"Cerastus","Chevalier Acastus":"Acastus"}[role]||role}
                               </span>
                             </div>
@@ -2399,10 +2399,10 @@
               }).filter(x=>x.count>0);
               return collectionValue > 0 ? (
                 <div style={{ marginBottom:"20px" }}>
-                  <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>VALEUR COLLECTION</div>
+                  <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>VALEUR COLLECTION</div>
                   <div style={{ background:"#0a0c08", border:"1px solid #2a3a1a", borderLeft:"3px solid #5a8a3a", padding:"12px 16px", marginBottom:"8px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
                     <div>
-                      <div style={{ color:"#3a3020", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>TOTAL COLLECTION</div>
+                      <div style={{ color:"#9a8a78", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>TOTAL COLLECTION</div>
                       <div style={{ color:"#e8dfc0", fontSize:"10px", marginTop:"2px" }}>{inventory.reduce((s,i)=>s+(i.qty||1),0)} figurines</div>
                     </div>
                     <div style={{ color:"#8aba5a", fontSize:"22px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{collectionValue.toFixed(0)}€</div>
@@ -2412,7 +2412,7 @@
                       <span style={{ fontSize:"16px" }}>{v.icon}</span>
                       <div style={{ flex:1 }}>
                         <div style={{ color:"#c8b890", fontSize:"11px", fontFamily:"'Cinzel',serif" }}>{v.label}</div>
-                        <div style={{ color:"#3a3020", fontSize:"9px", marginTop:"1px" }}>{count} figurines</div>
+                        <div style={{ color:"#9a8a78", fontSize:"9px", marginTop:"1px" }}>{count} figurines</div>
                       </div>
                       <span style={{ color:v.accent, fontSize:"13px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{val.toFixed(0)}€</span>
                     </div>
@@ -2434,7 +2434,7 @@
               }, 0);
               return (
                 <div style={{ marginBottom:"20px" }}>
-                  <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>ACQUISITIONS FUTURES</div>
+                  <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>ACQUISITIONS FUTURES</div>
                   <div style={{ display:"flex", gap:"6px", marginBottom:"8px" }}>
                     {[
                       { label:"SOUHAITÉ", count:wanted.length,   color:"#b8922a", icon:"✦" },
@@ -2444,14 +2444,14 @@
                       <div key={s.label} style={{ flex:1, background:"#0d0b0a", border:`1px solid ${s.color}33`, padding:"10px 8px", textAlign:"center" }}>
                         <div style={{ color:s.color, fontSize:"16px", marginBottom:"3px" }}>{s.icon}</div>
                         <div style={{ color:s.color, fontSize:"18px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{s.count}</div>
-                        <div style={{ color:"#3a3020", fontSize:"7px", letterSpacing:"1px", fontFamily:"'Cinzel',serif" }}>{s.label}</div>
+                        <div style={{ color:"#9a8a78", fontSize:"7px", letterSpacing:"1px", fontFamily:"'Cinzel',serif" }}>{s.label}</div>
                       </div>
                     ))}
                   </div>
                   <div style={{ background:"#0d0b0a", border:"1px solid #1a1816", padding:"10px 14px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                     <div>
-                      <div style={{ color:"#3a3020", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>BUDGET RESTANT</div>
-                      <div style={{ color:"#6a5a4a", fontSize:"9px", marginTop:"2px" }}>hors articles déjà reçus</div>
+                      <div style={{ color:"#9a8a78", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>BUDGET RESTANT</div>
+                      <div style={{ color:"#9a8a78", fontSize:"9px", marginTop:"2px" }}>hors articles déjà reçus</div>
                     </div>
                     <div style={{ color:"#b8922a", fontSize:"20px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{toSpend.toFixed(0)}€</div>
                   </div>
@@ -2460,7 +2460,7 @@
             })()}
 
             {inventory.length===0 && (
-              <div style={{ textAlign:"center", padding:"48px 0", color:"#252015" }}>
+              <div style={{ textAlign:"center", padding:"48px 0", color:"#7a6a58" }}>
                 <div style={{ fontSize:"40px", marginBottom:"12px", opacity:0.3 }}>✠</div>
                 <div style={{ fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"3px" }}>AUCUNE DONNÉE</div>
                 <div style={{ fontSize:"10px", marginTop:"6px", fontStyle:"italic" }}>Ajoutez des figurines à votre inventaire</div>
@@ -2480,10 +2480,10 @@
         <Overlay>
           <div style={{ background:"#0a0806", border:`1px solid ${accent}44`, borderTop:`2px solid ${accent}`, padding:"24px 20px", width:"100%", maxWidth:"320px", margin:"0 16px" }}>
             <div style={{ color:"#e8dfc0", fontSize:"14px", fontFamily:"'Cinzel',serif", letterSpacing:"1px", marginBottom:"8px", textAlign:"center" }}>CONFIRMATION</div>
-            <div style={{ color:"#6a5a4a", fontSize:"12px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", textAlign:"center", marginBottom:"20px", lineHeight:1.6 }}>{message}</div>
+            <div style={{ color:"#9a8a78", fontSize:"12px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", textAlign:"center", marginBottom:"20px", lineHeight:1.6 }}>{message}</div>
             <div style={{ display:"flex", gap:"8px" }}>
               <button onClick={onCancel}
-                style={{ flex:1, padding:"14px", background:"#060402", border:"1px solid #1c1c1c", color:"#4a4028", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
+                style={{ flex:1, padding:"14px", background:"#060402", border:"1px solid #1c1c1c", color:"#7a7060", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"2px", cursor:"pointer", touchAction:"manipulation" }}>
                 ANNULER
               </button>
               <button onClick={onConfirm}
@@ -2550,7 +2550,7 @@
             <div>
               <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"3px" }}>GALERIE</div>
               <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>ARMY ON PARADE</div>
-              {parade.length > 0 && <div style={{ color:"#3a3020", fontSize:"9px", marginTop:"2px" }}>{parade.length} photo{parade.length>1?"s":""}</div>}
+              {parade.length > 0 && <div style={{ color:"#9a8a78", fontSize:"9px", marginTop:"2px" }}>{parade.length} photo{parade.length>1?"s":""}</div>}
             </div>
             <IconBtn onClick={() => setShowForm(true)}><Ic.Plus /></IconBtn>
           </div>
@@ -2571,7 +2571,7 @@
                       <span style={{ color:FACTIONS[selectedPhoto.faction]?.accent||"#b8922a", fontSize:"11px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>
                         {FACTIONS[selectedPhoto.faction]?.label || selectedPhoto.faction}
                       </span>
-                      <span style={{ color:"#3a3020", fontSize:"9px", marginLeft:"auto" }}>{selectedPhoto.date}</span>
+                      <span style={{ color:"#9a8a78", fontSize:"9px", marginLeft:"auto" }}>{selectedPhoto.date}</span>
                     </div>
                   </div>
                   {/* Bouton supprimer */}
@@ -2607,15 +2607,15 @@
               <div style={{ background:"#0a0806", border:"1px solid #b8922a44", borderTop:"2px solid #b8922a", width:"100%", maxWidth:"420px", margin:"0 16px", padding:"20px 16px" }}>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
                   <div style={{ color:"#e8dfc0", fontSize:"13px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>NOUVELLE PHOTO</div>
-                  <button onClick={() => setShowForm(false)} style={{ background:"none", border:"none", color:"#4a4028", cursor:"pointer", fontSize:"18px" }}>✕</button>
+                  <button onClick={() => setShowForm(false)} style={{ background:"none", border:"none", color:"#7a7060", cursor:"pointer", fontSize:"18px" }}>✕</button>
                 </div>
 
                 {/* Preview photo */}
                 <div onClick={() => fileRef.current?.click()}
-                  style={{ width:"100%", height:"180px", background:"#040404", border:`1px dashed ${form.photo?"#b8922a55":"#2a2215"}`, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", marginBottom:"14px", overflow:"hidden" }}>
+                  style={{ width:"100%", height:"180px", background:"#040404", border:`1px dashed ${form.photo?"#b8922a55":"#7a6a58"}`, display:"flex", alignItems:"center", justifyContent:"center", cursor:"pointer", marginBottom:"14px", overflow:"hidden" }}>
                   {form.photo
                     ? <img src={form.photo} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                    : <div style={{ textAlign:"center", color:"#3a3020" }}>
+                    : <div style={{ textAlign:"center", color:"#9a8a78" }}>
                         <div style={{ fontSize:"32px", marginBottom:"8px" }}>📷</div>
                         <div style={{ fontSize:"10px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>TAP POUR AJOUTER</div>
                       </div>
@@ -2625,11 +2625,11 @@
 
                 {/* Faction */}
                 <div style={{ marginBottom:"14px" }}>
-                  <div style={{ color:"#4a4028", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"8px" }}>FACTION</div>
+                  <div style={{ color:"#7a7060", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"8px" }}>FACTION</div>
                   <div style={{ display:"flex", gap:"6px" }}>
                     {Object.entries(FACTIONS).map(([k,v]) => (
                       <button key={k} onClick={() => setForm(f=>({...f, faction:k}))}
-                        style={{ flex:1, padding:"8px 4px", background:form.faction===k?`${v.accent}15`:"#060402", border:`1px solid ${form.faction===k?v.accent:"#1c1c1c"}`, color:form.faction===k?v.accent:"#252015", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", display:"flex", flexDirection:"column", alignItems:"center", gap:"3px", touchAction:"manipulation" }}>
+                        style={{ flex:1, padding:"8px 4px", background:form.faction===k?`${v.accent}15`:"#060402", border:`1px solid ${form.faction===k?v.accent:"#1c1c1c"}`, color:form.faction===k?v.accent:"#7a6a58", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:"9px", display:"flex", flexDirection:"column", alignItems:"center", gap:"3px", touchAction:"manipulation" }}>
                         <span style={{ fontSize:"16px" }}>{v.icon}</span>
                         {v.short}
                       </button>
@@ -2639,7 +2639,7 @@
 
                 {/* Date */}
                 <div style={{ marginBottom:"16px" }}>
-                  <div style={{ color:"#4a4028", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"6px" }}>DATE (optionnel)</div>
+                  <div style={{ color:"#7a7060", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"6px" }}>DATE (optionnel)</div>
                   <input type="text" value={form.date} onChange={e => setForm(f=>({...f, date:e.target.value}))}
                     placeholder={new Date().toLocaleDateString("fr-FR")}
                     style={{ width:"100%", background:"#060402", border:"1px solid #1c1c1c", color:"#e8dfc0", padding:"8px 10px", fontSize:"12px", outline:"none", fontFamily:"'Crimson Pro',serif", boxSizing:"border-box" }} />
@@ -2676,7 +2676,7 @@
           <div style={{ flex:1, overflowY:"auto", padding:"16px" }}>
 
             {/* ── SAUVEGARDE ───────────────── */}
-            <div style={{ color:"#3a3020", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>SAUVEGARDE DES DONNÉES</div>
+            <div style={{ color:"#9a8a78", fontSize:"9px", letterSpacing:"4px", fontFamily:"'Cinzel',serif", marginBottom:"10px" }}>SAUVEGARDE DES DONNÉES</div>
 
             <div style={{ background:"linear-gradient(180deg,#131110 0%,#0d0b0a 100%)", border:"1px solid #1c1a18", borderTop:"2px solid #b8922a", padding:"16px", marginBottom:"8px" }}>
               <div style={{ color:"#6a5a3a", fontSize:"11px", fontFamily:"'Crimson Pro','Crimson Text',serif", fontStyle:"italic", lineHeight:1.6, marginBottom:"16px" }}>
@@ -2692,7 +2692,7 @@
                 ].map(c => (
                   <div key={c.label} style={{ background:"#080604", border:"1px solid #1a1714", padding:"8px", textAlign:"center" }}>
                     <div style={{ color:"#b8922a", fontSize:"16px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{c.val}</div>
-                    <div style={{ color:"#252015", fontSize:"7px", letterSpacing:"2px", marginTop:"2px" }}>{c.label}</div>
+                    <div style={{ color:"#7a6a58", fontSize:"7px", letterSpacing:"2px", marginTop:"2px" }}>{c.label}</div>
                   </div>
                 ))}
               </div>
@@ -2708,7 +2708,7 @@
               <input ref={importRef} type="file" accept=".json" style={{ display:"none" }}
                 onChange={e => { if(e.target.files[0]) { onImport(e.target.files[0]); e.target.value=""; } }} />
               <button onClick={() => importRef.current?.click()}
-                style={{ width:"100%", padding:"14px", background:"#080604", border:"1px solid #252015", color:"#4a4028", fontFamily:"'Cinzel',serif", fontSize:"12px", letterSpacing:"3px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px" }}>
+                style={{ width:"100%", padding:"14px", background:"#080604", border:"1px solid #252015", color:"#7a7060", fontFamily:"'Cinzel',serif", fontSize:"12px", letterSpacing:"3px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px" }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
                 IMPORTER UNE SAUVEGARDE
               </button>
@@ -2716,8 +2716,8 @@
 
             {/* ── NOTE ─────────────────────── */}
             <div style={{ background:"#080604", border:"1px solid #141210", borderLeft:"2px solid #35281a", padding:"12px 14px", marginTop:"8px" }}>
-              <div style={{ color:"#2a2215", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"6px" }}>NOTE</div>
-              <div style={{ color:"#3a3020", fontSize:"10px", fontFamily:"'Crimson Pro','Crimson Text',serif", fontStyle:"italic", lineHeight:1.7 }}>
+              <div style={{ color:"#7a6a58", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", marginBottom:"6px" }}>NOTE</div>
+              <div style={{ color:"#9a8a78", fontSize:"10px", fontFamily:"'Crimson Pro','Crimson Text',serif", fontStyle:"italic", lineHeight:1.7 }}>
                 Les photos sont incluses dans la sauvegarde (encodées en base64). Le fichier peut donc être volumineux si tu as beaucoup de photos.
                 <br/><br/>
                 Pour transférer vers un autre appareil, exporte le fichier JSON, transfère-le, puis importe-le depuis l'onglet Codex.
@@ -2869,7 +2869,7 @@
                 <div style={{ color:"#e8dfc0", fontSize:"17px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>WISHLIST</div>
                 <div style={{ display:"flex", gap:"10px", marginTop:"3px" }}>
                   {grandTotal>0 && <span style={{ color:"#6a9a3a", fontSize:"10px", fontWeight:"700" }}>~{grandTotal.toFixed(0)}€ total</span>}
-                  {totalPts>0  && <span style={{ color:"#3a3020", fontSize:"9px" }}>{totalPts} pts</span>}
+                  {totalPts>0  && <span style={{ color:"#9a8a78", fontSize:"9px" }}>{totalPts} pts</span>}
                 </div>
               </div>
               {tab==="units" && <IconBtn onClick={() => setShowFactionPicker(true)}><Ic.Plus /></IconBtn>}
@@ -2885,8 +2885,8 @@
                   fontFamily:"'Cinzel',serif", fontSize:"9px", letterSpacing:"2px" }}>
                 <div style={{ fontSize:"14px", marginBottom:"2px" }}>{t.icon}</div>
                 {t.label}
-                {t.key==="units"  && allItems.length>0 && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#252015", marginTop:"1px" }}>{allItems.length}</div>}
-                {t.key==="paints" && pw.length>0       && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#252015", marginTop:"1px" }}>{pw.length}</div>}
+                {t.key==="units"  && allItems.length>0 && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#7a6a58", marginTop:"1px" }}>{allItems.length}</div>}
+                {t.key==="paints" && pw.length>0       && <div style={{ fontSize:"8px", color:tab===t.key?"#b8922a":"#7a6a58", marginTop:"1px" }}>{pw.length}</div>}
               </button>
             ))}
           </div>
@@ -2894,10 +2894,10 @@
           {/* ── TAB FIGURINES ── */}
           {tab==="units" && (<>
             <div style={{ display:"flex", gap:"4px", padding:"8px 12px", background:"#030202", borderBottom:"1px solid #0f0f0f", overflowX:"auto" }}>
-              <span style={{ color:"#3a3020", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", alignSelf:"center", flexShrink:0 }}>TRIER:</span>
+              <span style={{ color:"#9a8a78", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"2px", alignSelf:"center", flexShrink:0 }}>TRIER:</span>
               {[{k:"faction",l:"FACTION"},{k:"role",l:"RÔLE"},{k:"status",l:"STATUT"},{k:"price",l:"PRIX"}].map(s => (
                 <button key={s.k} onClick={() => setSortBy(s.k)}
-                  style={{ padding:"4px 10px", background:sortBy===s.k?"#1a1200":"#060402", border:`1px solid ${sortBy===s.k?"#b8922a55":"#1c1c1c"}`, color:sortBy===s.k?"#b8922a":"#3a3020", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
+                  style={{ padding:"4px 10px", background:sortBy===s.k?"#1a1200":"#060402", border:`1px solid ${sortBy===s.k?"#b8922a55":"#1c1c1c"}`, color:sortBy===s.k?"#b8922a":"#9a8a78", fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
                   {s.l}
                 </button>
               ))}
@@ -2927,16 +2927,16 @@
                           </div>
                         </div>
                         <div style={{ display:"flex", gap:"5px", alignItems:"center" }}>
-                          <span style={{ color:"#2a2215", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>{item.unit.role}</span>
+                          <span style={{ color:"#7a6a58", fontSize:"8px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>{item.unit.role}</span>
                           <WahapediaBtn unitName={item.unit.name} faction={item.faction} accent={item.fDef.accent} />
                         </div>
                       </div>
                       <div style={{ display:"flex", flexDirection:"column", alignItems:"flex-end", gap:"4px" }}>
-                        {unitPts && <span style={{ color:"#4a4028", fontSize:"9px", fontFamily:"monospace" }}>{unitPts*item.qty}pts</span>}
+                        {unitPts && <span style={{ color:"#7a7060", fontSize:"9px", fontFamily:"monospace" }}>{unitPts*item.qty}pts</span>}
                         <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
                           <input type="number" value={item.price||""} onChange={e => onSetPrice(item.id, parseInt(e.target.value)||0)}
                             placeholder={shopPrice?shopPrice.toFixed(0):"€"}
-                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#2a2215"}`, color:isAuto?"#b8e890":"#e8dfc0", WebkitTextFillColor:isAuto?"#b8e890":"#e8dfc0", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
+                            style={{ width:"52px", background:isAuto?"#0d1008":"#060402", border:`1px solid ${isAuto?"#6a9a4a":"#7a6a58"}`, color:isAuto?"#b8e890":"#e8dfc0", WebkitTextFillColor:isAuto?"#b8e890":"#e8dfc0", padding:"4px 5px", fontSize:"12px", fontFamily:"monospace", fontWeight:"700", outline:"none", textAlign:"center" }} />
                           <span style={{ color:isAuto?"#b8e890":"#e8dfc0", fontSize:"11px", fontWeight:"700" }}>€{isAuto&&<span style={{fontSize:"8px"}}> a</span>}</span>
                         </div>
                         <button onClick={() => onDelete(item.id)} style={{ background:"none", border:"1px solid #2a2215", color:"#6a4a3a", cursor:"pointer", padding:"5px", display:"flex", alignItems:"center", justifyContent:"center", touchAction:"manipulation" }}><Ic.Trash /></button>
@@ -2952,7 +2952,7 @@
                 <div style={{ background:"#0a0806", border:"1px solid #b8922a44", borderTop:"2px solid #b8922a", width:"100%", maxWidth:"360px", margin:"0 16px", padding:"20px 16px" }}>
                   <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", letterSpacing:"2px" }}>CHOISIR UNE FACTION</div>
-                    <button onClick={() => setShowFactionPicker(false)} style={{ background:"none", border:"none", color:"#4a4028", cursor:"pointer", fontSize:"18px", lineHeight:1 }}>✕</button>
+                    <button onClick={() => setShowFactionPicker(false)} style={{ background:"none", border:"none", color:"#7a7060", cursor:"pointer", fontSize:"18px", lineHeight:1 }}>✕</button>
                   </div>
                   <div style={{ display:"flex", gap:"8px" }}>
                     {Object.entries(FACTIONS).map(([k,v]) => (
@@ -2985,7 +2985,7 @@
                   <button key={t} onClick={() => setPaintFilter(t)}
                     style={{ padding:"3px 10px", background:paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a")+"33":"#060402",
                       border:`1px solid ${paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a")+"88":"#1c1c1c"}`,
-                      color:paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a"):"#3a3020",
+                      color:paintFilter===t?(CITADEL_TYPES[t]?.color||"#b8922a"):"#9a8a78",
                       fontFamily:"'Cinzel',serif", fontSize:"8px", letterSpacing:"1px", cursor:"pointer", whiteSpace:"nowrap", flexShrink:0 }}>
                     {t==="all"?"TOUT":t.toUpperCase()}
                   </button>
@@ -3081,14 +3081,14 @@
             <div style={{ textAlign:"center", marginBottom:"32px" }}>
               <div style={{ fontSize:"52px", color:"#b8922a", textShadow:"0 0 60px #b8922a55", lineHeight:1, marginBottom:"14px", animation:"crossGrow 0.5s cubic-bezier(0.34,1.56,0.64,1) both" }}>✠</div>
               <div style={{ color:"#e8dfc0", fontSize:"19px", letterSpacing:"7px", fontFamily:"'Cinzel Decorative',serif", fontWeight:"900", textShadow:"0 0 30px #b8922a33" }}>BLACK TEMPLARS</div>
-              <div style={{ color:"#252015", fontSize:"8px", letterSpacing:"4px", marginTop:"5px" }}>CODEX ASTARTES</div>
+              <div style={{ color:"#7a6a58", fontSize:"8px", letterSpacing:"4px", marginTop:"5px" }}>CODEX ASTARTES</div>
             </div>
 
             {inventory.length > 0 && (<>
               {/* Divider */}
               <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"20px" }}>
                 <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,transparent,#2a2215)" }} />
-                <div style={{ color:"#2a2215", fontSize:"8px", letterSpacing:"4px" }}>ÉTAT DE LA FORCE</div>
+                <div style={{ color:"#7a6a58", fontSize:"8px", letterSpacing:"4px" }}>ÉTAT DE LA FORCE</div>
                 <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,#2a2215,transparent)" }} />
               </div>
 
@@ -3101,7 +3101,7 @@
                 ].map(s => (
                   <div key={s.label} style={{ background:"#0a0806", border:"1px solid #1a1714", padding:"12px 8px", textAlign:"center" }}>
                     <div style={{ color:"#b8922a", fontSize:"22px", fontWeight:"900", lineHeight:1 }}>{s.val}</div>
-                    <div style={{ color:"#252015", fontSize:"7px", letterSpacing:"2px", marginTop:"4px" }}>{s.label}</div>
+                    <div style={{ color:"#7a6a58", fontSize:"7px", letterSpacing:"2px", marginTop:"4px" }}>{s.label}</div>
                   </div>
                 ))}
               </div>
@@ -3129,7 +3129,7 @@
                             <div style={{ width:`${pct}%`, background: pct===100?"#2a7a2a":f.accent, transition:"width 1s 0.5s" }} />
                           </div>
                         </div>
-                        <span style={{ color:"#2a2215", fontSize:"8px", width:"28px", textAlign:"right" }}>{models}fig</span>
+                        <span style={{ color:"#7a6a58", fontSize:"8px", width:"28px", textAlign:"right" }}>{models}fig</span>
                         <span style={{ color: pct===100?"#2a7a2a":f.accent, fontSize:"9px", fontWeight:"700", width:"32px", textAlign:"right" }}>{pct}%</span>
                       </div>
                     );
@@ -3302,11 +3302,11 @@
             {/* Ornamental divider */}
             <div style={{ display:"flex", alignItems:"center", gap:"10px", margin:"20px 0", width:"220px" }}>
               <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,transparent,#b8922a44)" }} />
-              <div style={{ color:"#3a3020", fontSize:"10px" }}>✦</div>
+              <div style={{ color:"#9a8a78", fontSize:"10px" }}>✦</div>
               <div style={{ flex:1, height:"1px", background:"linear-gradient(90deg,#b8922a44,transparent)" }} />
             </div>
             {/* Loading pulse */}
-            <div style={{ color:"#252015", fontSize:"8px", letterSpacing:"5px", animation:"pulse 1.5s ease-in-out infinite" }}>CHARGEMENT DU GRIMOIRE</div>
+            <div style={{ color:"#7a6a58", fontSize:"8px", letterSpacing:"5px", animation:"pulse 1.5s ease-in-out infinite" }}>CHARGEMENT DU GRIMOIRE</div>
           </div>
         </div>
       );
@@ -3386,7 +3386,7 @@
           <div style={{ background:"#020202", height:"100vh", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:"24px", fontFamily:"'Cinzel',serif", gap:"16px" }}>
             <div style={{ fontSize:"40px", color:"#7a1515" }}>⚠</div>
             <div style={{ color:"#e8dfc0", fontSize:"14px", letterSpacing:"2px", textAlign:"center" }}>ERREUR — RECHARGER LA PAGE</div>
-            <div style={{ color:"#3a3020", fontSize:"10px", fontFamily:"monospace", textAlign:"center", maxWidth:"300px", lineHeight:1.6 }}>{this.state.error.message}</div>
+            <div style={{ color:"#9a8a78", fontSize:"10px", fontFamily:"monospace", textAlign:"center", maxWidth:"300px", lineHeight:1.6 }}>{this.state.error.message}</div>
             <button onClick={() => window.location.reload()} style={{ background:"#0f0c08", border:"1px solid #b8922a55", color:"#b8922a", padding:"10px 24px", fontFamily:"'Cinzel',serif", fontSize:"11px", letterSpacing:"3px", cursor:"pointer", marginTop:"8px" }}>RECHARGER</button>
           </div>
         );

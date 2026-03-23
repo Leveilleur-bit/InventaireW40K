@@ -1698,8 +1698,12 @@
         }
       }
 
+      const [collapsedSections, setCollapsedSections] = useState({});
+      const toggleSection = (title) => setCollapsedSections(p => ({...p, [title]:!p[title]}));
+
       const Section = ({ title, items }) => {
         if (items.length===0) return null;
+        const collapsed = collapsedSections[title];
         const sectionPts = items.reduce((sum,e) => {
           const manual = ptsMap[`${list.faction}:${e.unitId}`];
           const unit = UNITS_DB[list.faction]?.find(u=>u.id===e.unitId);

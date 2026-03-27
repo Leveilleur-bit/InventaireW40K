@@ -647,7 +647,7 @@
       "Questoris Knight Magaera": 385,
       "Questoris Knight Styrix": 385,
       "Armiger Moirax": 150,
-    };;
+    };
 
     // ══════════════════════════════════════════════════════════
     // TAILLE D'UNITÉ (nombre de figurines par unité)
@@ -1585,7 +1585,7 @@
       return (
         <div style={pageStyle} className={`bg-lists`}>
           <div style={{ background:"linear-gradient(180deg,#0a0808 0%,#050505 100%)", borderBottom:"1px solid #131313", padding:"20px 16px 14px", display:"flex", alignItems:"center", justifyContent:"space-between", position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute", right:"60px", top:"50%", transform:"translateY(-50%)", fontSize:"80px", color:"#0f0f0f", fontFamily:"serif", pointerEvents:"none", lineHeight:1 }}>✠</div>
+            <div style={{ position:"absolute", right:"60px", top:"50%", transform:"translateY(-50%)", fontSize:"80px", color:"#b8922a", opacity:0.12, fontFamily:"serif", pointerEvents:"none", lineHeight:1 }}>✠</div>
             <div>
               <div style={{ color:"#b8922a", fontSize:"9px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", marginBottom:"4px", opacity:0.6 }}>CODEX ASTARTES</div>
               <div style={{ color:"#e8dfc0", fontSize:"22px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"900", textShadow:"0 0 30px #b8922a33", lineHeight:1 }}>CROISADE</div>
@@ -2063,7 +2063,7 @@
       return (
         <div style={pageStyle} className={`bg-inventory`}>
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
+            
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between" }}>
               <div>
                 <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>REGISTRE DES RELIQUES</div>
@@ -2282,7 +2282,7 @@
         <div style={pageStyle} className={`bg-stats`}>
           {/* Header */}
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
+            
             <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ÉTAT DES FORCES</div>
             <div style={{ display:"flex", alignItems:"baseline", justifyContent:"space-between" }}>
               <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>STATISTIQUES</div>
@@ -2668,6 +2668,134 @@
       );
     }
 
+
+    // ══════════════════════════════════════════════════════════
+    // VIEW PILE OF SHAME
+    // ══════════════════════════════════════════════════════════
+    function ViewShame({ inventory, onUpdatePaint, confirm }) {
+      const [factionFilter, setFactionFilter] = useState("all");
+      const [sortBy, setSortBy] = useState("statut");
+
+      const STATUS_ORDER = { unpainted: 0, primed: 1, wip: 2 };
+      const STATUS_LABEL = { unpainted: "Non peint", primed: "Apprêté", wip: "En cours" };
+
+      const unpainted = inventory
+        .filter(i => i.paintStatus !== "painted")
+        .map(i => {
+          const f = FACTIONS[i.faction];
+          const unit = UNITS_DB[i.faction]?.find(u => u.id === i.unitId);
+          const figs = getModelCount(unit?.name, i.qty||1, i.modelCount);
+          return { ...i, f, unit, figs };
+        })
+        .filter(i => i.unit)
+        .filter(i => factionFilter === "all" || i.faction === factionFilter)
+        .sort((a, b) => {
+          if (sortBy === "statut") return (STATUS_ORDER[a.paintStatus]||0) - (STATUS_ORDER[b.paintStatus]||0);
+          if (sortBy === "faction") return a.faction.localeCompare(b.faction);
+          return 0;
+        });
+
+      // Compteurs par statut
+      const countByStatus = inventory.filter(i=>i.paintStatus!=="painted").reduce((s,i) => {
+        const k = i.paintStatus || "unpainted";
+        s[k] = (s[k]||0) + (i.qty||1);
+        return s;
+      }, {});
+      const totalFigs = inventory.filter(i=>i.paintStatus!=="painted").reduce((s,i) => {
+        const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
+        return s + getModelCount(unit?.name, i.qty||1, i.modelCount);
+      }, 0);
+
+      const factions = ["all", ...Array.from(new Set(inventory.filter(i=>i.paintStatus!=="painted").map(i=>i.faction)))];
+
+      return (
+        <div style={pageStyle}>
+          {/* Header */}
+          <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"14px 16px 12px", flexShrink:0 }}>
+            <div style={{ color:"#8a1a1a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.8, marginBottom:"3px" }}>À PEINDRE</div>
+            <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700", marginBottom:"8px" }}>PILE OF SHAME</div>
+            {/* Compteurs */}
+            <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
+              {[
+                { key:"unpainted", label:"Non peint", color:PAINT_STATUS.unpainted.color },
+                { key:"primed",    label:"Apprêté",   color:PAINT_STATUS.primed.color },
+                { key:"wip",       label:"En cours",  color:PAINT_STATUS.wip.color },
+              ].map(s => countByStatus[s.key] ? (
+                <div key={s.key} style={{ display:"flex", alignItems:"center", gap:"4px" }}>
+                  <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:s.color }} />
+                  <span style={{ color:"#9a8a78", fontSize:"9px" }}>{s.label}</span>
+                  <span style={{ color:s.color, fontSize:"9px", fontFamily:"monospace", fontWeight:"700" }}>{countByStatus[s.key]}</span>
+                </div>
+              ) : null)}
+              {totalFigs > 0 && <span style={{ color:"#6a5a4a", fontSize:"9px", marginLeft:"auto", fontFamily:"monospace" }}>{totalFigs} fig</span>}
+            </div>
+          </div>
+
+          {/* Filtres */}
+          <div style={{ display:"flex", gap:"4px", overflowX:"auto", padding:"6px 12px", background:"#020202", borderBottom:"1px solid #0a0a0a", scrollbarWidth:"none" }}>
+            {/* Tri */}
+            {[{k:"statut",label:"STATUT"},{k:"faction",label:"FACTION"}].map(t => (
+              <button key={t.k} onClick={() => setSortBy(t.k)}
+                style={{ flexShrink:0, padding:"3px 8px", background:sortBy===t.k?"#1a1816":"transparent", border:`1px solid ${sortBy===t.k?"#6a5a4a":"#1a1816"}`, color:sortBy===t.k?"#9a8a78":"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"8px", cursor:"pointer", touchAction:"manipulation" }}>
+                {t.label}
+              </button>
+            ))}
+            <div style={{ width:"1px", background:"#1a1816", margin:"0 4px" }} />
+            {/* Faction */}
+            {factions.map(k => {
+              const f = FACTIONS[k];
+              const active = factionFilter === k;
+              return (
+                <button key={k} onClick={() => setFactionFilter(k)}
+                  style={{ flexShrink:0, padding:"3px 8px", background:active?(f?`${f.accent}22`:"#1a1a1a"):"transparent", border:`1px solid ${active?(f?f.accent:"#6a5a4a"):"#1a1816"}`, color:active?(f?f.accent:"#e8dfc0"):"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"8px", cursor:"pointer", touchAction:"manipulation" }}>
+                  {k === "all" ? "TOUS" : (f?.short || k)}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Liste */}
+          <div style={{ flex:1, overflowY:"auto", padding:"10px 14px" }}>
+            {unpainted.length === 0
+              ? <EmptyState icon="🎨" title="Pile of shame vide !" sub="Tout est peint, bravo !" />
+              : unpainted.map((item, idx) => {
+                  const ps = PAINT_STATUS[item.paintStatus] || PAINT_STATUS.unpainted;
+                  return (
+                    <div key={item.id} style={{ display:"flex", gap:"12px", alignItems:"center", padding:"8px 0", borderBottom:"1px solid #0d0d0d", animation:`slideLeft 0.2s ${idx*20}ms ease both` }}>
+                      {/* Photo */}
+                      <div style={{ width:"48px", height:"48px", flexShrink:0, background:"#040404", border:`1px solid ${item.f?.accent||"#1c1c1c"}22`, overflow:"hidden", display:"flex", alignItems:"center", justifyContent:"center" }}>
+                        {item.photo
+                          ? <img src={item.photo} alt="" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
+                          : <span style={{ fontSize:"18px", opacity:0.3 }}>{item.f?.icon || "?"}</span>
+                        }
+                      </div>
+                      {/* Infos */}
+                      <div style={{ flex:1, minWidth:0 }}>
+                        <div style={{ color:"#e8dfc0", fontSize:"12px", fontFamily:"'Cinzel',serif", whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>
+                          {item.unit.name}
+                        </div>
+                        <div style={{ display:"flex", alignItems:"center", gap:"6px", marginTop:"3px" }}>
+                          <span style={{ fontSize:"10px" }}>{item.f?.icon}</span>
+                          <div style={{ display:"flex", alignItems:"center", gap:"3px" }}>
+                            <div style={{ width:"6px", height:"6px", borderRadius:"50%", background:ps.color }} />
+                            <span style={{ color:"#6a5a4a", fontSize:"8px" }}>{STATUS_LABEL[item.paintStatus] || "Non peint"}</span>
+                          </div>
+                          <span style={{ color:"#6a5a4a", fontSize:"8px", fontFamily:"monospace" }}>{item.figs} fig</span>
+                        </div>
+                      </div>
+                      {/* Bouton peint */}
+                      <button onClick={() => confirm(`Marquer "${item.unit.name}" comme peint ?`, () => onUpdatePaint(item.id, "painted"), "#2a7a2a", "PEINT ✓", false)}
+                        style={{ flexShrink:0, width:"32px", height:"32px", background:"#0a1208", border:"1px solid #2a7a2a44", color:"#2a7a2a", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px", touchAction:"manipulation" }}
+                        title="Marquer comme peint">✓</button>
+                    </div>
+                  );
+                })
+            }
+          </div>
+        </div>
+      );
+    }
+
     function ViewCodex({ onExport, onImport, inventory, lists }) {
       const importRef = useRef(null);
       const totalModels = inventory.reduce((s,i) => { const u=UNITS_DB[i.faction]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
@@ -2678,7 +2806,7 @@
         <div style={pageStyle} className={`bg-codex`}>
           {/* Header */}
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"18px 16px 14px", position:"relative", overflow:"hidden" }}>
-            <div style={{ position:"absolute", right:"14px", top:"50%", transform:"translateY(-50%)", fontSize:"72px", color:"#0b0a09", lineHeight:1, pointerEvents:"none", fontFamily:"serif" }}>✠</div>
+            
             <div style={{ color:"#b8922a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.6, marginBottom:"4px" }}>ADMINISTRATION</div>
             <div style={{ display:"flex", alignItems:"baseline", gap:"12px" }}>
               <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700" }}>CODEX</div>
@@ -3364,6 +3492,7 @@
             {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
             {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="parade"   && <ViewParade parade={appState.parade||[]} onAdd={addParade} onDelete={deleteParade} />}
+            {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={confirm} />}
             {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
@@ -3377,6 +3506,7 @@
                 { key:"inventory", symbol:"⚜", label:"RELIQUES" },
                 { key:"wishlist",  symbol:"✦", label:"WISHLIST" },
                 { key:"parade",    symbol:"⚔", label:"PARADE"   },
+                { key:"shame",     symbol:"💀", label:"SHAME"    },
                 { key:"stats",     symbol:"◈", label:"STATS"    },
                 { key:"codex",     symbol:"⚙", label:"CODEX"    },
               ].map(t => (

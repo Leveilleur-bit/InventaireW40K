@@ -2340,7 +2340,7 @@
                 {[
                   { label:"RÉFÉRENCES", val:totalUnique },
                   { label:"LISTES", val:lists.length },
-                  { label:"PTS TOTAL", val:totalPts>0?totalPts.toLocaleString("fr-FR"):"—" },
+                  { label:"PTS TOTAL", val:(()=>{ const t=factionStats.reduce((s,f)=>s+f.pts,0); return t>0?t.toLocaleString("fr-FR"):"—"; })() },
                 ].map(c => (
                   <div key={c.label} style={{ background:"#0d0b0a", border:"1px solid #1a1816", padding:"10px 8px", textAlign:"center" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{c.val}</div>
@@ -3528,7 +3528,7 @@
                 <button key={t.key} onClick={() => setActiveView(t.key)} style={{ flex:1, background:"none", border:"none", borderTop:activeView===t.key?"2px solid #b8922a":"2px solid transparent", padding:"13px 0 12px", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", gap:"5px" }}>
                   <span style={{ position:"relative", display:"inline-block" }}>
                     <span style={{ fontSize:"17px", lineHeight:1, color:activeView===t.key?"#b8922a":"#1c1a18", textShadow:activeView===t.key?"0 0 16px #b8922a99":"none" }}>{t.symbol}</span>
-                    {t.badge && <span style={{ position:"absolute", top:"-2px", right:"-5px", width:"7px", height:"7px", borderRadius:"50%", background:"#c04040", display:"block" }} />}
+                    {t.badge && <span style={{ position:"absolute", top:"-3px", right:"-6px", width:"9px", height:"9px", borderRadius:"50%", background:"#c04040", display:"block", boxShadow:"0 0 4px #c04040" }} />}
                   </span>
                   <span style={{ fontSize:"7px", fontFamily:"'Cinzel',serif", letterSpacing:"3px", color:activeView===t.key?"#b8922a":"#1c1a18" }}>{t.label}</span>
                 </button>

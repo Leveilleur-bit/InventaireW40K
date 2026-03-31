@@ -2265,11 +2265,11 @@
         .map(u => ({ ...u, unit: UNITS_DB[u.faction]?.find(un=>un.id===u.unitId), f: FACTIONS[u.faction] }))
         .filter(u=>u.unit);
 
-      const totalPts = Object.entries(ptsMap).reduce((s,[k,v])=>{
-        const [faction,unitId] = k.split(":");
-        const inv = inventory.filter(i=>i.faction===faction&&i.unitId===unitId);
-        return s + inv.reduce((ss,i)=>ss+v*i.qty,0);
-      },0);
+      const totalPts = inventory.reduce((s,i) => {
+        const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
+        const pts = ptsMap[`${i.faction}:${i.unitId}`] || (unit ? POINTS_DB[unit.name] : 0) || 0;
+        return s + pts * (i.qty||1);
+      }, 0);
 
       const totalValue = inventory.reduce((s,i) => {
         const unit = UNITS_DB[i.faction]?.find(u=>u.id===i.unitId);
@@ -2340,7 +2340,7 @@
                 {[
                   { label:"RÉFÉRENCES", val:totalUnique },
                   { label:"LISTES", val:lists.length },
-                  { label:"PTS TOTAL", val:totalPts||"—" },
+                  { label:"PTS TOTAL", val:totalPts>0?totalPts.toLocaleString("fr-FR"):"—" },
                 ].map(c => (
                   <div key={c.label} style={{ background:"#0d0b0a", border:"1px solid #1a1816", padding:"10px 8px", textAlign:"center" }}>
                     <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel',serif", fontWeight:"700" }}>{c.val}</div>
@@ -2672,7 +2672,7 @@
     // ══════════════════════════════════════════════════════════
     // VIEW PILE OF SHAME
     // ══════════════════════════════════════════════════════════
-    function ViewShame({ inventory, onUpdatePaint, confirm }) {
+    function ViewShame({ inventory, onUpdatePaint, confirm, paintPct }) {
       const [factionFilter, setFactionFilter] = useState("all");
       const [sortBy, setSortBy] = useState("statut");
 
@@ -2714,6 +2714,15 @@
           <div style={{ background:"#030202", borderBottom:"1px solid #0f0f0f", padding:"14px 16px 12px", flexShrink:0 }}>
             <div style={{ color:"#8a1a1a", fontSize:"8px", letterSpacing:"5px", fontFamily:"'Cinzel',serif", opacity:0.8, marginBottom:"3px" }}>À PEINDRE</div>
             <div style={{ color:"#e8dfc0", fontSize:"18px", fontFamily:"'Cinzel Decorative','Cinzel',serif", letterSpacing:"3px", fontWeight:"700", marginBottom:"8px" }}>PILE OF SHAME</div>
+            {/* Alerte < 80% */}
+            {paintPct < 80 && (
+              <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"8px", background:"#1a0808", border:"1px solid #7a1515", padding:"6px 10px" }}>
+                <span style={{ fontSize:"14px" }}>⚠️</span>
+                <span style={{ color:"#c04040", fontSize:"10px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>
+                  {paintPct}% PEINT — OBJECTIF 80% NON ATTEINT
+                </span>
+              </div>
+            )}
             {/* Compteurs */}
             <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
               {[
@@ -3455,6 +3464,12 @@
 
 
       const ptsMap = appState.ptsMap || {};
+      const globalPaintPct = (() => {
+        const total = appState.inventory.reduce((s,i)=>s+(i.qty||1),0);
+        const painted = appState.inventory.filter(i=>i.paintStatus==="painted").reduce((s,i)=>s+(i.qty||1),0);
+        return total ? Math.round(painted/total*100) : 100;
+      })();
+      const shameAlert = globalPaintPct < 80 && appState.inventory.length > 0;
       const activeList = appState.lists.find(l=>l.id===activeListId);
 
       return (
@@ -3492,7 +3507,7 @@
             {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
             {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="parade"   && <ViewParade parade={appState.parade||[]} onAdd={addParade} onDelete={deleteParade} />}
-            {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={confirm} />}
+            {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={confirm} paintPct={globalPaintPct} />}
             {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
@@ -3506,12 +3521,15 @@
                 { key:"inventory", symbol:"⚜", label:"RELIQUES" },
                 { key:"wishlist",  symbol:"✦", label:"WISHLIST" },
                 { key:"parade",    symbol:"⚔", label:"PARADE"   },
-                { key:"shame",     symbol:"💀", label:"SHAME"    },
-                { key:"stats",     symbol:"◈", label:"STATS"    },
+                { key:"shame",     symbol:"💀", label:"SHAME",   badge:shameAlert },
+                { key:"stats",     symbol:"◈", label:"STATS",   badge:shameAlert },
                 { key:"codex",     symbol:"⚙", label:"CODEX"    },
               ].map(t => (
                 <button key={t.key} onClick={() => setActiveView(t.key)} style={{ flex:1, background:"none", border:"none", borderTop:activeView===t.key?"2px solid #b8922a":"2px solid transparent", padding:"13px 0 12px", cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center", gap:"5px" }}>
-                  <span style={{ fontSize:"17px", lineHeight:1, color:activeView===t.key?"#b8922a":"#1c1a18", textShadow:activeView===t.key?"0 0 16px #b8922a99":"none" }}>{t.symbol}</span>
+                  <span style={{ position:"relative", display:"inline-block" }}>
+                    <span style={{ fontSize:"17px", lineHeight:1, color:activeView===t.key?"#b8922a":"#1c1a18", textShadow:activeView===t.key?"0 0 16px #b8922a99":"none" }}>{t.symbol}</span>
+                    {t.badge && <span style={{ position:"absolute", top:"-2px", right:"-5px", width:"7px", height:"7px", borderRadius:"50%", background:"#c04040", display:"block" }} />}
+                  </span>
                   <span style={{ fontSize:"7px", fontFamily:"'Cinzel',serif", letterSpacing:"3px", color:activeView===t.key?"#b8922a":"#1c1a18" }}>{t.label}</span>
                 </button>
               ))}

@@ -2812,7 +2812,9 @@
       const totalWithPhoto = inventory.filter(i=>i.photo).length;
       const estimatedSizeKB = Math.round(
         inventory.reduce((s,i) => s + (i.photo ? i.photo.length * 0.75 : 0), 0) / 1024
-        + JSON.stringify({...appState, inventory: appState.inventory.map(i=>({...i,photo:null}))}).length / 1024
+        + inventory.reduce((s,i) => s + JSON.stringify({...i, photo:null}).length / 1024, 0)
+        + lists.reduce((s,l) => s + JSON.stringify(l).length / 1024, 0)
+        + 2
       );
       const sizeMB = (estimatedSizeKB / 1024).toFixed(1);
       const sizeWarning = estimatedSizeKB > 5000;

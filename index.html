@@ -2805,11 +2805,17 @@
       );
     }
 
-    function ViewCodex({ onExport, onImport, inventory, lists }) {
+    function ViewCodex({ onExport, onExportNoPhotos, onImport, inventory, lists }) {
       const importRef = useRef(null);
       const totalModels = inventory.reduce((s,i) => { const u=UNITS_DB[i.faction]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
       const totalUnits  = inventory.reduce((s,i)=>s+(i.qty||1),0);
       const totalWithPhoto = inventory.filter(i=>i.photo).length;
+      const estimatedSizeKB = Math.round(
+        inventory.reduce((s,i) => s + (i.photo ? i.photo.length * 0.75 : 0), 0) / 1024
+        + JSON.stringify({...appState, inventory: appState.inventory.map(i=>({...i,photo:null}))}).length / 1024
+      );
+      const sizeMB = (estimatedSizeKB / 1024).toFixed(1);
+      const sizeWarning = estimatedSizeKB > 5000;
 
       return (
         <div style={pageStyle} className={`bg-codex`}>
@@ -2847,6 +2853,19 @@
                 ))}
               </div>
 
+              {/* Taille estimée */}
+              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"12px", padding:"6px 10px", background:"#060402", border:`1px solid ${sizeWarning?"#7a1515":"#1a1714"}` }}>
+                <span style={{ color:"#7a6a58", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>TAILLE ESTIMÉE</span>
+                <span style={{ color:sizeWarning?"#c04040":"#9a8a78", fontSize:"11px", fontFamily:"monospace", fontWeight:"700" }}>
+                  {estimatedSizeKB > 1024 ? `${sizeMB} MB` : `${estimatedSizeKB} KB`}
+                  {sizeWarning && " ⚠"}
+                </span>
+              </div>
+              {sizeWarning && (
+                <div style={{ color:"#c04040", fontSize:"9px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", marginBottom:"12px", lineHeight:1.5 }}>
+                  La sauvegarde est volumineuse à cause des photos. Si l'export échoue, utilise "Exporter sans photos".
+                </div>
+              )}
               {/* Export button */}
               <button onClick={onExport}
                 style={{ width:"100%", padding:"14px", background:"linear-gradient(180deg,#1a1200 0%,#120d00 100%)", border:"1px solid #b8922a55", borderTop:"2px solid #b8922a", color:"#b8922a", fontFamily:"'Cinzel',serif", fontSize:"12px", letterSpacing:"3px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", marginBottom:"8px" }}>
@@ -2854,6 +2873,12 @@
                 EXPORTER LA SAUVEGARDE
               </button>
 
+              {/* Export sans photos */}
+              <button onClick={onExportNoPhotos}
+                style={{ width:"100%", padding:"10px", background:"#060402", border:"1px solid #1a1714", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"8px", marginBottom:"8px" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                EXPORTER SANS PHOTOS
+              </button>
               {/* Import button */}
               <input ref={importRef} type="file" accept=".json" style={{ display:"none" }}
                 onChange={e => { if(e.target.files[0]) { onImport(e.target.files[0]); e.target.value=""; } }} />
@@ -3359,6 +3384,16 @@
         a.href = url; a.download = `black-templars-${date}.json`;
         a.click(); URL.revokeObjectURL(url);
       };
+      const exportDataNoPhotos = () => {
+        const stripped = { ...appState, inventory: appState.inventory.map(i => ({ ...i, photo: null })), parade: [] };
+        const data = JSON.stringify(stripped, null, 2);
+        const blob = new Blob([data], { type:"application/json" });
+        const url  = URL.createObjectURL(blob);
+        const a    = document.createElement("a");
+        const date = new Date().toISOString().slice(0,10);
+        a.href = url; a.download = `black-templars-${date}-no-photos.json`;
+        a.click(); URL.revokeObjectURL(url);
+      };
       const importData = (file) => {
         const reader = new FileReader();
         reader.onload = e => {
@@ -3508,7 +3543,7 @@
             {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="parade"   && <ViewParade parade={appState.parade||[]} onAdd={addParade} onDelete={deleteParade} />}
             {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={confirm} paintPct={globalPaintPct} />}
-            {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
+            {activeView==="codex"    && <ViewCodex onExport={exportData} onExportNoPhotos={exportDataNoPhotos} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
           {!activeList && (

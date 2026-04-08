@@ -2422,12 +2422,12 @@
       );
     }
 
-    function useConfirm_hook() {
+    function useConfirm() {
       const [state, setState] = useState(null);
       const ask = (message, onConfirm, accent, confirmLabel, danger) => setState({ message, onConfirm, accent, confirmLabel, danger });
       const cancel = () => setState(null);
-      const confirm = () => { state?.onConfirm(); setState(null); };
-      const modal = state ? <ConfirmModal message={state.message} onConfirm={confirm} onCancel={cancel} accent={state.accent} confirmLabel={state.confirmLabel||"CONFIRMER"} danger={state.danger||false} /> : null;
+      const doConfirm = () => { state?.onConfirm(); setState(null); };
+      const modal = state ? <ConfirmModal message={state.message} onConfirm={doConfirm} onCancel={cancel} accent={state.accent} confirmLabel={state.confirmLabel||"CONFIRMER"} danger={state.danger||false} /> : null;
       return [ask, modal];
     }
 
@@ -2706,7 +2706,7 @@
                         </div>
                       </div>
                       {/* Bouton peint */}
-                      <button onClick={() => confirm(`Marquer "${item.unit.name}" comme peint ?`, () => onUpdatePaint(item.id, "painted"), "#2a7a2a", "PEINT ✓", false)}
+                      <button onClick={() => askConfirm(`Marquer "${item.unit.name}" comme peint ?`, () => onUpdatePaint(item.id, "painted"), "#2a7a2a", "PEINT ✓", false)}
                         style={{ flexShrink:0, width:"32px", height:"32px", background:"#0a1208", border:"1px solid #2a7a2a44", color:"#2a7a2a", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", fontSize:"16px", touchAction:"manipulation" }}
                         title="Marquer comme peint">✓</button>
                     </div>
@@ -2718,19 +2718,11 @@
       );
     }
 
-    function ViewCodex({ onExport, onExportNoPhotos, onImport, inventory, lists }) {
+    function ViewCodex({ onExport, onImport, inventory, lists }) {
       const importRef = useRef(null);
       const totalModels = inventory.reduce((s,i) => { const u=UNITS_DB[i.faction]?.find(u=>u.id===i.unitId); return s+getModelCount(u?.name, i.qty||1, i.modelCount); }, 0);
       const totalUnits  = inventory.reduce((s,i)=>s+(i.qty||1),0);
       const totalWithPhoto = inventory.filter(i=>i.photo).length;
-      const estimatedSizeKB = Math.round(
-        inventory.reduce((s,i) => s + (i.photo ? i.photo.length * 0.75 : 0), 0) / 1024
-        + inventory.reduce((s,i) => s + JSON.stringify({...i, photo:null}).length / 1024, 0)
-        + lists.reduce((s,l) => s + JSON.stringify(l).length / 1024, 0)
-        + 2
-      );
-      const sizeMB = (estimatedSizeKB / 1024).toFixed(1);
-      const sizeWarning = estimatedSizeKB > 5000;
 
       return (
         <div style={pageStyle} className={`bg-codex`}>
@@ -2768,19 +2760,6 @@
                 ))}
               </div>
 
-              {/* Taille estimée */}
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"12px", padding:"6px 10px", background:"#060402", border:`1px solid ${sizeWarning?"#7a1515":"#1a1714"}` }}>
-                <span style={{ color:"#7a6a58", fontSize:"9px", fontFamily:"'Cinzel',serif", letterSpacing:"1px" }}>TAILLE ESTIMÉE</span>
-                <span style={{ color:sizeWarning?"#c04040":"#9a8a78", fontSize:"11px", fontFamily:"monospace", fontWeight:"700" }}>
-                  {estimatedSizeKB > 1024 ? `${sizeMB} MB` : `${estimatedSizeKB} KB`}
-                  {sizeWarning && " ⚠"}
-                </span>
-              </div>
-              {sizeWarning && (
-                <div style={{ color:"#c04040", fontSize:"9px", fontFamily:"'Crimson Pro',serif", fontStyle:"italic", marginBottom:"12px", lineHeight:1.5 }}>
-                  La sauvegarde est volumineuse à cause des photos. Si l'export échoue, utilise "Exporter sans photos".
-                </div>
-              )}
               {/* Export button */}
               <button onClick={onExport}
                 style={{ width:"100%", padding:"14px", background:"linear-gradient(180deg,#1a1200 0%,#120d00 100%)", border:"1px solid #b8922a55", borderTop:"2px solid #b8922a", color:"#b8922a", fontFamily:"'Cinzel',serif", fontSize:"12px", letterSpacing:"3px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", marginBottom:"8px" }}>
@@ -2788,12 +2767,6 @@
                 EXPORTER LA SAUVEGARDE
               </button>
 
-              {/* Export sans photos */}
-              <button onClick={onExportNoPhotos}
-                style={{ width:"100%", padding:"10px", background:"#060402", border:"1px solid #1a1714", color:"#6a5a4a", fontFamily:"'Cinzel',serif", fontSize:"10px", letterSpacing:"2px", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", gap:"8px", marginBottom:"8px" }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                EXPORTER SANS PHOTOS
-              </button>
               {/* Import button */}
               <input ref={importRef} type="file" accept=".json" style={{ display:"none" }}
                 onChange={e => { if(e.target.files[0]) { onImport(e.target.files[0]); e.target.value=""; } }} />
@@ -3240,7 +3213,7 @@
     function App() {
       const [appState, setAppState] = useState({ inventory:[], lists:[], ptsMap:{}, wishlist:[], paintWishlist:[], parade:[] });
       const [loaded, setLoaded] = useState(false);
-      const [confirm, confirmModal] = useConfirm_hook();
+      const [askConfirm, confirmModal] = useConfirm();
       const [splashDone, setSplashDone] = useState(() => {
         // Show splash max 3 times
         try {
@@ -3299,16 +3272,6 @@
         a.href = url; a.download = `black-templars-${date}.json`;
         a.click(); URL.revokeObjectURL(url);
       };
-      const exportDataNoPhotos = () => {
-        const stripped = { ...appState, inventory: appState.inventory.map(i => ({ ...i, photo: null })), parade: [] };
-        const data = JSON.stringify(stripped, null, 2);
-        const blob = new Blob([data], { type:"application/json" });
-        const url  = URL.createObjectURL(blob);
-        const a    = document.createElement("a");
-        const date = new Date().toISOString().slice(0,10);
-        a.href = url; a.download = `black-templars-${date}-no-photos.json`;
-        a.click(); URL.revokeObjectURL(url);
-      };
       const importData = (file) => {
         const reader = new FileReader();
         reader.onload = e => {
@@ -3323,7 +3286,7 @@
               parade: parsed.parade || [],
               ptsMap: parsed.ptsMap || {},
             };
-            confirm(
+            askConfirm(
               `Importer ${next.inventory.length} figurines et ${next.lists.length} listes ? Cela remplacera les données actuelles.`,
               () => {
                 setAppState(next);
@@ -3340,10 +3303,10 @@
       };
 
       const createList    = m  => updateApp(s => ({ ...s, lists:[...s.lists,{id:Date.now(),...m,entries:[]}] }));
-      const deleteList    = id => confirm("Supprimer cette liste ?", () => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) })), "#b8922a", "SUPPRIMER", true);
+      const deleteList    = id => askConfirm("Supprimer cette liste ?", () => updateApp(s => ({ ...s, lists:s.lists.filter(l=>l.id!==id) })), "#b8922a", "SUPPRIMER", true);
       const renameList    = (id,name)    => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,name}:l) }));
       const setListMaxPts = (id,maxPts) => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id===id?{...l,maxPts}:l) }));
-      const deleteEntry   = (listId,entryId) => confirm("Retirer cette unité de la liste ?", () => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) })), "#b8922a", "RETIRER", true);
+      const deleteEntry   = (listId,entryId) => askConfirm("Retirer cette unité de la liste ?", () => updateApp(s => ({ ...s, lists:s.lists.map(l=>l.id!==listId?l:{...l,entries:l.entries.filter(e=>e.id!==entryId)}) })), "#b8922a", "RETIRER", true);
       const toggleWarlord = (listId,entryId) => updateApp(s => ({
         ...s, lists: s.lists.map(l => l.id!==listId ? l : {
           ...l, entries: l.entries.map(e => ({ ...e, warlord: e.id===entryId ? !e.warlord : false }))
@@ -3352,7 +3315,7 @@
       const addInventory  = entry => updateApp(s => ({
         ...s, inventory:[...s.inventory,{id:Date.now(),...entry}]
       }));
-      const deleteInventory = id => confirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })), "#b8922a", "SUPPRIMER", true);
+      const deleteInventory = id => askConfirm("Supprimer cette figurine de l'inventaire ?", () => updateApp(s => ({ ...s, inventory:s.inventory.filter(i=>i.id!==id) })), "#b8922a", "SUPPRIMER", true);
       const updatePhoto     = (id,photo) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,photo}:i) }));
       const updatePaint     = (id,status) => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,paintStatus:status}:i) }));
       const updateQty        = (id,qty)    => updateApp(s => ({ ...s, inventory:s.inventory.map(i=>i.id===id?{...i,qty:Math.max(1,qty)}:i) }));
@@ -3368,13 +3331,13 @@
         return { ...s, inventory: inv };
       });
       const addWish       = entry    => updateApp(s => ({ ...s, wishlist:[...(s.wishlist||[]),entry] }));
-      const deleteWish    = id       => confirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })), "#b8922a", "RETIRER", true);
+      const deleteWish    = id       => askConfirm("Retirer de la wishlist ?", () => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).filter(i=>i.id!==id) })), "#b8922a", "RETIRER", true);
       const setWishStatus = (id,status) => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,status}:i) }));
       const setWishPrice  = (id,price)  => updateApp(s => ({ ...s, wishlist:(s.wishlist||[]).map(i=>i.id===id?{...i,price}:i) }));
       const addPaintWish    = entry => updateApp(s => ({ ...s, paintWishlist:[...(s.paintWishlist||[]),entry] }));
       const deletePaintWish = id    => updateApp(s => ({ ...s, paintWishlist:(s.paintWishlist||[]).filter(p=>p.id!==id) }));
       const addParade    = entry => updateApp(s => ({ ...s, parade:[...(s.parade||[]),entry] }));
-      const deleteParade = id    => confirm("Supprimer cette photo ?", () => updateApp(s => ({ ...s, parade:(s.parade||[]).filter(p=>p.id!==id) })), "#b8922a", "SUPPRIMER", true);
+      const deleteParade = id    => askConfirm("Supprimer cette photo ?", () => updateApp(s => ({ ...s, parade:(s.parade||[]).filter(p=>p.id!==id) })), "#b8922a", "SUPPRIMER", true);
 
       const addEntry = (listId,entry) => updateApp(s => {
         let inv=s.inventory, invId=entry.inventoryId;
@@ -3457,8 +3420,8 @@
             {activeView==="stats"    && <ViewStats inventory={appState.inventory} lists={appState.lists} ptsMap={ptsMap} wishlist={appState.wishlist||[]} />}
             {activeView==="wishlist" && <ViewWishlist wishlist={appState.wishlist||[]} paintWishlist={appState.paintWishlist||[]} ptsMap={ptsMap} onAdd={addWish} onDelete={deleteWish} onSetStatus={setWishStatus} onSetPrice={setWishPrice} onAddPaint={addPaintWish} onDeletePaint={deletePaintWish} />}
             {activeView==="parade"   && <ViewParade parade={appState.parade||[]} onAdd={addParade} onDelete={deleteParade} />}
-            {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={confirm} paintPct={globalPaintPct} />}
-            {activeView==="codex"    && <ViewCodex onExport={exportData} onExportNoPhotos={exportDataNoPhotos} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
+            {activeView==="shame"    && <ViewShame inventory={appState.inventory} onUpdatePaint={updatePaint} confirm={askConfirm} paintPct={globalPaintPct} />}
+            {activeView==="codex"    && <ViewCodex onExport={exportData} onImport={importData} inventory={appState.inventory} lists={appState.lists} />}
           </div>
 
           {!activeList && (

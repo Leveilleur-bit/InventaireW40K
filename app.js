@@ -2532,6 +2532,33 @@ var Ic = {
 };
 
 // ══════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════
+// COMPRESSION PHOTO
+// ══════════════════════════════════════════════════════════
+function compressPhoto(file) {
+  var maxSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 600;
+  var quality = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0.75;
+  return new Promise(function (resolve) {
+    var reader = new FileReader();
+    reader.onload = function (ev) {
+      var img = new Image();
+      img.onload = function () {
+        var scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+        var w = Math.round(img.width * scale);
+        var h = Math.round(img.height * scale);
+        var canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
 // SHARED STYLES
 // ══════════════════════════════════════════════════════════
 
@@ -3296,11 +3323,9 @@ function PhotoPicker(_ref12) {
     var file = e.target.files[0];
     if (!file) return;
     e.target.value = "";
-    var reader = new FileReader();
-    reader.onload = function (ev) {
-      return onPhoto(ev.target.result);
-    };
-    reader.readAsDataURL(file);
+    compressPhoto(file).then(function (compressed) {
+      return onPhoto(compressed);
+    });
   };
   if (size > 100) return /*#__PURE__*/React.createElement("div", {
     style: {
@@ -6936,15 +6961,13 @@ function ViewParade(_ref42) {
     var file = e.target.files[0];
     if (!file) return;
     e.target.value = "";
-    var reader = new FileReader();
-    reader.onload = function (ev) {
+    compressPhoto(file, 800, 0.80).then(function (compressed) {
       return setForm(function (f) {
         return _objectSpread(_objectSpread({}, f), {}, {
-          photo: ev.target.result
+          photo: compressed
         });
       });
-    };
-    reader.readAsDataURL(file);
+    });
   };
   var handleAdd = function handleAdd() {
     if (!form.photo) return;
@@ -7649,11 +7672,69 @@ function ViewShame(_ref45) {
     }, "\u2713"));
   })));
 }
-function ViewCodex(_ref46) {
-  var onExport = _ref46.onExport,
-    onImport = _ref46.onImport,
-    inventory = _ref46.inventory,
-    lists = _ref46.lists;
+function ImportPhotosBtn(_ref46) {
+  var onImportPhotos = _ref46.onImportPhotos;
+  var r = useRef(null);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("input", {
+    ref: r,
+    type: "file",
+    accept: ".json",
+    style: {
+      display: "none"
+    },
+    onChange: function onChange(e) {
+      if (e.target.files[0]) {
+        onImportPhotos(e.target.files[0]);
+        e.target.value = "";
+      }
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      var _r$current;
+      return (_r$current = r.current) === null || _r$current === void 0 ? void 0 : _r$current.click();
+    },
+    style: {
+      width: "100%",
+      padding: "10px",
+      background: "#060402",
+      border: "1px solid #1a1714",
+      color: "#7a7060",
+      fontFamily: "'Cinzel',serif",
+      fontSize: "10px",
+      letterSpacing: "2px",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+      touchAction: "manipulation"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "17 8 12 3 7 8"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "3",
+    x2: "12",
+    y2: "15"
+  })), "IMPORTER DES PHOTOS"));
+}
+function ViewCodex(_ref47) {
+  var onExport = _ref47.onExport,
+    onExportNoPhotos = _ref47.onExportNoPhotos,
+    onExportPhotos = _ref47.onExportPhotos,
+    onImportPhotos = _ref47.onImportPhotos,
+    onImport = _ref47.onImport,
+    inventory = _ref47.inventory,
+    lists = _ref47.lists;
   var importRef = useRef(null);
   var totalModels = inventory.reduce(function (s, i) {
     var _UNITS_DB$i$faction0;
@@ -7868,7 +7949,111 @@ function ViewCodex(_ref46) {
     y1: "3",
     x2: "12",
     y2: "15"
-  })), "IMPORTER UNE SAUVEGARDE")), /*#__PURE__*/React.createElement("div", {
+  })), "IMPORTER UNE SAUVEGARDE"), /*#__PURE__*/React.createElement("button", {
+    onClick: onExportNoPhotos,
+    style: {
+      width: "100%",
+      padding: "10px",
+      background: "#060402",
+      border: "1px solid #1a1714",
+      color: "#6a5a4a",
+      fontFamily: "'Cinzel',serif",
+      fontSize: "10px",
+      letterSpacing: "2px",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: "8px",
+      marginTop: "8px",
+      touchAction: "manipulation"
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "12",
+    height: "12",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+  }), /*#__PURE__*/React.createElement("polyline", {
+    points: "7 10 12 15 17 10"
+  }), /*#__PURE__*/React.createElement("line", {
+    x1: "12",
+    y1: "15",
+    x2: "12",
+    y2: "3"
+  })), "EXPORTER SANS PHOTOS")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#9a8a78",
+      fontSize: "9px",
+      letterSpacing: "4px",
+      fontFamily: "'Cinzel',serif",
+      marginBottom: "10px",
+      marginTop: "20px"
+    }
+  }, "PHOTOS PAR FACTION"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(180deg,#131110 0%,#0d0b0a 100%)",
+      border: "1px solid #1c1a18",
+      borderTop: "2px solid #b8922a44",
+      padding: "16px",
+      marginBottom: "8px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: "#6a5a3a",
+      fontSize: "11px",
+      fontFamily: "'Crimson Pro','Crimson Text',serif",
+      fontStyle: "italic",
+      lineHeight: 1.6,
+      marginBottom: "14px"
+    }
+  }, "Exporte les photos d'une faction s\xE9par\xE9ment. R\xE9importe-les sans \xE9craser tes autres donn\xE9es."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: "6px",
+      marginBottom: "12px"
+    }
+  }, Object.entries(FACTIONS).map(function (_ref48) {
+    var _ref49 = _slicedToArray(_ref48, 2),
+      k = _ref49[0],
+      f = _ref49[1];
+    var cnt = inventory.filter(function (i) {
+      return i.faction === k && i.photo;
+    }).length;
+    if (!cnt) return null;
+    return /*#__PURE__*/React.createElement("button", {
+      key: k,
+      onClick: function onClick() {
+        return onExportPhotos(k);
+      },
+      style: {
+        width: "100%",
+        padding: "10px 14px",
+        background: "#080604",
+        border: "1px solid ".concat(f.accent, "33"),
+        color: f.accent,
+        fontFamily: "'Cinzel',serif",
+        fontSize: "10px",
+        letterSpacing: "2px",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        touchAction: "manipulation"
+      }
+    }, /*#__PURE__*/React.createElement("span", null, f.icon, " ", f.label), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: "#7a6a58",
+        fontSize: "9px"
+      }
+    }, cnt, " photo", cnt > 1 ? "s" : "", " \u2193"));
+  })), /*#__PURE__*/React.createElement(ImportPhotosBtn, {
+    onImportPhotos: onImportPhotos
+  })), /*#__PURE__*/React.createElement("div", {
     style: {
       background: "#080604",
       border: "1px solid #141210",
@@ -8389,16 +8574,16 @@ var CITADEL_PAINTS = [{
   name: "Averland Sunset Spray",
   type: "Spray"
 }];
-function ViewWishlist(_ref47) {
-  var wishlist = _ref47.wishlist,
-    paintWishlist = _ref47.paintWishlist,
-    ptsMap = _ref47.ptsMap,
-    _onAdd = _ref47.onAdd,
-    onDelete = _ref47.onDelete,
-    onSetStatus = _ref47.onSetStatus,
-    onSetPrice = _ref47.onSetPrice,
-    onAddPaint = _ref47.onAddPaint,
-    onDeletePaint = _ref47.onDeletePaint;
+function ViewWishlist(_ref50) {
+  var wishlist = _ref50.wishlist,
+    paintWishlist = _ref50.paintWishlist,
+    ptsMap = _ref50.ptsMap,
+    _onAdd = _ref50.onAdd,
+    onDelete = _ref50.onDelete,
+    onSetStatus = _ref50.onSetStatus,
+    onSetPrice = _ref50.onSetPrice,
+    onAddPaint = _ref50.onAddPaint,
+    onDeletePaint = _ref50.onDeletePaint;
   var _useState73 = useState("units"),
     _useState74 = _slicedToArray(_useState73, 2),
     tab = _useState74[0],
@@ -8887,10 +9072,10 @@ function ViewWishlist(_ref47) {
       display: "flex",
       gap: "8px"
     }
-  }, Object.entries(FACTIONS).map(function (_ref48) {
-    var _ref49 = _slicedToArray(_ref48, 2),
-      k = _ref49[0],
-      v = _ref49[1];
+  }, Object.entries(FACTIONS).map(function (_ref51) {
+    var _ref52 = _slicedToArray(_ref51, 2),
+      k = _ref52[0],
+      v = _ref52[1];
     return /*#__PURE__*/React.createElement("button", {
       key: k,
       onClick: function onClick() {
@@ -9148,11 +9333,11 @@ function ViewWishlist(_ref47) {
 // ROOT APP
 // ══════════════════════════════════════════════════════════
 
-function SplashOverlay(_ref50) {
-  var inventory = _ref50.inventory,
-    lists = _ref50.lists,
-    ptsMap = _ref50.ptsMap,
-    onDone = _ref50.onDone;
+function SplashOverlay(_ref53) {
+  var inventory = _ref53.inventory,
+    lists = _ref53.lists,
+    ptsMap = _ref53.ptsMap,
+    onDone = _ref53.onDone;
   var _useState87 = useState("in"),
     _useState88 = _slicedToArray(_useState87, 2),
     phase = _useState88[0],
@@ -9187,10 +9372,10 @@ function SplashOverlay(_ref50) {
       clearTimeout(t2);
     };
   }, []);
-  var factionSummary = Object.entries(FACTIONS).map(function (_ref51) {
-    var _ref52 = _slicedToArray(_ref51, 2),
-      k = _ref52[0],
-      f = _ref52[1];
+  var factionSummary = Object.entries(FACTIONS).map(function (_ref54) {
+    var _ref55 = _slicedToArray(_ref54, 2),
+      k = _ref55[0],
+      f = _ref55[1];
     var items = inventory.filter(function (i) {
       return i.faction === k;
     });
@@ -9390,11 +9575,11 @@ function SplashOverlay(_ref50) {
       gap: "6px",
       animation: "statSlide 0.5s 0.5s ease both"
     }
-  }, factionSummary.map(function (_ref53) {
-    var key = _ref53.key,
-      f = _ref53.f,
-      models = _ref53.models,
-      painted = _ref53.painted;
+  }, factionSummary.map(function (_ref56) {
+    var key = _ref56.key,
+      f = _ref56.f,
+      models = _ref56.models,
+      painted = _ref56.painted;
     var pct = models ? Math.round(painted / models * 100) : 0;
     return /*#__PURE__*/React.createElement("div", {
       key: key,
@@ -9585,6 +9770,89 @@ function App() {
     a.click();
     URL.revokeObjectURL(url);
   };
+  var exportDataNoPhotos = function exportDataNoPhotos() {
+    var stripped = _objectSpread(_objectSpread({}, appState), {}, {
+      inventory: appState.inventory.map(function (i) {
+        return _objectSpread(_objectSpread({}, i), {}, {
+          photo: null
+        });
+      }),
+      parade: []
+    });
+    var data = JSON.stringify(stripped, null, 2);
+    var blob = new Blob([data], {
+      type: "application/json"
+    });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    var date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = "black-templars-".concat(date, "-leger.json");
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  var exportPhotos = function exportPhotos(faction) {
+    var f = FACTIONS[faction];
+    var photos = appState.inventory.filter(function (i) {
+      return i.faction === faction && i.photo;
+    }).map(function (i) {
+      return {
+        id: i.id,
+        unitId: i.unitId,
+        photo: i.photo
+      };
+    });
+    if (!photos.length) {
+      alert("Aucune photo pour cette faction.");
+      return;
+    }
+    var data = JSON.stringify({
+      type: "photos",
+      faction: faction,
+      photos: photos
+    }, null, 2);
+    var blob = new Blob([data], {
+      type: "application/json"
+    });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    var date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = "photos-".concat(faction.toLowerCase(), "-").concat(date, ".json");
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+  var importPhotos = function importPhotos(file) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        var _FACTIONS$parsed$fact;
+        var parsed = JSON.parse(e.target.result);
+        if (parsed.type !== "photos" || !parsed.photos) {
+          alert("Fichier invalide.");
+          return;
+        }
+        var faction = ((_FACTIONS$parsed$fact = FACTIONS[parsed.faction]) === null || _FACTIONS$parsed$fact === void 0 ? void 0 : _FACTIONS$parsed$fact.label) || parsed.faction;
+        askConfirm("Importer ".concat(parsed.photos.length, " photo(s) pour ").concat(faction, " ?"), function () {
+          return updateApp(function (s) {
+            return _objectSpread(_objectSpread({}, s), {}, {
+              inventory: s.inventory.map(function (i) {
+                var m = parsed.photos.find(function (p) {
+                  return p.id === i.id;
+                });
+                return m ? _objectSpread(_objectSpread({}, i), {}, {
+                  photo: m.photo
+                }) : i;
+              })
+            });
+          });
+        }, "#b8922a", "IMPORTER", false);
+      } catch (_unused5) {
+        alert("Erreur de lecture.");
+      }
+    };
+    reader.readAsText(file);
+  };
   var importData = function importData(file) {
     var reader = new FileReader();
     reader.onload = function (e) {
@@ -9613,7 +9881,7 @@ function App() {
           setActiveListId(null);
           setSplashDone(true);
         }, "#b8922a", "IMPORTER", false);
-      } catch (_unused5) {
+      } catch (_unused6) {
         alert("Erreur de lecture du fichier.");
       }
     };
@@ -10020,7 +10288,7 @@ function App() {
       try {
         var n = parseInt(localStorage.getItem("wh40k-splash-count") || "0");
         localStorage.setItem("wh40k-splash-count", String(n + 1));
-      } catch (_unused6) {}
+      } catch (_unused7) {}
       setSplashDone(true);
     }
   }), savedLabel && /*#__PURE__*/React.createElement("div", {
@@ -10126,6 +10394,9 @@ function App() {
     paintPct: globalPaintPct
   }), activeView === "codex" && /*#__PURE__*/React.createElement(ViewCodex, {
     onExport: exportData,
+    onExportNoPhotos: exportDataNoPhotos,
+    onExportPhotos: exportPhotos,
+    onImportPhotos: importPhotos,
     onImport: importData,
     inventory: appState.inventory,
     lists: appState.lists

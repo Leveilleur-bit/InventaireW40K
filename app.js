@@ -7892,7 +7892,7 @@ function ViewCodex(_ref46) {
       fontStyle: "italic",
       lineHeight: 1.7
     }
-  }, "Les photos sont incluses dans la sauvegarde (encod\xE9es en base64). Le fichier peut donc \xEAtre volumineux si tu as beaucoup de photos.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), "Pour transf\xE9rer vers un autre appareil, exporte le fichier JSON, transf\xE8re-le, puis importe-le depuis l'onglet Codex."))));
+  }, "Les photos d'inventaire ne sont pas incluses dans la sauvegarde pour r\xE9duire la taille du fichier. Les photos Army on Parade sont conserv\xE9es.", /*#__PURE__*/React.createElement("br", null), /*#__PURE__*/React.createElement("br", null), "Pour transf\xE9rer vers un autre appareil, exporte le fichier JSON, transf\xE8re-le, puis importe-le depuis l'onglet Codex."))));
 }
 
 // ══════════════════════════════════════════════════════════
@@ -9566,7 +9566,14 @@ function App() {
 
   // ── Export / Import ──────────────────────────────────────
   var exportData = function exportData() {
-    var data = JSON.stringify(appState, null, 2);
+    var stripped = _objectSpread(_objectSpread({}, appState), {}, {
+      inventory: appState.inventory.map(function (i) {
+        return _objectSpread(_objectSpread({}, i), {}, {
+          photo: null
+        });
+      })
+    });
+    var data = JSON.stringify(stripped, null, 2);
     var blob = new Blob([data], {
       type: "application/json"
     });
